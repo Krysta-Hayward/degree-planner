@@ -1,0 +1,33 @@
+1. Problem Statement
+Many students, especially Freshmen, have a difficult time navigating a degree course on their own. Software such as a degree planner gives power to the student to find their path on their own, with less help from staff, and more of an understanding of what the next steps are. As well as understanding the differing paths a student can take to achieve their degree. Many students may miss prerequisite classes and have to extend their program to accommodate missed classes, costing them time, money, and stress. Software aids these issues by plainly laying out what the next steps are.
+
+2. Users
+Most users will be students. A student using a degree planner will use the planner to map out their programs and classes to prepare for the upcoming, as well as the future. For example, a student will use the degree planner at the beginning of their college career, mapping out which classes to take first, following up with which classes are able to be taken the following quarter given the prerequisites achieved.
+Another user will be academic advisors, using the degree planner to input what classes a new or previous student has taken in order to help the student plan out their program map.
+
+3. Goals and Success Criteria
+* A new student with no previously taken college courses can plan out their degree's program map to understand which classes will be taken first to progress further.
+* A returning student will be able to input the previously taken courses to plan out which classes to take next.
+* An academic advisor can aid students of any type in the same way, using the student's previously taken courses, or none at all, to plan the student's program map.
+
+4. In Scope
+
+
+5. Out of Scope
+
+
+6. Assumptions
+
+
+7. Risks
+
+
+8. Milestones
+
+
+9. Open Questions
+
+
+10. Approval
+
+

@@ -1,88 +1,89 @@
-1. Problem Statement
+# 1. Problem Statement
 Many students, especially Freshmen, have a difficult time navigating a degree course on their own. Software such as a degree planner gives power to the student to find their path on their own, with less help from staff, and more of an understanding of what the next steps are. As well as understanding the differing paths a student can take to achieve their degree. 
 Many students may miss prerequisite classes and have to extend their program to accommodate missed classes, costing them time, money, and stress. Software aids these issues by plainly laying out what the next steps are and giving the individual more control over their own college career.
 
-2. Users
-# Most users will be students. A student using a degree planner will use the planner to map out their programs and classes to prepare for the upcoming, as well as the future. For example, a student will use the degree planner at the beginning of their college career, mapping out which classes to take first, following up with which classes are able to be taken the following quarter given the prerequisites achieved.
-# Academic advisors can use the degree planner to input what classes a new or previous student has taken in order to help the student plan out their program map.
-# Admins can assign advisors to students. When a new student applies to the college, an admin can review if the student has an advisor yet, and can assign one for them.
+# 2. Users
+- Most users will be students. A student using a degree planner will use the planner to map out their programs and classes to prepare for the upcoming, as well as the future. For example, a student will use the degree planner at the beginning of their college career, mapping out which classes to take first, following up with which classes are able to be taken the following quarter given the prerequisites achieved.
+- Academic advisors can use the degree planner to input what classes a new or previous student has taken in order to help the student plan out their program map.
+- Admins can assign advisors to students. When a new student applies to the college, an admin can review if the student has an advisor yet, and can assign one for them.
 
 
-3. Goals and Success Criteria
-# A new student with no previously taken college courses can input their degree to receive a program map of which classes will be taken first to progress further.
-# A returning student will be able to input the previously taken courses to receive which classes are complete, and which classes to take next.
-# An academic advisor can aid students of any type, using the student's previously taken courses, or none at all, to plan the student's program map.
+# 3. Goals and Success Criteria
+- A new student with no previously taken college courses can input their degree to receive a program map of which classes will be taken first to progress further.
+- A returning student will be able to input the previously taken courses to receive which classes are complete, and which classes to take next.
+- An academic advisor can aid students of any type, using the student's previously taken courses, or none at all, to plan the student's program map.
 An admin can assign an advisor to a student.
 
-4. In Scope
-Epic 1 MH: Accounts and Access
-# Students and advisors log in with a school email and password
-# Roles based access where students can see and edit their own plan while advisors can see plans and comment on plans.
-# An admin can assign students to advisors
+# 4. In Scope
+## Epic 1 MH: Accounts and Access
+- Students and advisors log in with a school email and password
+- Roles based access where students can see and edit their own plan while advisors can see plans and comment on plans.
+- An admin can assign students to advisors
 
-Epic 2 MH: Course and Program catalog *use our degree planner online as example*
-# Admin can add and edit courses with proper labels (code, title, credits, prereqs, terms offered)
-# Admin can define a degree program as a set of requirement groups (Electives, etc)
-# Data can be seeded rather than entered by hand
+## Epic 2 MH: Course and Program catalog *use our degree planner online as example*
+- Admin can add and edit courses with proper labels (code, title, credits, prereqs, terms offered)
+- Admin can define a degree program as a set of requirement groups (Electives, etc)
+- Data can be seeded rather than entered by hand
 
-Epic 3 MH: Term planning
-# Students create their term plans (Fall 2026, Winter 2027, Ect) then adds courses to each term
-# Students are made aware of what classes are required, prerequisite chains etc
-# Students are shown class availability
-# Courses can be edited by being moved, to another term or removed
-# Term credit total is displayed
-# For class/scheduling time conflicts a warning will display for the student
+## Epic 3 MH: Term planning
+- Students create their term plans (Fall 2026, Winter 2027, Ect) then adds courses to each term
+- Students are made aware of what classes are required, prerequisite chains etc
+- Students are shown class availability
+- Courses can be edited by being moved, to another term or removed
+- Term credit total is displayed
+- For class/scheduling time conflicts a warning will display for the student
 
-Epic 4: Degree progress tracking
-# Student records completed courses with grades (Letter or Percentage)
-# Progress view shows if requirement has been met, in progress, or not started
-# Total credits completed vs required, (show as percentage)
+## Epic 4: Degree progress tracking
+- Student records completed courses with grades (Letter or Percentage)
+- Progress view shows if requirement has been met, in progress, or not started
+- Total credits completed vs required, (show as percentage)
 
-Epic 5: Advisor Review
-# Student can submit a plan for review
-# Advisor overseas reviews
-# Advisor can comment on reviews for change and approve review
+## Epic 5: Advisor Review
+- Student can submit a plan for review
+- Advisor overseas reviews
+- Advisor can comment on reviews for change and approve review
 
-5. Out of Scope
-# Google/Facebook login
-# Two-factor authentication
-# Password recovery
-# User profile pictures
-# Direct messages between users
-# Push notifications
-# Advanced search filters
-# Mobile application
-# Dark mode
-# Multiple languages
+# 5. Out of Scope
+- Google/Facebook login
+- Two-factor authentication
+- Password recovery
+- User profile pictures
+- Direct messages between users
+- Push notifications
+- Advanced search filters
+- Mobile application
+- Dark mode
+- Multiple languages
 
-6. Assumptions
-# Number of users: Application supports at least a small number of users, ~100.
-# Browser support: Chromium based browsers like Chrome, Brave, Opera, Edge.
-# Email: If the product includes email functionality, demonstrating or simulating email functionality.
-# Data persistence: Database will retain the application data unless it is reset.
-# Internet access: Users are expected to have an active internet connection while using the application.
-# Devices: The application will primarily be designed for desktop browsers.
+# 6. Assumptions
+- Number of users: Application supports at least a small number of users, ~100.
+- Browser support: Chromium based browsers like Chrome, Brave, Opera, Edge.
+- Email: If the product includes email functionality, demonstrating or simulating email functionality.
+- Data persistence: Database will retain the application data unless it is reset.
+- Internet access: Users are expected to have an active internet connection while using the application.
+- Devices: The application will primarily be designed for desktop browsers.
 
-7. Risks
-# Scheduling conflicts. High risk. Each team member is balancing other obligations, which limits the amount of time we have available to work on the project. We will do what we can to accommodate each other and help where needed.
-# Finances. High risk. Our personal financial resources are fairly limited, so any services or resources that we may need to pay for could become a challenge, such as web hosting services.
-# Inability to contribute to code due to inexperience. Moderate risk.  If that happens, we will put our heads together to help those behind to understand more, worst case scenario we may trade responsibilities to complete the task.
-# If a team member drops the course. Low risk. We will distribute their leftover work accordingly.
-# Disagreements. Unknown risk. While the overall scope of the project seems fairly straightforward, we’ve had some difficulty coming to a finalized agreement in a timely manner. This can potentially cause issues, but so far the team has been good at communicating and working through it together.
-8. Milestones
-# Sprint 1: Epic 1 - Accounts and Access
-# Sprint 2: Epic 2 - Course and Program catalog
-# Sprint 3: Epic 3 - Term planning
-# Sprint 4: Epic 4 - Degree progress tracking
-# Sprint 5: Epic 5 - Advisor Review
+# 7. Risks
+- Scheduling conflicts. High risk. Each team member is balancing other obligations, which limits the amount of time we have available to work on the project. We will do what we can to accommodate each other and help where needed.
+- Finances. High risk. Our personal financial resources are fairly limited, so any services or resources that we may need to pay for could become a challenge, such as web hosting services.
+- Inability to contribute to code due to inexperience. Moderate risk.  If that happens, we will put our heads together to help those behind to understand more, worst case scenario we may trade responsibilities to complete the task.
+- If a team member drops the course. Low risk. We will distribute their leftover work accordingly.
+- Disagreements. Unknown risk. While the overall scope of the project seems fairly straightforward, we’ve had some difficulty coming to a finalized agreement in a timely manner. This can potentially cause issues, but so far the team has been good at communicating and working through it together.
 
-9. Open Questions
-# Do we have a preferred webhost, or is this going to be run from a local server?
-# How much data about each class do we need to track? (time slot conflicts, multiple teachers/classrooms available, seat number and availability?)
-# Is the splash/welcome/home page in-scope?
-# Is there an existing framework that we’re starting from, or do we need to set up the basic web environment from scratch? (database, preferred plugins et webpacks, is there a home screen already etc.)
-# ADA compliance? (screen-reader support)
-# Number of users? How many users will the application need to support?
+# 8. Milestones
+- Sprint 1: Epic 1 - Accounts and Access
+- Sprint 2: Epic 2 - Course and Program catalog
+- Sprint 3: Epic 3 - Term planning
+- Sprint 4: Epic 4 - Degree progress tracking
+- Sprint 5: Epic 5 - Advisor Review
+
+# 9. Open Questions
+- Do we have a preferred webhost, or is this going to be run from a local server?
+- How much data about each class do we need to track? (time slot conflicts, multiple teachers/classrooms available, seat number and availability?)
+- Is the splash/welcome/home page in-scope?
+- Is there an existing framework that we’re starting from, or do we need to set up the basic web environment from scratch? (database, preferred plugins et webpacks, is there a home screen already etc.)
+- ADA compliance? (screen-reader support)
+- Number of users? How many users will the application need to support?
 
 
 10. Approval

@@ -9,3 +9,4 @@ test('health endpoint reports app and database up', function () {
         'database' => 'up',
     ]);
 });
+

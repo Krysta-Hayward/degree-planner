@@ -7,7 +7,10 @@ Route::get('/', function () {
 });
 
 Route::get('/health', function () {
+    DB::connection()->getPdo();
+
     return response()->json([
         'app' => 'up',
+        'database' => 'up',
     ]);
 });

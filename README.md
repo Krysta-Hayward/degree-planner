@@ -1,4 +1,5 @@
 # Degree Planner
+[![CI](https://github.com/Krysta-Hayward/degree-planner/actions/workflows/ci.yaml/badge.svg)](https://github.com/Krysta-Hayward/degree-planner/actions/workflows/ci.yaml)
 
 A web application designed to help college students plan and track their degree progress.
 

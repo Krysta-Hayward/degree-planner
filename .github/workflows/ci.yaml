@@ -25,6 +25,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Generate application key
+        run: php artisan key:generate
+
       - name: Run tests
         run: php artisan test
 

@@ -92,6 +92,7 @@ This project is currently under development as a team school project.
 * Copy testing environment file ```cp .env.testing.example .env.testing```
 * Install dependencies. Make sure you have PHP, Composer, and Docker Desktop installed locally, then run ```composer install```
 * Generate application key ```php artisan key:generate```
+* Generate testing key ```php artisan key:generate --env=testing```
 * Create the SQLite database ```New-Item database/database.sqlite -ItemType File```
 * Run database migrations ```php artisan migrate```
 * Start Docker ```docker compose up -d --build```

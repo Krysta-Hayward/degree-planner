@@ -84,3 +84,21 @@ The following features are not planned for this project:
 ## Project Status
 
 This project is currently under development as a team school project.
+
+## How To Run
+* Clone the GitHub repo (SSH) ```git clone git@github.com:Krysta-Hayward/degree-planner.git```
+* cd into the degree planner ```cd degree-planner```
+* Copy environment file ```cp .env.example .env```
+* Copy testing environment file ```cp .env.testing.example .env.testing```
+* Install dependencies. Make sure you have PHP, Composer, and Docker Desktop installed locally, then run ```composer install```
+* Generate application key ```php artisan key:generate```
+* Create the SQLite database ```New-Item database/database.sqlite -ItemType File```
+* Run database migrations ```php artisan migrate```
+* Start Docker ```docker compose up -d --build```
+* Visit the application ```http://localhost```
+* Visit the health check page ```http://localhost/health```
+* Run tests ```php artisan test```
+* Check Pint ```vendor/bin/pint --test```
+
+## Stop Docker
+* ```docker compose down```

@@ -101,5 +101,21 @@ This project is currently under development as a team school project.
 * Run tests ```php artisan test```
 * Check Pint ```vendor/bin/pint --test```
 
+## Easy copy and paste commands
+```
+git clone git@github.com:Krysta-Hayward/degree-planner.git
+cd degree-planner
+cp .env.example .env
+cp .env.testing.example .env.testing
+composer install
+php artisan key:generate
+php artisan key:generate --env=testing
+New-Item database/database.sqlite -ItemType File
+php artisan migrate
+docker compose up -d --build
+php artisan test
+vendor/bin/pint --test
+```
+
 ## Stop Docker
 * ```docker compose down```

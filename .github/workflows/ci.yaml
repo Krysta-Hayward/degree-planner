@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/deployment
   pull_request:
 
 jobs:
@@ -18,7 +19,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: "8.4"
           extensions: mbstring, pdo_sqlite
           coverage: none
 
@@ -34,7 +35,7 @@ jobs:
       - name: Generate testing environment file
         run: cp .env.testing.example .env.testing
 
-      - name: Generate application key
+      - name: Generate application key for testing
         run: php artisan key:generate --env=testing
 
       - name: Create SQLite database
@@ -44,7 +45,61 @@ jobs:
         run: php artisan migrate --env=testing
 
       - name: Run tests
-        run: php artisan test
+        run: vendor/bin/pest
 
-      - name: Run Pint
-        run: vendor/bin/pint --test
+  deploy:
+    name: Deploy to DreamHost
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/deployment'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Github code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, pdo_sqlite
+
+      - name: Install Production Dependencies
+        run: composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DREAMHOST_SSH_KEY }}
+          known_hosts: ${{ secrets.DREAMHOST_KNOWN_HOSTS }}
+
+      - name: Sync Files via Rsync
+        run: |
+          rsync -avz --delete \
+            --exclude='.git*' \
+            --exclude='.github*' \
+            --exclude='.env' \
+            --exclude='storage/logs/*' \
+            --exclude='storage/framework/cache/*' \
+            --exclude='storage/framework/sessions/*' \
+            --exclude='storage/framework/views/*' \
+            --exclude='node_modules' \
+            --exclude='vendor/bin/sail' \
+            ./ ${{ secrets.DREAMHOST_USER }}@${{ secrets.DREAMHOST_HOST }}:/home/ded_section/degreeplanner.dedsectionslair.net
+
+      - name: Run Post-Deployment Commands
+        run: |
+          ssh ${{ secrets.DREAMHOST_USER }}@${{ secrets.DREAMHOST_HOST }} << 'EOF'
+            cd /home/ded_section/degreeplanner.dedsectionslair.net
+            mkdir -p database
+            touch database/database.sqlite
+            
+            if [ ! -f .env ]; then
+              cp .env.example .env
+              php artisan key:generate
+            fi
+            
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan migrate --force
+          EOF

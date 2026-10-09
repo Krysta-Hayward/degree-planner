@@ -60,7 +60,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4" # Fixed: Synchronized to match project requirements
+          php-version: "8.4"
           extensions: mbstring, pdo_sqlite
 
       - name: Install Production Dependencies
@@ -75,7 +75,7 @@ jobs:
       - name: Sync Files via Rsync
         run: |
           rsync -avz --delete \
-            -e "ssh -o IdentitiesOnly=yes" \
+            -e "ssh -i /home/runner/.ssh/id_github -o IdentitiesOnly=yes" \
             --exclude='.git*' \
             --exclude='.github*' \
             --exclude='.env' \

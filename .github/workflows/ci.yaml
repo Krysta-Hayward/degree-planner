@@ -19,7 +19,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: "8.4"
           extensions: mbstring, pdo_sqlite
           coverage: none
 
@@ -60,7 +60,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'  # Fixed: Synchronized to match project requirements
+          php-version: "8.4" # Fixed: Synchronized to match project requirements
           extensions: mbstring, pdo_sqlite
 
       - name: Install Production Dependencies
@@ -75,6 +75,7 @@ jobs:
       - name: Sync Files via Rsync
         run: |
           rsync -avz --delete \
+            -e "ssh -o IdentitiesOnly=yes" \
             --exclude='.git*' \
             --exclude='.github*' \
             --exclude='.env' \

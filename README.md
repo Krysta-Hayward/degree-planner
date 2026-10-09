@@ -85,6 +85,14 @@ The following features are not planned for this project:
 
 This project is currently under development as a team school project.
 
+## Definition of Done
+* Acceptance criteria met
+* Tests written and passing (php artisan test, vendor/bin/pint --test)
+* Pull request reviewed and approved by at least one teammate
+* CI passing
+* Merged to main and deployed
+* Any documentation the change requires is updated
+
 ## How To Run
 * Clone the GitHub repo (SSH) ```git clone git@github.com:Krysta-Hayward/degree-planner.git```
 * cd into the degree planner ```cd degree-planner```

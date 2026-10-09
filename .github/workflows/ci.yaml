@@ -75,7 +75,7 @@ jobs:
       - name: Sync Files via Rsync
         run: |
           rsync -avz --delete \
-            -e "ssh -i /home/runner/.ssh/id_github -o IdentitiesOnly=yes" \
+            -e "ssh -i /home/runner/.ssh/id_rsa -o IdentitiesOnly=yes" \
             --exclude='.git*' \
             --exclude='.github*' \
             --exclude='.env' \

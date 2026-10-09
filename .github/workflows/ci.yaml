@@ -66,16 +66,22 @@ jobs:
       - name: Install Production Dependencies
         run: composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
 
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.DREAMHOST_SSH_KEY }}
-          known_hosts: ${{ secrets.DREAMHOST_KNOWN_HOSTS }}
+      - name: Setup SSH Credentials
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.DREAMHOST_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
       - name: Sync Files via Rsync
         run: |
           rsync -avz --delete \
-            -e "ssh -i /home/runner/.ssh/id_rsa -o IdentitiesOnly=yes" \
+            -e "ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes" \
             --exclude='.git*' \
             --exclude='.github*' \
             --exclude='.env' \
@@ -89,7 +95,7 @@ jobs:
 
       - name: Run Post-Deployment Commands
         run: |
-          ssh ${{ secrets.DREAMHOST_USER }}@${{ secrets.DREAMHOST_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes ${{ secrets.DREAMHOST_USER }}@${{ secrets.DREAMHOST_HOST }} << 'EOF'
             cd /home/ded_section/degreeplanner.dedsectionslair.net
             mkdir -p database
             touch database/database.sqlite

@@ -14,8 +14,17 @@ return new class extends Migration
         Schema::create('enrolled', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreign('student')->references('id')->in('users');
-            $table->foreign('term')->references('id')->in('terms');
+            $table->integer('student');
+            $table->integer('term');
+
+            $table->foreign('student')
+                ->references('id')
+                ->in('users')
+                ->onUpdate('cascade');
+            $table->foreign('term')
+                ->references('id')
+                ->in('terms')
+                ->onUpdate('cascade');
         });
     }
 

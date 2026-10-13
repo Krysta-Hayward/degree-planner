@@ -15,7 +15,12 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('quarterYear');
-            $table->foreign('course')->references('name')->on('courses');
+            $table->integer('course');
+
+            $table->foreign('course')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade');
         });
     }
 

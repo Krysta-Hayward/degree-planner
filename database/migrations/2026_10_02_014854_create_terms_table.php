@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('terms', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('quarterYear');
+            $table->foreign('course')->references('name')->on('courses');
         });
     }
 

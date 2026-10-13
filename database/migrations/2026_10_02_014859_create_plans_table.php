@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreign('student')->references('id')->in('users');
+            $table->foreign('class')->references('id')->in('terms');
         });
     }
 

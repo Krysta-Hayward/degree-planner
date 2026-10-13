@@ -1,47 +1,39 @@
-LycanArcanist's notepad, delete once it ceases being useful.
+LycanArcanist notepad, delete once it ceases being useful.
 
-Migrations already present;
-  users
-  cache ?
-  jobs ?
-  programs
-  courses
-  terms
-  plans
-  plan
-  course program
-  course prerequisites
+users;
+  add user class (student, advisor, admin)
 
-required fields to implement;
+courses
+  id
+  name
+  credits
 
-  users
-    _id
-    name
-    email
-    status //student? teacher? admin?
-    contextResponsibility //if student; class list. if teacher, student list.
+terms;
+  id
+  quarterYear
+  course FK courses
 
-  courses //aka individual classes
-    _id
-    name //e.g. CIS218
-    prereqs //list of ids or names - self-referencing FOREIGN KEY?!
+plans;
+  id
+  student FK users
+  term FK terms
 
-  programs //a list of terms or quarters
-    _id
-    name //computer programming?
-    term list - FOREIGN KEY?
+course_prerequisites;
+  id
+  course FK courses
+  prereq FK courses
 
-  terms
-    _id
-    class list - FOREIGN KEY?
+students
+  id
+  advisor FK users
+  student FK users
 
-  plans //oh no
-    _id
-    student //the one who made the plan
-    quarter
-    classList
+enrolled;
+  id
+  student FK users
+  term FK terms
 
-cannot continue; discussion required.
-SQLite cannot handle a list as a database entry;
-  foreign key required to reference other tables.
-  holy hells foreign key map just got complicated.
+programs;
+  id
+  name
+  course FK courses

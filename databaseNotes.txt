@@ -1,0 +1,47 @@
+LycanArcanist's notepad, delete once it ceases being useful.
+
+Migrations already present;
+  users
+  cache ?
+  jobs ?
+  programs
+  courses
+  terms
+  plans
+  plan
+  course program
+  course prerequisites
+
+required fields to implement;
+
+  users
+    _id
+    name
+    email
+    status //student? teacher? admin?
+    contextResponsibility //if student; class list. if teacher, student list.
+
+  courses //aka individual classes
+    _id
+    name //e.g. CIS218
+    prereqs //list of ids or names - self-referencing FOREIGN KEY?!
+
+  programs //a list of terms or quarters
+    _id
+    name //computer programming?
+    term list - FOREIGN KEY?
+
+  terms
+    _id
+    class list - FOREIGN KEY?
+
+  plans //oh no
+    _id
+    student //the one who made the plan
+    quarter
+    classList
+
+cannot continue; discussion required.
+SQLite cannot handle a list as a database entry;
+  foreign key required to reference other tables.
+  holy hells foreign key map just got complicated.

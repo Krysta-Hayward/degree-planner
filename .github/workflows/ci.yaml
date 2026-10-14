@@ -96,7 +96,7 @@ jobs:
             --exclude='vendor/bin/sail' \
             ./ ${{ secrets.DREAMHOST_USER }}@${{ secrets.DREAMHOST_HOST }}:/home/ded_section/degreeplanner.dedsectionslair.net
 
-            - name: Run Post-Deployment Commands
+      - name: Run Post-Deployment Commands
         run: |
           ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes ${{ secrets.DREAMHOST_USER }}@${{ secrets.DREAMHOST_HOST }} << 'EOF'
             cd /home/ded_section/degreeplanner.dedsectionslair.net

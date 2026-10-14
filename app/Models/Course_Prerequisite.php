@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course_Prerequisite extends Model
 {
-    //
+    use HasFactory;
+    protected $fillable = ['course','prereq'];
 }

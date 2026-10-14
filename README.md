@@ -120,6 +120,9 @@ php artisan key:generate
 php artisan key:generate --env=testing
 New-Item database/database.sqlite -ItemType File
 php artisan migrate
+//DATABASE TESTING ONLY
+php artisan db:seed
+//END TEST ONLY
 docker compose up -d --build
 php artisan test
 vendor/bin/pint --test

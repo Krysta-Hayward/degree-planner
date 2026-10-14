@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enroll extends Model
 {
-    //
+    use HasFactory;
+    protected $fillable = ['student','term'];
 }

@@ -107,16 +107,16 @@ This project is currently under development as a team school project.
   - Run database migrations ```php artisan migrate```
 * Visit the application ```http://localhost```
 * Visit the health check page ```http://localhost/health```
-* Run tests ```php artisan test```
-* Check Pint ```vendor/bin/pint --test```
+* Run tests ```docker compose exec tests php artisan test```
+* Check Pint ```docker compose exec test vendor/bin/pint --test```
 
 ## Easy copy and paste commands
 ```
 git clone git@github.com:Krysta-Hayward/degree-planner.git
 cd degree-planner
 docker compose up -d --build
-php artisan test
-vendor/bin/pint --test
+docker compose exec test php artisan test
+docker compose exec test vendor/bin/pint --test
 ```
 
 ## Stop Docker

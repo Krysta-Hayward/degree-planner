@@ -84,3 +84,46 @@ The following features are not planned for this project:
 ## Project Status
 
 This project is currently under development as a team school project.
+
+## Definition of Done
+* Acceptance criteria met
+* Tests written and passing (php artisan test, vendor/bin/pint --test)
+* Pull request reviewed and approved by at least one teammate
+* CI passing
+* Merged to main and deployed
+* Any documentation the change requires is updated
+
+## How To Run
+* Clone the GitHub repo (SSH) ```git clone git@github.com:Krysta-Hayward/degree-planner.git```
+* cd into the degree planner ```cd degree-planner```
+* Copy environment file ```cp .env.example .env```
+* Copy testing environment file ```cp .env.testing.example .env.testing```
+* Install dependencies. Make sure you have PHP, Composer, and Docker Desktop installed locally, then run ```composer install```
+* Generate application key ```php artisan key:generate```
+* Generate testing key ```php artisan key:generate --env=testing```
+* Create the SQLite database ```New-Item database/database.sqlite -ItemType File```
+* Run database migrations ```php artisan migrate```
+* Start Docker ```docker compose up -d --build```
+* Visit the application ```http://localhost```
+* Visit the health check page ```http://localhost/health```
+* Run tests ```php artisan test```
+* Check Pint ```vendor/bin/pint --test```
+
+## Easy copy and paste commands
+```
+git clone git@github.com:Krysta-Hayward/degree-planner.git
+cd degree-planner
+cp .env.example .env
+cp .env.testing.example .env.testing
+composer install
+php artisan key:generate
+php artisan key:generate --env=testing
+New-Item database/database.sqlite -ItemType File
+php artisan migrate
+docker compose up -d --build
+php artisan test
+vendor/bin/pint --test
+```
+
+## Stop Docker
+* ```docker compose down```

@@ -1,27 +1,16 @@
+
 services:
     laravel.test:
         build:
-            context: './vendor/laravel/sail/runtimes/8.5'
+            context: .
             dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.5/app'
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
+        image: degree-planner/app
+        entrypoint: ['/bin/bash', '/var/www/html/docker/entrypoint.sh']
         ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            - '${APP_PORT:-80}:8000'
         volumes:
             - '.:/var/www/html'
-        networks:
-            - sail
-        depends_on: {}
-networks:
-    sail:
-        driver: bridge
+            - 'degree-planner-vendor:/var/www/html/vendor'
+
+volumes:
+    degree-planner-vendor:

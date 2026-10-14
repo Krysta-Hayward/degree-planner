@@ -1,0 +1,45 @@
+body {
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+.site-header {
+    padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+nav button {
+    margin: 5px;
+    padding: 10px 15px;
+}
+
+main {
+    width: 100%;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 35px;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+section button {
+    margin: 5px;
+    padding: 10px 15px;
+}

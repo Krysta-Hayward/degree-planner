@@ -2,6 +2,9 @@
 name: User Story
 about: Create a user story for the degree planner
 title: ''
+labels: ''
+assignees: ''
+
 ---
 
 ## Description
@@ -15,3 +18,5 @@ so that [reason/benefit].
 - [ ] 
 - [ ] 
 - [ ] 
+
+## Related Sprint

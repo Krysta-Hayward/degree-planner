@@ -20,7 +20,7 @@ class CourseFactory extends Factory
         return [
             'courseNumber' => fake()->regexify('[A-Z]{3}[1-3]{3}'),
             'name' => fake()->sentence(2),
-            'credits' => fake()->numberBetween(4,6),
+            'credits' => fake()->numberBetween(4, 6),
         ];
     }
 }

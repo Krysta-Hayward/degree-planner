@@ -16,10 +16,10 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->integer('course');
-            
+
             $table->foreign('course')
                 ->references('id')
-                ->in('courses')
+                ->on('courses')
                 ->onUpdate('cascade');
         });
     }

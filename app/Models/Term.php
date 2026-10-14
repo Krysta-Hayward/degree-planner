@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Term extends Model
 {
     use HasFactory;
-    protected $fillable = ['quarterYear','course'];
+
+    protected $fillable = ['quarterYear', 'course'];
 }

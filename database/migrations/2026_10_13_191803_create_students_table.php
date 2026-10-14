@@ -19,11 +19,11 @@ return new class extends Migration
 
             $table->foreign('advisor')
                 ->references('id')
-                ->in('users')
+                ->on('users')
                 ->onUpdate('cascade');
             $table->foreign('student')
                 ->references('id')
-                ->in('users')
+                ->on('users')
                 ->onUpdate('cascade');
         });
     }

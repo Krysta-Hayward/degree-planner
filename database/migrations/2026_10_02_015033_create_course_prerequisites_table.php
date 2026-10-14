@@ -19,11 +19,11 @@ return new class extends Migration
 
             $table->foreign('course')
                 ->references('id')
-                ->in('courses')
+                ->on('courses')
                 ->onUpdate('cascade');
             $table->foreign('prereq')
                 ->references('id')
-                ->in('courses')
+                ->on('courses')
                 ->onUpdate('cascade');
         });
     }

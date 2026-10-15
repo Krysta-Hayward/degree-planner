@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AdminDataController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminDataController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

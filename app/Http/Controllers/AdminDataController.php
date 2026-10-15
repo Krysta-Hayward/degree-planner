@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Schema;
 
 class AdminDataController extends Controller
 {
-    public function index(?string $table = null) {
+    public function index(?string $table = null)
+    {
         $tables = [
             'users',
             'programs',

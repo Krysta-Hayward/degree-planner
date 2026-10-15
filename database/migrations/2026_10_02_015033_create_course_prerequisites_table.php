@@ -14,6 +14,17 @@ return new class extends Migration
         Schema::create('course_prerequisites', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->integer('course');
+            $table->integer('prereq');
+
+            $table->foreign('course')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade');
+            $table->foreign('prereq')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade');
         });
     }
 

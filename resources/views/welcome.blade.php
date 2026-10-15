@@ -18,6 +18,9 @@
             <button>Home</button>
             <button>Programs</button>
             <button>Courses</button>
+
+            <button class="admin-links"><a href="{{ route('admin.dashboard') }}">Admin Dashboard</a></button>
+            <button class="admin-links"><a href="{{ route('admin.data') }}">Database Overview</a></button>
         </nav>
     </header>
 

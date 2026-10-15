@@ -12,8 +12,8 @@
     <header class="site-header">
         <div class="logo">Degree Planner</div>
         <nav>
-            <a href="/">Home</a>
-            <a href="{{ route('admin.data') }}">Database Overview</a>
+            <button class="admin-links"><a href="/">Home</a></button>
+            <button class="admin-links"><a href="{{ route('admin.data') }}">Database Overview</a></button>
         </nav>
     </header>
 

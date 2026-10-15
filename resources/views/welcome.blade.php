@@ -15,9 +15,12 @@
         <div class="logo">Degree Planner</div>
 
         <nav>
-            <button>Home</button>
-            <button>Programs</button>
-            <button>Courses</button>
+            <button class="button-links"><a href="/">Home</a></button>
+            <button class="button-links">Programs</button>
+            <button class="button-links">Courses</button>
+
+            <button class="button-links"><a href="{{ route('admin.dashboard') }}">Admin Dashboard</a></button>
+            <button class="button-links"><a href="{{ route('admin.data') }}">Database Overview</a></button>
         </nav>
     </header>
 

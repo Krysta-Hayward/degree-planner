@@ -121,3 +121,43 @@ docker compose exec test vendor/bin/pint --test
 
 ## Stop Docker
 * ```docker compose down```
+
+## 🚀 Deployment & CI/CD (DreamHost Platform)
+
+The Degree Planner skeleton application is deployed to our team production hosting environment on DreamHost.
+
+### 🌐 Live Public URL
+- **Application Link:** [degreeplanner.dedsectionslair.net]
+- *Note: This deployment link is pinned in our team **Slack** channel for continuous grading and validation.*
+
+### 🛠️ Deployment Steps & Automation
+
+#### Option A: Automated Rollout Profile (On Merge to Main)
+Our workflow leverages GitHub Actions pipelines to fully automate code promotion directly to our DreamHost infrastructure:
+1. When a Pull Request (PR) is approved and merged into the `main` branch, a GitHub Action automatically triggers.
+2. The pipeline executes test suites (`php artisan test`), validates code styling via Pint, and securely syncs the production state to the DreamHost live environment.
+
+#### Option B: Manual Production Deployment Steps
+If a manual code refresh or database synchronization is required directly on the host server:
+1. Connect to the DreamHost production server via secure terminal shell:
+   ```bash
+   ssh your_dreamhost_user@your-server-ip
+   ```
+2. Navigate into your live application deployment root folder and execute the optimization hooks:
+   ```bash
+   cd ~/your-domain-folder.com
+   
+   # Pull down the latest approved codebase
+   git pull origin main
+   
+   # Sync production dependency frameworks
+   composer install --no-dev --optimize-autoloader
+   
+   # Apply final database structural updates
+   php artisan migrate --force
+   
+   # Build optimized framework cache matrices
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```

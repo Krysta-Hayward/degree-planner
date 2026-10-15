@@ -43,3 +43,34 @@ section button {
     margin: 5px;
     padding: 10px 15px;
 }
+
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid #eeeeee;
+    text-align: left;
+}
+
+th {
+    background: #f4f6f9;
+}
+
+td {
+    background: white;
+}
+
+td a {
+    color: #356ac3;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}

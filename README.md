@@ -96,34 +96,68 @@ This project is currently under development as a team school project.
 ## How To Run
 * Clone the GitHub repo (SSH) ```git clone git@github.com:Krysta-Hayward/degree-planner.git```
 * cd into the degree planner ```cd degree-planner```
-* Copy environment file ```cp .env.example .env```
-* Copy testing environment file ```cp .env.testing.example .env.testing```
-* Install dependencies. Make sure you have PHP, Composer, and Docker Desktop installed locally, then run ```composer install```
-* Generate application key ```php artisan key:generate```
-* Generate testing key ```php artisan key:generate --env=testing```
-* Create the SQLite database ```New-Item database/database.sqlite -ItemType File```
-* Run database migrations ```php artisan migrate```
 * Start Docker ```docker compose up -d --build```
+* Building Docker runs these commands:
+  - Copy environment file ```cp .env.example .env```
+  - Copy testing environment file ```cp .env.testing.example .env.testing```
+  - Install dependencies. Make sure you have PHP, Composer, and Docker Desktop installed locally, then run ```composer install```
+  - Generate application key ```php artisan key:generate```
+  - Generate testing key ```php artisan key:generate --env=testing```
+  - Create the SQLite database ```New-Item database/database.sqlite -ItemType File```
+  - Run database migrations ```php artisan migrate```
 * Visit the application ```http://localhost```
 * Visit the health check page ```http://localhost/health```
-* Run tests ```php artisan test```
-* Check Pint ```vendor/bin/pint --test```
+* Run tests ```docker compose exec tests php artisan test```
+* Check Pint ```docker compose exec test vendor/bin/pint --test```
 
 ## Easy copy and paste commands
 ```
 git clone git@github.com:Krysta-Hayward/degree-planner.git
 cd degree-planner
-cp .env.example .env
-cp .env.testing.example .env.testing
-composer install
-php artisan key:generate
-php artisan key:generate --env=testing
-New-Item database/database.sqlite -ItemType File
-php artisan migrate
 docker compose up -d --build
-php artisan test
-vendor/bin/pint --test
+docker compose exec test php artisan test
+docker compose exec test vendor/bin/pint --test
 ```
 
 ## Stop Docker
 * ```docker compose down```
+
+## 🚀 Deployment & CI/CD (DreamHost Platform)
+
+The Degree Planner skeleton application is deployed to our team production hosting environment on DreamHost.
+
+### 🌐 Live Public URL
+- **Application Link:** [degreeplanner.dedsectionslair.net]
+- *Note: This deployment link is pinned in our team **Slack** channel for continuous grading and validation.*
+
+### 🛠️ Deployment Steps & Automation
+
+#### Option A: Automated Rollout Profile (On Merge to Main)
+Our workflow leverages GitHub Actions pipelines to fully automate code promotion directly to our DreamHost infrastructure:
+1. When a Pull Request (PR) is approved and merged into the `main` branch, a GitHub Action automatically triggers.
+2. The pipeline executes test suites (`php artisan test`), validates code styling via Pint, and securely syncs the production state to the DreamHost live environment.
+
+#### Option B: Manual Production Deployment Steps
+If a manual code refresh or database synchronization is required directly on the host server:
+1. Connect to the DreamHost production server via secure terminal shell:
+   ```bash
+   ssh your_dreamhost_user@your-server-ip
+   ```
+2. Navigate into your live application deployment root folder and execute the optimization hooks:
+   ```bash
+   cd ~/your-domain-folder.com
+   
+   # Pull down the latest approved codebase
+   git pull origin main
+   
+   # Sync production dependency frameworks
+   composer install --no-dev --optimize-autoloader
+   
+   # Apply final database structural updates
+   php artisan migrate --force
+   
+   # Build optimized framework cache matrices
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```

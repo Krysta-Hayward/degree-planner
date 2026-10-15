@@ -1,3 +1,4 @@
+/* Welcome Screen/Main */
 body {
     min-height: 100%;
     width: 100%;
@@ -44,7 +45,7 @@ section button {
     padding: 10px 15px;
 }
 
-
+/* Database Overview */
 table {
     width: 90%;
     border-collapse: collapse;
@@ -73,4 +74,78 @@ td a {
 
 td a:hover {
     text-decoration: underline;
+}
+
+/* Admin Dashboard */
+.admin-layout {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.admin-sidebar {
+    flex: 0 0 220px;
+    padding: 25px 20px;
+    background: #f1f1f1;
+    text-align: left;
+}
+
+.admin-sidebar h2 {
+    font-size: 20px;
+}
+
+.admin-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.admin-sidebar a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.admin-sidebar a:hover,
+.admin-sidebar a.active {
+    background: #ddd;
+}
+
+.admin-content {
+    flex: 1;
+    min-width: 0;
+    padding: 35px;
+    text-align: left;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+
+.dashboard-card {
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+}
+
+.dashboard-card h3 {
+    margin-top: 0;
+}
+
+.record-count {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.dashboard-card a {
+    color: #333;
 }

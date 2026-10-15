@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDataController;
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,3 +18,5 @@ Route::get('/health', function () {
 });
 
 Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
+
+Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');

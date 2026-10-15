@@ -13,6 +13,7 @@
         <div class="logo">Degree Planner</div>
         <nav>
             <button class="admin-links"><a href="/">Home</a></button>
+            <button class="admin-links"><a href="{{ route('admin.dashboard') }}">Admin Dashboard</a></button>
             <button class="admin-links"><a href="{{ route('admin.data') }}">Database Overview</a></button>
         </nav>
     </header>

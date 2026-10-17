@@ -19,6 +19,7 @@ jobs:
           host: ${{ secrets.DREAMHOST_HOST }}
           username: ${{ secrets.DREAMHOST_USER }}
           key: ${{ secrets.DREAMHOST_SSH_KEY }}
+          disable_host_key_checking: true
           fingerprint: ${{ secrets.DREAMHOST_KNOWN_HOSTS }}
           script: |
             cd ~/degreeplanner.dedsectionslair.net

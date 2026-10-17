@@ -116,6 +116,7 @@ jobs:
             
             /usr/local/php84/bin/php artisan config:cache
             /usr/local/php84/bin/php artisan route:cache
+            /usr/local/php84/bin/php artisan view:clear
             /usr/local/php84/bin/php artisan view:cache
             /usr/local/php84/bin/php artisan migrate --force
           EOF

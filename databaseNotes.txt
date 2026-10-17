@@ -1,0 +1,39 @@
+LycanArcanist notepad, delete once it ceases being useful.
+
+users;
+  add user class (student, advisor, admin)
+
+courses
+  id
+  name
+  credits
+
+terms;
+  id
+  quarterYear
+  course FK courses
+
+plans;
+  id
+  student FK users
+  term FK terms
+
+course_prerequisites;
+  id
+  course FK courses
+  prereq FK courses
+
+students
+  id
+  advisor FK users
+  student FK users
+
+enrolled;
+  id
+  student FK users
+  term FK terms
+
+programs;
+  id
+  name
+  course FK courses

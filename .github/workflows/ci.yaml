@@ -79,6 +79,12 @@ jobs:
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
+          echo "Configured host: $DREAMHOST_HOST"
+          echo "Matching known_hosts entries:"
+          ssh-keygen -F "$DREAMHOST_HOST" -f ~/.ssh/known_hosts || true
+          echo "Known hosts file:"
+          cat ~/.ssh/known_hosts
+
       - name: Sync Files via Rsync
         run: |
           rsync -avz --delete \

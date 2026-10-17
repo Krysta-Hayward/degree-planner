@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Degree Planner - Deployment test!!!</title>
+    <title>Degree Planner</title>
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
@@ -12,7 +12,7 @@
 <body>
 
     <header class="site-header">
-        <div class="logo">Degree Planner</div>
+        <div class="logo">Degree Planner - Automatic Deployment Working!</div>
 
         <nav>
             <button class="button-links"><a href="/">Home</a></button>

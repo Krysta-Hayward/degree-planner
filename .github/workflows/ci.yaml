@@ -50,7 +50,7 @@ jobs:
   deploy:
     name: Deploy to DreamHost
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/deployment'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -82,7 +82,7 @@ jobs:
       - name: Sync Files via Rsync
         run: |
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes" \
+            -e "ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" \
             --exclude='.git*' \
             --exclude='.github*' \
             --exclude='.env' \

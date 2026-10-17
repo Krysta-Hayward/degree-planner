@@ -12,7 +12,7 @@
 <body>
 
     <header class="site-header">
-        <div class="logo">Degree Planner - Automatic Deployment Working!</div>
+        <div class="logo">Degree Planner</div>
 
         <nav>
             <button class="button-links"><a href="/">Home</a></button>

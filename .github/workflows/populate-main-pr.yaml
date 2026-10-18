@@ -1,0 +1,143 @@
+name: Populate Main PR Description
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  populate-description:
+    if: github.event.pull_request.head.ref == 'develop'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Gather merged PR descriptions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr list \
+            --repo "$REPO" \
+            --state merged \
+            --base main \
+            --head develop \
+            --limit 100 \
+            --json mergedAt \
+            > main-prs.json
+
+          gh pr list \
+            --repo "$REPO" \
+            --state merged \
+            --base develop \
+            --limit 100 \
+            --json number,title,body,url,mergedAt \
+            > develop-prs.json
+
+          cat > populate_pr.py <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+
+          with open("main-prs.json", encoding="utf-8") as f:
+              main_prs = json.load(f)
+
+          with open("develop-prs.json", encoding="utf-8") as f:
+              develop_prs = json.load(f)
+
+          last_main_merge = max(
+              (p["mergedAt"] for p in main_prs if p["mergedAt"]),
+              default="1970-01-01T00:00:00Z"
+          )
+
+          changes = [
+              pr for pr in develop_prs
+              if pr["mergedAt"] and pr["mergedAt"] > last_main_merge
+          ]
+          changes.sort(key=lambda p: p["mergedAt"])
+
+          linked_issues = set()
+
+          def extract_section(body, heading):
+              pattern = (
+                  r"(?ims)^\s*#{1,3}\s*" + re.escape(heading) +
+                  r"\s*\n(.*?)(?=^\s*#{1,3}\s|\Z)"
+              )
+              match = re.search(pattern, body or "")
+              return match.group(1).strip() if match else ""
+
+          def clean_what_changed(body):
+              body = re.split(
+                  r"(?im)^\s*#{1,3}\s*(How to Test|Linked Issues?)\s*$",
+                  body or "",
+                  maxsplit=1
+              )[0]
+
+              body = re.sub(
+                  r"(?im)^\s*#{1,3}\s*"
+                  r"(What Changed|Describe your changes in detail)\s*$",
+                  "",
+                  body
+              )
+
+              return body.strip()
+
+          sections = [
+              "# What Changed",
+              "This release includes the following merged pull requests."
+          ]
+
+          if changes:
+              for pr in changes:
+                  body = pr.get("body") or ""
+
+                  what_changed = clean_what_changed(body)
+                  how_to_test = extract_section(body, "How to Test")
+
+                  if not what_changed:
+                      what_changed = "_No description provided._"
+
+                  for issue in re.findall(
+                      r"(?i)(?:#|issues?/)(\d+)", body
+                  ):
+                      linked_issues.add(issue)
+
+                  sections.extend([
+                      f"## PR #{pr['number']}: {pr['title']}",
+                      f"**Pull request:** {pr['url']}",
+                      "### What Changed",
+                      what_changed,
+                      "### How to Test",
+                      how_to_test or "No testing instructions provided."
+                  ])
+          else:
+              sections.append(
+                  "No merged PRs into develop since the last "
+                  "develop-to-main merge."
+              )
+
+          sections.extend(["", "# Linked Issues"])
+
+          if linked_issues:
+              for issue in sorted(linked_issues, key=int):
+                  sections.append(f"- #{issue}")
+          else:
+              sections.append("No linked issues found in the PR descriptions.")
+
+          with open("pr-body.md", "w", encoding="utf-8") as f:
+              f.write("\n\n".join(sections))
+
+          subprocess.run([
+              "gh", "pr", "edit", os.environ["PR_NUMBER"],
+              "--repo", os.environ["REPO"],
+              "--body-file", "pr-body.md"
+          ], check=True)
+          PY
+
+          python3 populate_pr.py

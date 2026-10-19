@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function showLogin() {
+    public function showLogin()
+    {
         return view('login');
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -36,7 +38,8 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
 
         $request->session()->invalidate();
@@ -45,4 +48,3 @@ class AuthController extends Controller
         return redirect('/');
     }
 }
-

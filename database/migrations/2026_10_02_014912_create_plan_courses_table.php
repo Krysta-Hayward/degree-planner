@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('plan_courses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('term_id')->constrained()->cascadeOnDelete();
+            $table->string('status')->default('planned');
+            $table->string('grade')->nullable();
             $table->timestamps();
+            $table->unique(['pland_id', 'course_id']);
         });
     }
 

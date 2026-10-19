@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constained()->cascadeOnDelete();
+            $table->foreignId('program_id')->contrsained()->cascadeonDelete();
+            $table->string('name');
             $table->timestamps();
         });
     }

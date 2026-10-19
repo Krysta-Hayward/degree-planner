@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('code')->unique();
+            $table->unsignedInteger('total_credits');
             $table->timestamps();
         });
     }

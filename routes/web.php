@@ -23,6 +23,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
-    Route::get('/admin/data/{table}', [AdminDataController::class, 'index'])->name('admin.data');
+    Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });

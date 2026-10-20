@@ -13,10 +13,18 @@ return new class extends Migration
     {
         Schema::create('course_prerequisites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('prerequisite_id')->constrained('courses')->cascadeOnDelete();
             $table->timestamps();
-            $table->unique(['course_id', 'prerequisite_id']);
+            $table->integer('course');
+            $table->integer('prereq');
+
+            $table->foreign('course')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade');
+            $table->foreign('prereq')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade');
         });
     }
 

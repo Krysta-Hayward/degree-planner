@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('terms', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->date('start_on');
-            $table->date('end_on');
             $table->timestamps();
+            $table->string('quarterYear');
+            $table->integer('course');
+
+            $table->foreign('course')
+                ->references('id')
+                ->on('courses')
+                ->onUpdate('cascade');
         });
     }
 

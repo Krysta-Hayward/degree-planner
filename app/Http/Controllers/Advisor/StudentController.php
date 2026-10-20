@@ -12,4 +12,11 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
     //
+    public function index(){
+        return 'Hello world from student list';
+    }
+
+    public function show(User $student){
+        return 'Hello world from studen: ' . $student->name;
+    }
 }

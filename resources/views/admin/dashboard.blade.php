@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Degree Planner</title>
+@section('title', 'Admin Dashboard - Degree Planner')
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-</head>
-
-<body>
+@section('content')
     <div class="admin-layout">
         <aside class="admin-sidebar">
             <h2>Degree Planner</h2>
@@ -37,6 +30,4 @@
             </div>
         </main>
     </div>
-</body>
-
-</html>
+@endsection

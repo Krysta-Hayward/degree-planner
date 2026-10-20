@@ -14,9 +14,11 @@ class AdvisorSeeder extends Seeder
     public function run(): void
     {
         // Advisors
-        User::updateOrCreate(
-            ['email' => 'advisor@example.com'],
-             ['name' => 'Test Advisor', 'password' => Hash::make('password'), 'role' => 'advisor']
-        );
+        User::factory()->create([
+        'name' => 'Test Advisor',
+        'email' => 'advisor@example.com',
+        'permission' => 'advisor',
+        'role' => 'advisor',
+        ]);
     }
 }

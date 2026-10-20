@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminDataController;
-use App\Http\Controllers\Advisor;
+use App\Http\Middleware\AdvisorMiddleware;
+use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
+use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
 use Illuminate\Support\Facades\Route;
 
 // Home route
@@ -25,20 +27,11 @@ Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name(
 Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
 // Advisor routes
-Route::middleware(['auth', 'advisor'])
-    ->prefix('advisor')
-    ->name('advisor.')
-    ->group(function (){
-        Route::get('/', [Advisor\DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/students', [Advisor\StudentController::class, 'index'])->name('students.index');
-    });
+Route::middleware(['auth', AdvisorMiddleware::class])->group(function () {
+    Route::get('/advisor', [AdvisorDashboardController::class, 'index'])->name('advisor.dashboard');
+    Route::get('/advisor/students', [AdvisorStudentController::class, 'index'])->name('advisor.students.index');
+});
 
 // Student routes
 
-// Temp route
-if (app()->isLocal()) {
-    Route::get('/dev/login-advisor', function () {
-        auth()->login(\App\Models\User::where('email', 'advisor@example.com')->firstOrFail());
-        return redirect()->route('advisor.dashboard');
-    });
-}
+

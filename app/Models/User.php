@@ -31,9 +31,8 @@ class User extends Authenticatable
     }
 
     // Role helpers
-    public function isAdvisor():bool
+    public function isAdvisor(): bool
     {
         return $this->role === 'advisor';
     }
-
 }

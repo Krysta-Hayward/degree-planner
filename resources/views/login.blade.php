@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1>Admin Login</h1>
+    <h1>Login</h1>
 
     @if ($errors->any())
         <p>{{  $errors->first() }}</p>

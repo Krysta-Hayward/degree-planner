@@ -33,7 +33,7 @@ class AuthController extends Controller
             Auth::logout();
 
             return back()->withErrors([
-                'email' => 'You do not have access.',
+                'email' => 'You do not have admin access.',
             ]);
         }
 

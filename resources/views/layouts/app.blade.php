@@ -18,11 +18,6 @@
             <button class="button-links">Courses</button>
 
             @auth
-                @if (auth()->user()->role === 'student')
-                    <button class="button-links">
-                        <a href="{{ route('student.dashboard') }}">My Degree Plan</a>
-                    </button>
-                @endif
                 @if (auth()->user()->role === 'admin')
                     <button class="button-links">
                         <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>

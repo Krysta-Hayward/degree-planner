@@ -5,7 +5,7 @@
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/student.css') }}">
 
-    <div class="student-page">
+    <div class="student-page" id="student-top">
         <h1>My Degree Plan</h1>
         <p>Welcome, {{ $user->name }}.</p>
 
@@ -26,7 +26,7 @@
                 <select id="program" name="program" required>
                     <option value="">Select a program</option>
                     @foreach ($programs as $name)
-                        <option value="{{ $name }}" @selected($user->program === $name)>{{ $name }}</option>
+                        <option value="{{ $name }}">{{ $name }}</option>
                     @endforeach
                 </select>
                 <button type="submit">Save Program</button>
@@ -34,6 +34,12 @@
 
             @if ($user->program)
                 <p>Selected program: <strong>{{ $user->program }}</strong></p>
+
+                <form method="POST" action="{{ route('student.program.clear') }}" class="inline-form">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit">Clear Program</button>
+                </form>
             @else
                 <p>You have not picked a program yet.</p>
             @endif
@@ -68,8 +74,15 @@
                                 </td>
                                 <td>
                                     @forelse ($terms->get($course->id, collect()) as $term)
+                                        @php
+                                            $missing = $prerequisites->get($course->id, collect())
+                                                ->reject(fn ($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
+                                                ->pluck('courseNumber');
+                                        @endphp
                                         @if (in_array($term->id, $plannedTermIds))
                                             {{ $term->quarterYear }} (planned)
+                                        @elseif ($missing->isNotEmpty())
+                                            {{ $term->quarterYear }}: add {{ $missing->join(', ') }} first
                                         @else
                                             <form method="POST" action="{{ route('student.plan.add') }}" class="inline-form">
                                                 @csrf
@@ -173,5 +186,13 @@
 
             <p>Total planned credits: <strong>{{ $planned->sum('credits') }}</strong></p>
         </section>
+
+        <script>
+            // start at the top after saving, adding or removing
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+            window.scrollTo(0, 0);
+        </script>
     </div>
 @endsection

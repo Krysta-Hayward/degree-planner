@@ -86,7 +86,7 @@ test('a student can pick a program', function () {
 
     $this->actingAs($student)
         ->post('/student/program', ['program' => 'Test Program'])
-        ->assertRedirect(route('student.dashboard'));
+        ->assertRedirect(route('student.dashboard').'#student-top');
 
     expect($student->fresh()->program)->toBe('Test Program');
 });
@@ -203,4 +203,103 @@ test('a student cannot see another student program map', function () {
         ->get('/student')
         ->assertOk()
         ->assertSee('Your program map is empty');
+});
+
+test('a student can clear their program and program map', function () {
+    $course = makeCourse('TEST 101');
+    $term = makeTerm($course);
+    $student = makeUser('student', 'student-test@example.com', 'Test Program');
+    DB::table('plans')->insert([
+        'student' => $student->id,
+        'class' => $term,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $this->actingAs($student)
+        ->delete('/student/program')
+        ->assertRedirect(route('student.dashboard').'#student-top');
+
+    expect($student->fresh()->program)->toBeNull();
+    expect(DB::table('plans')->where('student', $student->id)->count())->toBe(0);
+});
+
+test('a class cannot be added until its prerequisite is on the program map', function () {
+    $intro = makeCourse('PREQ 101', 'Intro Course');
+    $next = makeCourse('PREQ 201', 'Next Course');
+    $introTerm = makeTerm($intro);
+    $nextTerm = makeTerm($next);
+    makeProgram('Test Program', $intro);
+    makeProgram('Test Program', $next);
+    DB::table('course_prerequisites')->insert([
+        'course' => $next,
+        'prereq' => $intro,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    $student = makeUser('student', 'student-test@example.com', 'Test Program');
+
+    // blocked while the prerequisite is missing
+    $this->actingAs($student)->post('/student/plan', ['term' => $nextTerm])->assertSessionHasErrors('term');
+    expect(DB::table('plans')->where('student', $student->id)->count())->toBe(0);
+
+    // allowed once the prerequisite is planned
+    $this->actingAs($student)->post('/student/plan', ['term' => $introTerm]);
+    $this->actingAs($student)->post('/student/plan', ['term' => $nextTerm])->assertSessionHasNoErrors();
+    expect(DB::table('plans')->where('student', $student->id)->count())->toBe(2);
+});
+
+test('a prerequisite cannot be removed while a class that needs it is planned', function () {
+    $intro = makeCourse('PREQ 101', 'Intro Course');
+    $next = makeCourse('PREQ 201', 'Next Course');
+    $introTerm = makeTerm($intro);
+    $nextTerm = makeTerm($next);
+    makeProgram('Test Program', $intro);
+    makeProgram('Test Program', $next);
+    DB::table('course_prerequisites')->insert([
+        'course' => $next,
+        'prereq' => $intro,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    $student = makeUser('student', 'student-test@example.com', 'Test Program');
+    $introPlan = DB::table('plans')->insertGetId([
+        'student' => $student->id,
+        'class' => $introTerm,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    DB::table('plans')->insert([
+        'student' => $student->id,
+        'class' => $nextTerm,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $this->actingAs($student)->delete("/student/plan/{$introPlan}")->assertSessionHasErrors('plan');
+
+    expect(DB::table('plans')->where('id', $introPlan)->exists())->toBeTrue();
+});
+
+test('choosing a different program clears the program map but the same program keeps it', function () {
+    $course = makeCourse('TEST 101');
+    $other = makeCourse('OTHR 101');
+    $term = makeTerm($course);
+    makeProgram('Test Program', $course);
+    makeProgram('Other Program', $other);
+    $student = makeUser('student', 'student-test@example.com', 'Test Program');
+    DB::table('plans')->insert([
+        'student' => $student->id,
+        'class' => $term,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    // saving the same program again keeps the map
+    $this->actingAs($student)->post('/student/program', ['program' => 'Test Program']);
+    expect(DB::table('plans')->where('student', $student->id)->count())->toBe(1);
+
+    // switching programs starts the map over
+    $this->actingAs($student)->post('/student/program', ['program' => 'Other Program']);
+    expect(DB::table('plans')->where('student', $student->id)->count())->toBe(0);
 });

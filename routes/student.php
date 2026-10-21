@@ -11,6 +11,7 @@ Route::middleware(['auth', StudentMiddleware::class])
     ->group(function () {
         Route::get('/', [StudentController::class, 'dashboard'])->name('dashboard');
         Route::post('/program', [StudentController::class, 'selectProgram'])->name('program.select');
+        Route::delete('/program', [StudentController::class, 'clearProgram'])->name('program.clear');
         Route::post('/plan', [StudentController::class, 'addToPlan'])->name('plan.add');
         Route::delete('/plan/{plan}', [StudentController::class, 'removeFromPlan'])->name('plan.remove');
     });

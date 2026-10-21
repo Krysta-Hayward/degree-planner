@@ -20,13 +20,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
             'permission' => 'admin',
+            'role' => 'admin'
         ]); // that's one guaranteed admin account for test purposes.
 
         User::factory()->create([
             'name' => 'Test Advisor',
             'email' => 'advisor@example.com',
             'permission' => 'advisor',
-            'role' => 'advisor',
+            'role' => 'advisor'
         ]); // one guaranteed advisor account for testing the advisor section.
         User::factory(9)->create(); // and a total of ten to play with for now.
 

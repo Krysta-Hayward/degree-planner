@@ -4,7 +4,7 @@
 
 @section('content')
     <section>
-        <h1>Plan Your Degree</h1>
+        <h1>Plan Your Degree </h1>
 
         <p>
             Organize your courses, track your progress, and plan

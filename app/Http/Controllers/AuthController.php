@@ -26,6 +26,10 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard');
             }
 
+            if (Auth::user()->role === 'student') {
+                return redirect()->route('student.dashboard');
+            }
+
             Auth::logout();
 
             return back()->withErrors([

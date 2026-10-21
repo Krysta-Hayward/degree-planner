@@ -16,11 +16,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // admin example user
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'permission' => 'admin',
-        ]); // that's one guaranteed admin account for test purposes.
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => 'Password123!',
+            'role' => 'admin',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Advisor User',
+            'email' => 'advisor@example.com',
+            'password' => 'Password123!',
+            'role' => 'advisor',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Student User',
+            'email' => 'student@example.com',
+            'password' => 'Password123!',
+            'role' => 'student',
+        ]);
+
         User::factory(9)->create(); // and a total of ten to play with for now.
 
         Course::factory(25)->create(); // TODO: manually rip class list for Programs!

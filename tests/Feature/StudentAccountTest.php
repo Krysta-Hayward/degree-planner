@@ -14,7 +14,6 @@ function makeUser(string $role, string $email, ?string $program = null): User
         'name' => ucfirst($role).' Test',
         'email' => $email,
         'password' => Hash::make('password'),
-        'permission' => $role,
         'role' => $role,
         'program' => $program,
         'created_at' => now(),

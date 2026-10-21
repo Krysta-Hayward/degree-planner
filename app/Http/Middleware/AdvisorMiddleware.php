@@ -15,9 +15,11 @@ class AdvisorMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(! $request->user()?->isAdvisor()){
+        $role = $request->user()?->role;
+
+        if ($role !== 'advisor' && $role !== 'admin') {
             abort(403);
-        }    
+        }
 
         return $next($request);
     }

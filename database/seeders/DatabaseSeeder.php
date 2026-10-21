@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,26 +18,32 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // admin example user
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => 'Password123!',
-            'role' => 'admin',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('Password123!'),
+                'role' => 'admin'
+            ],
+        );
 
-        User::factory()->create([
-            'name' => 'Advisor User',
-            'email' => 'advisor@example.com',
-            'password' => 'Password123!',
-            'role' => 'advisor',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'advisor@example.com'],
+            [
+                'name' => 'Advisor User',
+                'password' => Hash::make('Password123!'),
+                'role' => 'advisor'
+            ],
+        );
 
-        User::factory()->create([
-            'name' => 'Student User',
-            'email' => 'student@example.com',
-            'password' => 'Password123!',
-            'role' => 'student',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'student@example.com'],
+            [
+                'name' => 'Student User',
+                'password' => Hash::make('Password123!'),
+                'role' => 'student'
+            ],
+        );
 
         User::factory(9)->create(); // and a total of ten to play with for now.
 

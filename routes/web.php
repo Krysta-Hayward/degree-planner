@@ -30,6 +30,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin routes
+require __DIR__.'/student.php';
+
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');

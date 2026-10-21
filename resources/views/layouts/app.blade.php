@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Degree Planner')</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
 </head>
 
 <body>
@@ -24,6 +25,21 @@
                     </button>
                     <button class="button-links">
                         <a href="{{ route('admin.data') }}">Database Overview</a>
+                    </button>
+                @endif
+
+                                @if (auth()->user()->role === 'advisor')
+                    <button class="button-links">
+                        <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
+                    </button>
+                    <button class="button-links">
+                        <a href="{{ route('advisor.students.index') }}">Students</a>
+                    </button>
+                @endif
+
+                @if (auth()->user()->role === 'student')
+                    <button class="button-links">
+                        <a href="{{ route('student.dashboard') }}">My Degree Plan</a>
                     </button>
                 @endif
 

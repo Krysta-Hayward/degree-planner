@@ -17,11 +17,11 @@ Rules:
 
 Files (all new, to keep merge conflicts away from other stories):
 `routes/student.php`, `StudentController`, `StudentMiddleware`, `resources/views/student/`, `public/css/student.css`,
-migration `add_program_to_users_table`, `StudentDemoSeeder`, `tests/Feature/StudentAccountTest.php`.
+migration `add_program_to_users_table`, `StudentSeeder`, `tests/Feature/StudentAccountTest.php`.
 
 Small edits to shared files: one `require` line in `routes/web.php`, the student redirect in `AuthController`, one nav link in `layouts/app.blade.php`.
 
-Demo account: `php artisan db:seed --class=StudentDemoSeeder` then log in as `student@example.com` / `password`.
+Test login: `php artisan db:seed --class=StudentSeeder` then log in as `student@example.com` / `password`.
 
 ## How it works (for the sprint demo)
 
@@ -39,4 +39,4 @@ Data: `users.program` (new column), `plans.student` -> users.id, `plans.class` -
 
 Security: forms use `@csrf`, output is escaped by Blade `{{ }}`, and ownership is checked on the server, not just hidden in the page.
 
-Demo order (matches the acceptance criteria): log in as the demo student, see the all-courses table, pick a program, see its required courses and prerequisites, add a class to the map, reload (still there), remove it, then show another student's plan is not visible and the 403 test.
+Order for the sprint review (matches the acceptance criteria): log in as the student, see the all-courses table, pick a program, see its required courses and prerequisites, add a class to the map, reload (still there), remove it, then show another student's plan is not visible and the 403 test.

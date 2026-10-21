@@ -26,10 +26,14 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard');
             }
 
+            if (Auth::user()->role === 'student') {
+                return redirect()->route('student.dashboard');
+            }
+
             Auth::logout();
 
             return back()->withErrors([
-                'email' => 'You do not have admin access.',
+                'email' => 'You do not have access.',
             ]);
         }
 

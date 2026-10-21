@@ -31,6 +31,14 @@
                     @csrf
                     <button class="button-links" type="submit">Log Out</button>
                 </form>
+
+                @auth
+                    <span>
+                        {{ Auth::user()->name }}
+                        ({{ ucfirst(Auth::user()->role) }})
+                    </span>
+                @endauth
+                
             @else
                 <button class="button-links">
                     <a href="{{ route('login') }}">Log In</a>

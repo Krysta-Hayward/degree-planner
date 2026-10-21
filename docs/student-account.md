@@ -47,13 +47,12 @@ App\Models\User::forceCreate([
     'email' => 'student@example.com',
     'password' => 'Password123!',
     'role' => 'student',
-    'permission' => 'student',
 ]);
 
 App\Models\User::select('id', 'name', 'email', 'role')->get();
 ```
 
-The second command lists the users so you can check the student was created. `permission` is a required column on `users`, so it has to be set when the row is created, which is why this uses `forceCreate`.
+The second command lists the users so you can check the student was created. `role` is a required column on `users`, so it has to be set when the row is created, which is why this uses `forceCreate`.
 
 The student also needs courses, programs and terms in the database to have anything to plan with.
 

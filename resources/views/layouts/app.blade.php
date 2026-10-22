@@ -28,7 +28,7 @@
                     </button>
                 @endif
 
-                                @if (auth()->user()->role === 'advisor')
+                @if (auth()->user()->role === 'advisor')
                     <button class="button-links">
                         <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
                     </button>
@@ -54,7 +54,7 @@
                         ({{ ucfirst(Auth::user()->role) }})
                     </span>
                 @endauth
-                
+
             @else
                 <button class="button-links">
                     <a href="{{ route('login') }}">Log In</a>

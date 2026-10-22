@@ -8,11 +8,12 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * The program a student picked is stored by name (it matches programs.name).
      */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('student');
+            $table->string('program')->nullable();
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            $table->dropColumn('program');
         });
     }
 };

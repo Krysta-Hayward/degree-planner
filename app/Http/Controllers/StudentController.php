@@ -1,0 +1,215 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Plan;
+use App\Models\Program;
+use App\Models\Term;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class StudentController extends Controller
+{
+    /**
+     * The student's degree plan page: their program, the required courses
+     * with prerequisites and offered terms, and their own program map.
+     */
+    public function dashboard(Request $request)
+    {
+        $user = $request->user();
+
+        $programs = Program::query()->distinct()->orderBy('name')->pluck('name');
+
+        // every course in the catalog (the story says students see all available courses)
+        $catalog = DB::table('courses')
+            ->orderBy('courseNumber')
+            ->select('id', 'courseNumber', 'name', 'credits')
+            ->get();
+
+        $courseIds = $catalog->pluck('id');
+
+        // prerequisites of every course, grouped by course (one query, not one per row)
+        $prerequisites = DB::table('course_prerequisites')
+            ->join('courses', 'course_prerequisites.prereq', '=', 'courses.id')
+            ->whereIn('course_prerequisites.course', $courseIds)
+            ->select('course_prerequisites.course as course_id', 'courses.id as prereq_id', 'courses.courseNumber', 'courses.name')
+            ->get()
+            ->groupBy('course_id');
+
+        // terms every course is offered, grouped by course
+        $terms = Term::query()
+            ->whereIn('course', $courseIds)
+            ->orderBy('quarterYear')
+            ->get()
+            ->groupBy('course');
+
+        // required courses of the student's chosen program
+        $requirements = collect();
+
+        if ($user->program) {
+            $requiredIds = Program::query()->where('name', $user->program)->pluck('course');
+            $requirements = $catalog->whereIn('id', $requiredIds)->values();
+        }
+
+        // this student's program map (only their own plan rows)
+        $planned = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->join('courses', 'terms.course', '=', 'courses.id')
+            ->where('plans.student', $user->id)
+            ->orderBy('terms.quarterYear')
+            ->orderBy('courses.courseNumber')
+            ->select(
+                'plans.id as plan_id',
+                'terms.id as term_id',
+                'courses.id as course_id',
+                'terms.quarterYear',
+                'courses.courseNumber',
+                'courses.name',
+                'courses.credits'
+            )
+            ->get();
+
+        return view('student.dashboard', [
+            'user' => $user,
+            'programs' => $programs,
+            'catalog' => $catalog,
+            'requirements' => $requirements,
+            'prerequisites' => $prerequisites,
+            'terms' => $terms,
+            'planned' => $planned,
+            'plannedTermIds' => $planned->pluck('term_id')->all(),
+            'plannedCourseIds' => $planned->pluck('course_id')->all(),
+        ]);
+    }
+
+    /**
+     * Save the degree program the student picked.
+     */
+    public function selectProgram(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'program' => ['required', 'string', 'exists:programs,name'],
+        ]);
+
+        $user = $request->user();
+
+        // a different program means the old plan no longer applies
+        if ($user->program !== null && $user->program !== $data['program']) {
+            DB::table('plans')->where('student', $user->id)->delete();
+        }
+
+        $user->program = $data['program'];
+        $user->save();
+
+        return $this->toTop()->with('status', 'Degree program saved.');
+    }
+
+    /**
+     * Clear the student's chosen program and program map so they can start over.
+     */
+    public function clearProgram(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        $user->program = null;
+        $user->save();
+
+        // the old plan belongs to the old program, so start it over too
+        DB::table('plans')->where('student', $user->id)->delete();
+
+        return $this->toTop()->with('status', 'Degree program and program map cleared.');
+    }
+
+    /**
+     * Add a course (a term it is offered) to the student's program map.
+     */
+    public function addToPlan(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'term' => ['required', 'integer', 'exists:terms,id'],
+        ]);
+
+        $user = $request->user();
+
+        // only courses from the student's own program can be planned
+        $inProgram = Term::query()
+            ->where('id', $data['term'])
+            ->whereIn('course', Program::query()->where('name', $user->program)->select('course'))
+            ->exists();
+
+        if (! $inProgram) {
+            return $this->toTop()
+                ->withErrors(['term' => 'That class is not part of your degree program.']);
+        }
+
+        // every prerequisite has to be on the student's program map first
+        $courseId = Term::query()->whereKey($data['term'])->value('course');
+        $missing = $this->missingPrerequisites($user->id, $courseId);
+
+        if ($missing->isNotEmpty()) {
+            return $this->toTop()
+                ->withErrors(['term' => 'Add '.$missing->join(', ').' to your program map first.']);
+        }
+
+        Plan::firstOrCreate([
+            'student' => $user->id,
+            'class' => $data['term'],
+        ]);
+
+        return $this->toTop()->with('status', 'Added to your program map.');
+    }
+
+    /**
+     * Remove a course from the student's program map.
+     */
+    public function removeFromPlan(Request $request, Plan $plan): RedirectResponse
+    {
+        // a student can never change another student's program map
+        abort_if((int) $plan->student !== $request->user()->id, 403);
+
+        // a class that is still on the map may need this one as a prerequisite
+        $courseId = Term::query()->whereKey($plan->class)->value('course');
+        $dependents = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->join('course_prerequisites', 'course_prerequisites.course', '=', 'terms.course')
+            ->join('courses', 'terms.course', '=', 'courses.id')
+            ->where('plans.student', $plan->student)
+            ->where('course_prerequisites.prereq', $courseId)
+            ->pluck('courses.courseNumber');
+
+        if ($dependents->isNotEmpty()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Remove '.$dependents->unique()->join(', ').' first, it needs this class.']);
+        }
+
+        $plan->delete();
+
+        return $this->toTop()->with('status', 'Removed from your program map.');
+    }
+
+    /**
+     * Course numbers of prerequisites the student has not put on their program map yet.
+     */
+    private function missingPrerequisites(int $studentId, int $courseId)
+    {
+        $plannedCourseIds = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->where('plans.student', $studentId)
+            ->pluck('terms.course');
+
+        return DB::table('course_prerequisites')
+            ->join('courses', 'course_prerequisites.prereq', '=', 'courses.id')
+            ->where('course_prerequisites.course', $courseId)
+            ->whereNotIn('course_prerequisites.prereq', $plannedCourseIds)
+            ->orderBy('courses.courseNumber')
+            ->pluck('courses.courseNumber');
+    }
+
+    /**
+     * Send the student back to the top of their plan page after an action.
+     */
+    private function toTop(): RedirectResponse
+    {
+        return redirect(route('student.dashboard').'#student-top');
+    }
+}

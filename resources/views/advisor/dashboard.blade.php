@@ -58,17 +58,11 @@
         <div class="main">
 
             <!-- Page header  -->
-            <header class="header">
+            <header class="page-header">
                 <div class="container">
                     <div>
                         <h1>Advisor Dashboard</h1>
-                        <p class="subtitle">{{ auth()->user()->name }} · {{ auth()->user()->role }}</p>
                     </div>
-                    <!-- Log out Button -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="logout-button">Log out</button>
-            </form>
                 </div>
             </header>
 

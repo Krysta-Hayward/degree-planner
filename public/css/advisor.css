@@ -188,6 +188,13 @@ body {
 }
 
 /*Main Page Right Side*/
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
 
 
 

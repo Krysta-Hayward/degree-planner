@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Degree Planner')</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/theme.js') }}"></script>
 </head>
 
 <body>
@@ -16,6 +17,7 @@
             <button class="button-links"><a href="/">Home</a></button>
             <button class="button-links">Programs</button>
             <button class="button-links">Courses</button>
+            <button class="button-links theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
 
             @auth
                 @if (auth()->user()->role === 'admin')

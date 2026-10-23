@@ -17,6 +17,9 @@ class DashboardController extends Controller
     //
     public function index()
     {
-        return view('advisor.dashboard');
+        return view('layouts.admin-advisor-dashboards', [
+            'counts' => [],
+            'studentCount' => 0,
+        ]);
     }
 }

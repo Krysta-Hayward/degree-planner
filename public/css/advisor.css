@@ -1,0 +1,212 @@
+/*Root page edits*/
+:root {
+    --scc-green: #2e7d32;   /* placeholder: replace with the real value */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #111827;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 25%;
+    max-width: 280px;
+    min-width: 220px;
+    background: var(--scc-green);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+}
+
+
+/* Main layout of page Right side*/
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f9fafb;
+    min-width: 0;
+}
+
+.page-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 20px 32px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.page-body {
+    padding: 24px 32px;
+}
+
+.schedule {
+    margin-top: 24px;
+}
+
+
+
+/* Top NavBar brand */
+
+.sidebar-top {
+    padding: 0 8px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--scc-green);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-name {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+/* Middle NavBar links */
+
+.sidebar-middle {
+    padding-top: 24px;
+}
+
+.nav-label {
+    margin: 0 0 8px 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-list a {
+    display: block;
+    padding: 14px 16px;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav-list a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.nav-list a.active {
+    background: #ffffff;
+    color: var(--scc-green);
+    font-weight: 600;
+}
+
+/* Bottom NavBar user and logout */
+
+.sidebar-bottom {
+    margin-top: auto;
+    margin-bottom: 80px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px 12px;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.user-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.user-role {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+.logout {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    background: none;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.logout:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/*Main Page Right Side*/
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+
+
+
+@media (max-width: 700px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-width: none;
+    }
+}

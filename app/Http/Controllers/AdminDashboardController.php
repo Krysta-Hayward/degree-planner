@@ -30,7 +30,7 @@ class AdminDashboardController extends Controller
             }
         }
 
-        return view('admin.dashboard', [
+        return view('layouts.admin-advisor-dashboards', [
             'counts' => $counts,
         ]);
     }

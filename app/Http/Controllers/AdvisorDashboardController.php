@@ -2,17 +2,18 @@
 
 /*
 ADVISOR HOME PAGE
-Stats
-Plans
-Awaiting Review
-Flagged Students
+studentCount
+pendingPlans
+needsAttention
+awaitingReview
+flaggedStudents
 */
 
-namespace App\Http\Controllers\Advisor;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
-class DashboardController extends Controller
+class AdvisorDashboardController extends Controller
 {
     //
     public function index()

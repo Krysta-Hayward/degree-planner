@@ -1,8 +1,6 @@
-@extends('layouts.advisor')
+@extends('layouts.app')
 
-@section('title', 'Advisor Dashboard')
-
-@section('heading', 'Advisor Dashboard')
+@section('title', 'Advisor Dashboard - Degree Planner')
 
 @section('content')
 
@@ -10,14 +8,15 @@
         <div class="card">
             <p class="card-label">Assigned students</p>
             <p class="card-number">{{ $studentCount }}</p>
+            <p>I am writing here!!</p>
         </div>
         <div class="card">
             <p class="card-label">Plans awaiting review</p>
-            <p class="card-number">{{ $awaitingReview->count() }}</p>
+            <p class="card-number">{{ $awaitingReview }}</p>
         </div>
         <div class="card">
             <p class="card-label">Needs attention</p>
-            <p class="card-number">{{ $flaggedStudents->count() }}</p>
+            <p class="card-number">{{ $flaggedStudents }}</p>
         </div>
     </section>
 

@@ -27,12 +27,16 @@ class AdvisorDashboardController extends Controller
          // $studentCount = User::where('advisor_id', $advisorId->count());
 
          // TODO: Plans with status 'submitted' for this advisor's student
+         // $awaitingReview = count()
 
          // TODO: Students with problems (no plan, failed prerequisite)
+         // $flaggedStudents = count()
          
 
         return view('layouts.admin-advisor-dashboards', [
             'studentCount' => 0,
+            'awaitingReview' => 0,
+            'flaggedStudents' => 0,
 
         ]);
     }

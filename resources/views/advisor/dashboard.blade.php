@@ -1,39 +1,23 @@
-@extends('layouts.app')
+@extends('layouts.admin-advisor-dashboards')
 
 @section('title', 'Advisor Dashboard - Degree Planner')
+@section('heading', 'Advisor Dashboard')
 
-@section('content')
-
-    <section class="stats">
-        <div class="card">
-            <p class="card-label">Assigned students</p>
-            <p class="card-number">{{ $studentCount }}</p>
-            <p>I am writing here!!</p>
+@section('dashboard')
+    <p>Welcome, {{ auth()->user()->name }}.</p>
+    <div class="dashboard-cards">
+        <div class="dashboard-card">
+            <h3>Assigned students</h3>
+            <p class="record-count">{{ $studentCount }}</p>
+            <a href="{{ route('advisor.students.index') }}">View students</a>
         </div>
-        <div class="card">
-            <p class="card-label">Plans awaiting review</p>
-            <p class="card-number">{{ $awaitingReview }}</p>
+        <div class="dashboard-card">
+            <h3>Plans awaiting review</h3>
+            <p class="record-count">{{ $awaitingReview }}</p>
         </div>
-        <div class="card">
-            <p class="card-label">Needs attention</p>
-            <p class="card-number">{{ $flaggedStudents }}</p>
+        <div class="dashboard-card">
+            <h3>Needs attention</h3>
+            <p class="record-count">{{ $flaggedStudents }}</p>
         </div>
-    </section>
-
-    <section class="sections">
-        <div class="card">
-            <h2>Plans awaiting review</h2>
-            <p class="empty">No plans waiting for review.</p>
-        </div>
-        <div class="card">
-            <h2>Students needing attention</h2>
-            <p class="empty">No students flagged.</p>
-        </div>
-    </section>
-
-    <section class="card schedule">
-        <h2>Schedule</h2>
-        <p class="empty">Schedule will go here.</p>
-    </section>
-
+    </div>
 @endsection

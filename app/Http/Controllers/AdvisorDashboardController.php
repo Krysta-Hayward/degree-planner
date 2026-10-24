@@ -15,6 +15,7 @@ Changes to student's program map are saved to the database
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class AdvisorDashboardController extends Controller
 {
@@ -24,19 +25,21 @@ class AdvisorDashboardController extends Controller
          $advisorId = auth()->id();
 
          // Students assigned to this advisor
-         // $studentCount = User::where('advisor_id', $advisorId->count());
-
-         // TODO: Plans with status 'submitted' for this advisor's student
-         // $awaitingReview = count()
-
-         // TODO: Students with problems (no plan, failed prerequisite)
-         // $flaggedStudents = count()
+         $studentCount = User::where('advisor_id', auth()->id())->count();
          
 
-        return view('layouts.admin-advisor-dashboards', [
-            'studentCount' => 0,
-            'awaitingReview' => 0,
-            'flaggedStudents' => 0,
+         // TODO: Plans with status 'submitted' for this advisor's student
+         $awaitingReview = 0;
+
+         // TODO: Students with problems (no plan, failed prerequisite)
+         $flaggedStudents = 0;
+         
+
+        return view('advisor.dashboard', [
+            'advisorPage' => 'partials.advisor-main',
+            'studentCount' => $studentCount,
+            'awaitingReview' => $awaitingReview,
+            'flaggedStudents' => $flaggedStudents,
 
         ]);
     }

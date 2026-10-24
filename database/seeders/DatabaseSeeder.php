@@ -46,6 +46,8 @@ class DatabaseSeeder extends Seeder
         );
 
         User::factory(9)->create(); // and a total of ten to play with for now.
+        
+        $this->call(AdvisorSeeder::class);
 
         Course::factory(25)->create(); // TODO: manually rip class list for Programs!
         // Term::factory(8)->create();

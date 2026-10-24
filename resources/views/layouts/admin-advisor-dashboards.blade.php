@@ -49,8 +49,9 @@
                     @endforeach
                 </div>
             @elseif (auth()->user()->role === 'advisor')
-                @include('partials.advisor-main')
+                @include($advisorPage ?? 'partials.advisor-main')
             @endif
+
         </main>
     </div>
 @endsection

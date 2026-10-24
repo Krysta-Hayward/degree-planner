@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class AdvisorStudentController extends Controller
 {
@@ -12,6 +13,14 @@ class AdvisorStudentController extends Controller
     // Display a table of students
     public function index()
     {
-        return 'Hello world from the advisor student list';
+
+        $students = User::where('advisor_id', auth()->id())
+            ->orderBy('name')
+            ->get();
+
+        return view('advisor.students.index', [
+            'advisorPage' => 'partials.advisor-students',
+            'students' => $students
+        ]);
     }
 }

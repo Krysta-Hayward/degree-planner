@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminDataController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminDataController;
+use App\Http\Controllers\Admin\AdminStudentController;
 use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
 use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
 use App\Http\Controllers\AuthController;
@@ -30,11 +31,17 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin routes
-require __DIR__.'/student.php';
+require __DIR__ . '/student.php';
 
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/students', [AdminStudentController::class, 'index'])->name('admin.students');
+
+    Route::put('/admin/students/{student}/advisor', [
+        AdminStudentController::class,
+        'updateAdvisor',
+    ])->name('admin.students.advisor.update');
 });
 
 // Advisor routes

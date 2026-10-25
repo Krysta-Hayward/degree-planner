@@ -31,14 +31,18 @@ class AdminStudentController extends Controller
             'advisor_id' => [
                 'nullable',
                 'integer',
-                'exists:user_id',
+                'exists:user,id',
             ],
         ]);
 
         if ($validated['advisor_id'] !== null) {
-            return back()->withErrors([
-                'advisor_id' => 'Please select a valid advisor.',
-            ]);
+            $advisor = User::findOrFail($validated['advisor_id']);
+
+            if ($advisor->role !== 'advisor') {
+                return back()->withErrors([
+                    'advisor_id' => 'Please select a valid advisor.'
+                ]);
+            }
         }
 
         $student->advisor_id = $validated['advisor_id'];

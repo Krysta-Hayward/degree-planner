@@ -24,14 +24,15 @@ class AdminDashboardController extends Controller
 
         $counts = [];
 
+        $counts['Users'] = User::where('role', 'users')->count();
+        $counts['Advisors'] = User::where('role', 'advisor')->count();
+        $counts['Students'] = User::where('role', 'student')->count();
+
         foreach ($tables as $table => $label) {
             if (Schema::hasTable($table)) {
                 $counts[$label] = DB::table($table)->count();
             }
         }
-
-        $counts['Students'] = User::where('role', 'student')->count();
-        $counts['Advisors'] = User::where('role', 'advisor')->count();
 
         return view('admin.dashboard', [
             'counts' => $counts,

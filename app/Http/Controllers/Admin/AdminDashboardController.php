@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -12,8 +13,6 @@ class AdminDashboardController extends Controller
     {
         $tables = [
             'users' => 'Users',
-            'students' => 'Students',
-            'advisors' => 'Advisors',
             'courses' => 'Courses',
             'programs' => 'Programs',
             'terms' => 'Terms',
@@ -30,6 +29,9 @@ class AdminDashboardController extends Controller
                 $counts[$label] = DB::table($table)->count();
             }
         }
+
+        $counts['Students'] = User::where('role', 'student')->count();
+        $counts['Advisors'] = User::where('role', 'advisor')->count();
 
         return view('admin.dashboard', [
             'counts' => $counts,

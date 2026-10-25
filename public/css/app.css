@@ -154,3 +154,18 @@ td a:hover {
 .dashboard-card a {
     color: #333;
 }
+
+/* Advisor Edits */
+.advisor-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.advisor-nav li {
+    margin: 0;
+}
+
+.advisor-nav a {
+    display: block;
+}

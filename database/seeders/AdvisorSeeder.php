@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdvisorSeeder extends Seeder
 {
@@ -13,19 +14,17 @@ class AdvisorSeeder extends Seeder
         // The advisor created in DatabaseSeeder
         $advisor = User::where('email', 'advisor@example.com')->firstOrFail();
 
-        // Students assigned to that advisor
-        $names = ['Aiko Tanaka', 'Jordan Miller', 'Riko Sato'];
+        // Students assigned to logged in advisor
+        $students = User::where('role', 'student')->take(12)->get();
 
-        foreach ($names as $i => $name) {
-            User::updateOrCreate(
-                ['email' => 'student' . ($i + 1) . '@example.com'],
-                [
-                    'name' => $name,
-                    'password' => Hash::make('Password123!'),
-                    'role' => 'student',
-                    'advisor_id' => $advisor->id,
-                ],
-            );
+        
+       foreach ($students as $student) {
+            DB::table('students')->insert([
+                'advisor' => $advisor->id,
+                'student' => $student->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
     }
 }

@@ -16,6 +16,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Plan;
+use Illuminate\Support\Facades\DB;
 
 class AdvisorDashboardController extends Controller
 {
@@ -25,10 +27,11 @@ class AdvisorDashboardController extends Controller
          $advisorId = auth()->id();
 
          // Students assigned to this advisor
-         $studentCount = User::where('advisor_id', auth()->id())->count();
+         $studentCount = DB::table('students')
+            ->where('advisor', auth()->id())
+            ->count();
          
-
-         // TODO: Plans with status 'submitted' for this advisor's student
+         // TODO: Plans with status 'submitted' for this advisor's student "Add status column to plans table"
          $awaitingReview = 0;
 
          // TODO: Students with problems (no plan, failed prerequisite)
@@ -36,7 +39,8 @@ class AdvisorDashboardController extends Controller
          
 
         return view('advisor.dashboard', [
-            'advisorPage' => 'partials.advisor-main',
+            
+            'advisorPage' => 'partials.advisor-main', // Show count if student table is not displayed
             'studentCount' => $studentCount,
             'awaitingReview' => $awaitingReview,
             'flaggedStudents' => $flaggedStudents,

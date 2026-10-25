@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
+use App\Models\User;
 
 class PlanReviewController extends Controller
 {

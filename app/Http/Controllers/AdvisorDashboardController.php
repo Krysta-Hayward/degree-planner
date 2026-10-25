@@ -40,7 +40,7 @@ class AdvisorDashboardController extends Controller
 
         return view('advisor.dashboard', [
             
-            'advisorPage' => 'partials.advisor-main', // Show count if student table is not displayed
+            'advisorPage' => 'partials.advisor.menu', // Show count if student table is not displayed
             'studentCount' => $studentCount,
             'awaitingReview' => $awaitingReview,
             'flaggedStudents' => $flaggedStudents,

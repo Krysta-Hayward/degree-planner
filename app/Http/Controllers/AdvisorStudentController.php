@@ -16,7 +16,6 @@ class AdvisorStudentController extends Controller
     public function index()
     {
 
-
         // IDs of students assigned to this advisor
         $studentIds = DB::table('students')
             ->where('advisor', auth()->id())
@@ -29,7 +28,7 @@ class AdvisorStudentController extends Controller
 
 
         return view('advisor.students.index', [
-            'advisorPage' => 'partials.advisor-students',
+            'advisorPage' => 'partials.advisor.student-list',
             'students' => $students
         ]);
     }

@@ -18,7 +18,7 @@
                         Database Overview
                     </a>
                 @else
-                    @include('partials.advisor-nav')
+                    @include('partials.advisor.navbar')
                 @endif
 
                 <a href="/">Home</a>
@@ -49,7 +49,7 @@
                     @endforeach
                 </div>
             @elseif (auth()->user()->role === 'advisor')
-                @include($advisorPage ?? 'partials.advisor-main')
+                @include($advisorPage ?? 'partials.advisor.student-list')
             @endif
 
         </main>

@@ -12,7 +12,7 @@ class AdvisorPlanReviewController extends Controller
         // Will list plans awaiting for this advisor to review
 
         return view('layouts.admin-advisor-dashboards', [
-                'advisorPage' => 'partials.advisor-plans',
+                'advisorPage' => 'partials.advisor.plans',
             ]);
    }
 

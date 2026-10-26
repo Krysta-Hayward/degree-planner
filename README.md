@@ -128,6 +128,7 @@ php artisan migrate
 docker compose up -d --build
 docker compose exec test php artisan test
 docker compose exec test vendor/bin/pint --test
+LINUX W/ APACHE: sudo systemctl stop apache2 <- free default localhost
 ```
 
 ## Stop Docker

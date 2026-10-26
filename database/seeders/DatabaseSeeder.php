@@ -55,11 +55,10 @@ class DatabaseSeeder extends Seeder
 
         // A bunch of fake courses as test data
         Course::factory(25)->create();
-        // TODO: manually rip class list for Programs!
-        // TODO: Plans should not be seeded, make one or two with hard options.
-        // TODO: Seed Random Course Prerequisites
-        // TODO: Students cannot be seeded; manually assign some students to some advisors.
-        // Enrolls::factory(5)->create(); //low number to minimize weirdness
-        // TODO: Programs cannot be randomly seeded, make manual program or two for testing.
+        // TODO: manually rip class list for Programs; make and call ProgramSeeder
+        // TODO: $this->call(PlanSeeder::class);
+        // TODO: $this->call(PrereqSeeder::class);
+        // TODO: $this->call(StudentSeeder::class);
+        // TODO: $this->call(EnrollSeeder::class);
     }
 }

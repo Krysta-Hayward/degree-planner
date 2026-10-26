@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAdvisorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDataController;
 use App\Http\Controllers\Admin\AdminStudentController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
 use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
 use App\Http\Controllers\AuthController;
@@ -45,7 +46,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         'updateAdvisor',
     ])->name('admin.students.advisor.update');
 
-    Route::view('/admin/users', 'admin.users')->name('admin.users');
+    Route::get('/admin/users', [AdminUserController::class, 'index'])
+        ->name('admin.users');
     Route::view('/admin/courses', 'admin.courses')->name('admin.courses');
     Route::view('/admin/programs', 'admin.programs')->name('admin.programs');
     Route::view('/admin/terms', 'admin.terms')->name('admin.terms');

@@ -42,6 +42,13 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         AdminStudentController::class,
         'updateAdvisor',
     ])->name('admin.students.advisor.update');
+
+    Route::view('/admin/users', 'admin.users')->name('admin.users');
+    Route::view('/admin/courses', 'admin.courses')->name('admin.courses');
+    Route::view('/admin/programs', 'admin.programs')->name('admin.programs');
+    Route::view('/admin/terms', 'admin.terms')->name('admin.terms');
+    Route::view('/admin/plans', 'admin.plans')->name('admin.plans');
+    Route::view('/admin/prereqs', 'admin.prereqs')->name('admin.prereqs');
 });
 
 // Advisor routes

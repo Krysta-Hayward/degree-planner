@@ -17,9 +17,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // Link who wrote comment
             $table->text('body'); // The comment itself
             $table->timestamps();
-            $table->string('name');
-            $table->integer('course');
-
             $table->foreign('course')
                 ->references('id')
                 ->on('courses')

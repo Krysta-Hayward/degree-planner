@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        // advisor example user
         User::updateOrCreate(
             ['email' => 'advisor@example.com'],
             [
@@ -36,6 +37,7 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        // student example user
         User::updateOrCreate(
             ['email' => 'student@example.com'],
             [
@@ -45,14 +47,17 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        User::factory(100)->create(); // and a total of ten to play with for now. (Changed to 100)
+        // A bunch of fake users as test data.
+        User::factory(100)->create();
         
+        // Link some students to the example advisor
         $this->call(AdvisorSeeder::class);
 
-        Course::factory(25)->create(); // TODO: manually rip class list for Programs!
-        // Term::factory(8)->create();
+        // A bunch of fake courses as test data
+        Course::factory(25)->create();
+        // TODO: manually rip class list for Programs!
         // TODO: Plans should not be seeded, make one or two with hard options.
-        // Course_Prerequisites::factory(8)->create(); //low number to minimize weirdness
+        // TODO: Seed Random Course Prerequisites
         // TODO: Students cannot be seeded; manually assign some students to some advisors.
         // Enrolls::factory(5)->create(); //low number to minimize weirdness
         // TODO: Programs cannot be randomly seeded, make manual program or two for testing.

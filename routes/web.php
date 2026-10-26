@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAdvisorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDataController;
 use App\Http\Controllers\Admin\AdminStudentController;
+use App\Http\Controllers\Admin\AdminCourseController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
 use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
@@ -39,16 +40,15 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/advisors', [AdminAdvisorController::class, 'index'])->name('admin.advisors');
-
     Route::get('/admin/students', [AdminStudentController::class, 'index'])->name('admin.students');
     Route::put('/admin/students/{student}/advisor', [
         AdminStudentController::class,
         'updateAdvisor',
     ])->name('admin.students.advisor.update');
-
     Route::get('/admin/users', [AdminUserController::class, 'index'])
         ->name('admin.users');
-    Route::view('/admin/courses', 'admin.courses')->name('admin.courses');
+    Route::get('/admin/courses', [AdminCourseController::class, 'index'])
+        ->name('admin.courses');
     Route::view('/admin/programs', 'admin.programs')->name('admin.programs');
     Route::view('/admin/terms', 'admin.terms')->name('admin.terms');
     Route::view('/admin/plans', 'admin.plans')->name('admin.plans');

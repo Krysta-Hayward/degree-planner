@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAdvisorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDataController;
 use App\Http\Controllers\Admin\AdminStudentController;
@@ -36,15 +37,15 @@ require __DIR__ . '/student.php';
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/students', [AdminStudentController::class, 'index'])->name('admin.students');
+    Route::get('/admin/advisors', [AdminAdvisorController::class, 'index'])->name('admin.advisors');
 
+    Route::get('/admin/students', [AdminStudentController::class, 'index'])->name('admin.students');
     Route::put('/admin/students/{student}/advisor', [
         AdminStudentController::class,
         'updateAdvisor',
     ])->name('admin.students.advisor.update');
 
     Route::view('/admin/users', 'admin.users')->name('admin.users');
-    Route::view('/admin/advisors', 'admin.advisors')->name('admin.advisors');
     Route::view('/admin/courses', 'admin.courses')->name('admin.courses');
     Route::view('/admin/programs', 'admin.programs')->name('admin.programs');
     Route::view('/admin/terms', 'admin.terms')->name('admin.terms');

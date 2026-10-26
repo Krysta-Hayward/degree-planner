@@ -25,6 +25,10 @@
                     <button class="button-links">
                         <a href="{{ route('admin.data') }}">Database Overview</a>
                     </button>
+                @elseif (auth()->user()->role === 'advisor')
+                    <button class="button-links">
+                        <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
+                    </button>
                 @endif
 
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">

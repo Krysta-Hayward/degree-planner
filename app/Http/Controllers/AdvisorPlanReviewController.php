@@ -13,12 +13,14 @@ class AdvisorPlanReviewController extends Controller
 
         return view('layouts.admin-advisor-dashboards', [
                 'advisorPage' => 'partials.advisor.plans',
+                'planId' => $plan->id
             ]);
    }
 
    public function show(Plan $plan)
    {
         // Show one plan for advisor to review
+        return 'Approved plan'.$plan->id;
 
    }
 
@@ -32,6 +34,7 @@ class AdvisorPlanReviewController extends Controller
     public function requestChanges($plan)
     {
         // Request changes on a plan
+        return 'Request changes for plan '.$plan->id;
 
     }
 

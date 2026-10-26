@@ -44,6 +44,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     ])->name('admin.students.advisor.update');
 
     Route::view('/admin/users', 'admin.users')->name('admin.users');
+    Route::view('/admin/advisors', 'admin.advisors')->name('admin.advisors');
     Route::view('/admin/courses', 'admin.courses')->name('admin.courses');
     Route::view('/admin/programs', 'admin.programs')->name('admin.programs');
     Route::view('/admin/terms', 'admin.terms')->name('admin.terms');

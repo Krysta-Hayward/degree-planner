@@ -24,7 +24,24 @@
                     <div class="dashboard-card">
                         <h3>{{ $label }}</h3>
                         <p class="record-count">{{ $count }}</p>
-                        <a href="{{ route('admin.data') }}">View Database</a>
+                        @php
+                            $viewRoutes = [
+                                'Users' => 'admin.users',
+                                'Advisors' => 'admin.advisors',
+                                'Students' => 'admin.students',
+                                'Courses' => 'admin.courses',
+                                'Programs' => 'admin.programs',
+                                'Terms' => 'admin.terms',
+                                'Plans' => 'admin.plans',
+                                'Plan Courses' => 'admin.data',
+                                'Course Programs' => 'admin.data',
+                                'Course Prerequisites' => 'admin.prereqs',
+                            ];
+                        @endphp
+
+                        <a href="{{ route($viewRoutes[$label] ?? 'admin.data') }}">
+                            Manage {{ $label }}
+                        </a>
                     </div>
                 @endforeach
             </div>

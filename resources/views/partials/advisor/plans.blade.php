@@ -14,7 +14,9 @@
 
 @isset($planId)
     <p>Plan ID: {{ $planId }}</p>
+    <p>Student: {{ $plan->owner?->name }}</p>
 
+    @can('review', $plan)
     <form method="POST" action="{{ route('advisor.plans.approve', $planId) }}">
         @csrf
         <button type="submit">Approve</button>
@@ -24,4 +26,5 @@
         @csrf
         <button type="submit">Request changes</button>
     </form>
+    @endcan
 @endisset

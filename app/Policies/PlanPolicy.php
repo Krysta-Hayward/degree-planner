@@ -1,4 +1,7 @@
 <?php
+/**
+ * Determines roles for each on who can do what with the plans
+ */
 
 namespace App\Policies;
 

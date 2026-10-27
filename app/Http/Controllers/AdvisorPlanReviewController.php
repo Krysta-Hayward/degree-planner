@@ -1,32 +1,44 @@
 <?php
+/**
+ * W
+ */
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\Plan;
+use Illuminate\Support\Facades\Gate;
 
 class AdvisorPlanReviewController extends Controller
 {
    public function index()
    {
         // Will list plans awaiting for this advisor to review
-
         return view('layouts.admin-advisor-dashboards', [
                 'advisorPage' => 'partials.advisor.plans',
-                'planId' => $plan->id
             ]);
    }
 
    public function show(Plan $plan)
    {
         // Show one plan for advisor to review
-        return 'Approved plan'.$plan->id;
+        Gate::authorize('view', $plan);
+
+        return view('layouts.admin-advisor-dashboards', [
+        'advisorPage' => 'partials.advisor-placeholder',
+        'planId' => $plan->id,
+    ]);
 
    }
 
    public function approve(Plan $plan)
    {
        // Sets status to approve
+       Gate::authorize('review', $plan);
+
+        return redirect()
+        ->route('advisor.plans.show', $plan)
+        ->with('success', "Approve clicked for plan {$plan->id}");
 
    }
 
@@ -34,9 +46,12 @@ class AdvisorPlanReviewController extends Controller
     public function requestChanges($plan)
     {
         // Request changes on a plan
-        return 'Request changes for plan '.$plan->id;
+        Gate::authorize('review', $plan);
+
+        return redirect()
+        ->route('advisor.plans.show', $plan)
+        ->with('success', "Request changes clicked for plan {$plan->id}");
 
     }
-
 
 }

@@ -11,7 +11,8 @@ class Plan extends Model
 
     protected $fillable = ['student', 'class'];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

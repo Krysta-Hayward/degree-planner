@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Course;
+use App\Models\Student;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -11,18 +12,24 @@ class PlanSeeder extends Seeder
     public function run(): void
     {
         // The advisor created in DatabaseSeeder
-        $advisor = User::where('email', 'advisor@example.com')->firstOrFail();
+        $students = Student::inRandomOrder()->take(3)->get();
 
         // Students assigned to logged in advisor
-        $students = User::where('role', 'student')->take(12)->get();
+        $courses = Course::inRandomOrder()->take(9)->get();
 
-        foreach ($students as $student) {
-            DB::table('students')->insert([
-                'advisor' => $advisor->id,
-                'student' => $student->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        // for use in forEach
+        $classCounter = 0;
+
+        foreach ($students as $studier) {
+            for ($i = 0; $i < 3; $i++) {
+                DB::table('plans')->insert([
+                    'student' => $studier->student,
+                    'class' => $courses[$classCounter + $i]->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            $classCounter = $classCounter + 3;
         }
     }
 }

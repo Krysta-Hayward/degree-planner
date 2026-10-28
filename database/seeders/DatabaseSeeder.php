@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
         // Three random students with default advisor each make a plan with three random courses
         // TODO: $this->call(PlanSeeder::class);
 
-        // five classes gain a prerequisite.
+        // five random classes gain a random prerequisite.
         $this->call(PrereqSeeder::class);
 
         // three random terms are created with three random courses each

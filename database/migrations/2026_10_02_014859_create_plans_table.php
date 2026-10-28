@@ -23,7 +23,7 @@ return new class extends Migration
                 ->onUpdate('cascade');
             $table->foreign('class')
                 ->references('id')
-                ->on('terms')
+                ->on('courses')
                 ->onUpdate('cascade');
         });
     }

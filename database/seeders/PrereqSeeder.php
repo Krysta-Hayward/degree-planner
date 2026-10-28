@@ -11,10 +11,10 @@ class PrereqSeeder extends Seeder
     public function run(): void
     {
         // main course
-        $courses = Course::take(5)->get();
+        $courses = Course::inRandomOrder()->take(5)->get();
 
         // prerequisites
-        $prereqs = Course::where('id', '>', 5)->take(5)->get();
+        $prereqs = Course::inRandomOrder()->take(5)->get();
 
         // for use in foreach
         $counter = 0;

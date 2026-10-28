@@ -28,7 +28,7 @@ class TermSeeder extends Seeder
                     'updated_at' => now(),
                 ]);
             }
-            $counter = $counter +3;
+            $counter = $counter + 3;
         }
     }
 }

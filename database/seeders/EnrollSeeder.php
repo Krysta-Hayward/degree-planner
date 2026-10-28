@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +29,7 @@ class EnrollSeeder extends Seeder
                     'updated_at' => now(),
                 ]);
             }
-            $counter = $counter +3;
+            $counter = $counter + 3;
         }
     }
 }

@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->integer('course');
+            $table->integer('term');
 
-            $table->foreign('course')
+            $table->foreign('term')
                 ->references('id')
-                ->on('courses')
+                ->on('terms')
                 ->onUpdate('cascade');
         });
     }

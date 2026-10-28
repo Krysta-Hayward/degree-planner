@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Term;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -11,15 +11,12 @@ class ProgramSeeder extends Seeder
     public function run(): void
     {
         // The advisor created in DatabaseSeeder
-        $advisor = User::where('email', 'advisor@example.com')->firstOrFail();
+        $terms = Term::take(9)->get();
 
-        // Students assigned to logged in advisor
-        $students = User::where('role', 'student')->take(12)->get();
-
-        foreach ($students as $student) {
-            DB::table('students')->insert([
-                'advisor' => $advisor->id,
-                'student' => $student->id,
+        foreach ($terms as $term) {
+            DB::table('programs')->insert([
+                'name' => "One Year Test Term",
+                'term' => $term->id,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

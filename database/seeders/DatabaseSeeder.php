@@ -56,9 +56,6 @@ class DatabaseSeeder extends Seeder
         // A bunch of fake courses as test data
         Course::factory(75)->create();
 
-        // TODO: manually rip class list for Programs, random isn't going to cut it!
-        // $this->call(ProgramSeeder::class);
-
         // Three random students with default advisor each make a plan with three random courses
         $this->call(PlanSeeder::class);
 
@@ -69,6 +66,9 @@ class DatabaseSeeder extends Seeder
         $this->call(TermSeeder::class);
 
         // three random students enroll in three random courses each
-        // TODO: $this->call(EnrollSeeder::class);
+        $this->call(EnrollSeeder::class);
+
+        // TODO: manually rip class list for Programs, random isn't going to cut it in the future!
+        $this->call(ProgramSeeder::class);
     }
 }

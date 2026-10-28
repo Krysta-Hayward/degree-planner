@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Course;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -11,18 +12,24 @@ class EnrollSeeder extends Seeder
     public function run(): void
     {
         // The advisor created in DatabaseSeeder
-        $advisor = User::where('email', 'advisor@example.com')->firstOrFail();
+        $students = User::inRandomOrder()->take(3)->get();
 
         // Students assigned to logged in advisor
-        $students = User::where('role', 'student')->take(12)->get();
+        $courses = Course::inRandomOrder()->take(9)->get();
+
+        // for use in for loop
+        $counter = 0;
 
         foreach ($students as $student) {
-            DB::table('students')->insert([
-                'advisor' => $advisor->id,
-                'student' => $student->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            for ($i = 0; $i < 3; $i++) {
+                DB::table('enrolls')->insert([
+                    'student' => $student->id,
+                    'course' => $courses[$counter + $i]->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            $counter = $counter +3;
         }
     }
 }

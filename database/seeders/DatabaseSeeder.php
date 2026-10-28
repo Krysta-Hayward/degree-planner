@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PrereqSeeder::class);
 
         // three random terms are created with three random courses each
-        // TODO: $this->call(TermSeeder::class);
+        $this->call(TermSeeder::class);
 
         // three random students enroll in three random courses each
         // TODO: $this->call(EnrollSeeder::class);

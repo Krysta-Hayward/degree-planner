@@ -13,6 +13,6 @@ class Program extends Model
 
     public function courseDetails()
     {
-        return $this->belongsTo(\App\Models\Course::class, 'course');
+        return $this->belongsTo(Course::class, 'course');
     }
 }

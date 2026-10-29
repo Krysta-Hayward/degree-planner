@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,11 +50,11 @@ class AdminStudentController extends Controller
         }
 
         // Remove the existing advisor assignment.
-        \App\Models\Student::where('student', $student->id)->delete();
+        Student::where('student', $student->id)->delete();
 
         // Create the new assignment if an advisor was selected.
         if ($advisorId !== null) {
-            \App\Models\Student::create([
+            Student::create([
                 'advisor' => $advisorId,
                 'student' => $student->id,
             ]);

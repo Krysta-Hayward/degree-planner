@@ -31,13 +31,13 @@ class AdminProgramController extends Controller
         $courses = Program::with('courseDetails')
             ->where('name', $programName)
             ->get()
-            ->sortBy(fn($program) => $program->courseDetails?->courseNumber ?? '')
+            ->sortBy(fn ($program) => $program->courseDetails?->courseNumber ?? '')
             ->values();
 
         abort_if($courses->isEmpty(), 404);
 
         $totalCredits = $courses->sum(
-            fn($program) => $program->courseDetails?->credits ?? 0
+            fn ($program) => $program->courseDetails?->credits ?? 0
         );
 
         return view('admin.program-details', compact(

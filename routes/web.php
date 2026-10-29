@@ -1,18 +1,18 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAdvisorController;
+use App\Http\Controllers\Admin\AdminCourseController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDataController;
-use App\Http\Controllers\Admin\AdminStudentController;
-use App\Http\Controllers\Admin\AdminCourseController;
-use App\Http\Controllers\Admin\AdminProgramController;
-use App\Http\Controllers\Admin\AdminTermController;
 use App\Http\Controllers\Admin\AdminPlanController;
 use App\Http\Controllers\Admin\AdminPrereqController;
+use App\Http\Controllers\Admin\AdminProgramController;
+use App\Http\Controllers\Admin\AdminStudentController;
+use App\Http\Controllers\Admin\AdminTermController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\AdvisorDashboardController;
-use App\Http\Controllers\AdvisorStudentController;
 use App\Http\Controllers\AdvisorPlanReviewController;
+use App\Http\Controllers\AdvisorStudentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdvisorMiddleware;
@@ -39,7 +39,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin routes
-require __DIR__ . '/student.php';
+require __DIR__.'/student.php';
 
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
@@ -72,7 +72,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     Route::get('/admin/plans/{student}', [AdminPlanController::class, 'show'])
         ->name('admin.plans.show');
-    
+
     Route::get('/admin/prereqs', [AdminPrereqController::class, 'index'])->name('admin.prereqs');
 });
 

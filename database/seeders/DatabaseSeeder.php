@@ -68,7 +68,10 @@ class DatabaseSeeder extends Seeder
         // three random students enroll in three random courses each
         $this->call(EnrollSeeder::class);
 
-        // TODO: manually rip class list for Programs, random isn't going to cut it in the future!
+        // random program with the terms from TermSeeder
         $this->call(ProgramSeeder::class);
+
+        // AAS-SoftDev data hand-pulled from SCC website
+        $this->call(SoftDevSeeder::class);
     }
 }

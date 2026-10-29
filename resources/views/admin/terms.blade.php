@@ -20,18 +20,18 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Term Number</th>
-                            <th>Term Name</th>
-                            <th>Credits</th>
+                            <th>Term ID</th>
+                            <th>Quarter / Year</th>
+                            <th>Course ID</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach ($terms as $term)
                             <tr>
-                                <td>{{ $term->termNumber }}</td>
-                                <td>{{ $term->name }}</td>
-                                <td>{{ $term->credits }}</td>
+                                <td>{{ $term->id }}</td>
+                                <td>{{ $term->quarterYear }}</td>
+                                <td>{{ $term->course }}</td>
                             </tr>
                         @endforeach
                     </tbody>

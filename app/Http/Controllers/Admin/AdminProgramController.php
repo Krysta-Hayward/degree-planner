@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Program;
 use Illuminate\View\View;
 
-class AdminProgramsController extends Controller
+class AdminProgramController extends Controller
 {
     public function index(): View
     {

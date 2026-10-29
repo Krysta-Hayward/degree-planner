@@ -5,7 +5,8 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDataController;
 use App\Http\Controllers\Admin\AdminStudentController;
 use App\Http\Controllers\Admin\AdminCourseController;
-use App\Http\Controllers\Admin\AdminProgramsController;
+use App\Http\Controllers\Admin\AdminProgramController;
+use App\Http\Controllers\Admin\AdminTermController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
 use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
@@ -56,8 +57,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/courses', [AdminCourseController::class, 'index'])
         ->name('admin.courses');
 
-    Route::get('/admin/programs', [AdminProgramsController::class, 'index'])->name('admin.programs');
-    Route::view('/admin/terms', 'admin.terms')->name('admin.terms');
+    Route::get('/admin/programs', [AdminProgramController::class, 'index'])->name('admin.programs');
+
+    Route::get('/admin/terms', [AdminTermController::class, 'index'])->name('admin.terms');
     Route::view('/admin/plans', 'admin.plans')->name('admin.plans');
     Route::view('/admin/prereqs', 'admin.prereqs')->name('admin.prereqs');
 });

@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, inital-scale=1.0">
     <title>Account Login - Degree Planner</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/theme.js') }}"></script>
 </head>
 
 <body>
@@ -31,6 +33,7 @@
     </form>
 
     <p><a href="/">Back to Home</a></p>
+    <button class="button-links theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
 </body>
 
 </html>

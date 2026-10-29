@@ -1,30 +1,18 @@
-<h2>Plan Reviews</h2>
-
-<h3>List of student plans will goe here</h3>
+<h2>Plans awaiting review</h2>
 
 @if (session('success'))
     <p>{{ session('success') }}</p>
 @endif
 
-
-<p>Will have Status of:</p>
-<li>Draft</li>
-<li>Processed</li>
-<li>Apporved</li>
-
-@isset($planId)
-    <p>Plan ID: {{ $planId }}</p>
-    <p>Student: {{ $plan->owner?->name }}</p>
-
-    @can('review', $plan)
-    <form method="POST" action="{{ route('advisor.plans.approve', $planId) }}">
-        @csrf
-        <button type="submit">Approve</button>
-    </form>
-
-    <form method="POST" action="{{ route('advisor.plans.changes', $planId) }}">
-        @csrf
-        <button type="submit">Request changes</button>
-    </form>
-    @endcan
-@endisset
+@if ($maps->isEmpty())
+    <p>No plans waiting for review.</p>
+@else
+    <ul>
+        @foreach ($maps as $map)
+            <li>
+                {{ $map->owner->name }}
+                <a href="{{ route('advisor.plans.show', $map) }}">Review</a>
+            </li>
+        @endforeach
+    </ul>
+@endif

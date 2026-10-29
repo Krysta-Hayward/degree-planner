@@ -23,15 +23,12 @@ class PlanPolicy
     }
 
     /**
-     * Determine who can see this plan
+     * Course can be viewed if its a program map
      */
     public function view(User $user, Plan $plan): bool
     {
-        return match($user->role){
-            'student' => $plan->student === $user->id,
-            'advisor' => $this->isAdvisorOf($user, $plan->student),
-            default => false,
-        };
+        return $plan->programMap !== null
+            && $user->can('view', $plan->programMap);
     }
 
     /**
@@ -43,12 +40,12 @@ class PlanPolicy
     }
 
     /**
-     * Determine who can update plan 
-     * Should be just student?
+     * Course row can be added, moved or removed, if its a program map it can be edited
      */
     public function update(User $user, Plan $plan): bool
     {
-        return false;
+        return $plan->programMap !== null
+            && $user->can('update', $plan->programMap);
     }
 
     /**
@@ -57,7 +54,7 @@ class PlanPolicy
      */
     public function delete(User $user, Plan $plan): bool
     {
-        return false;
+        return $this->update($user, $plan);
     }
 
     /**
@@ -77,15 +74,6 @@ class PlanPolicy
     public function forceDelete(User $user, Plan $plan): bool
     {
         return false;
-    }
-
-    /**
-     * Who can approve or request changes.
-     * Advisor
-     */
-
-    public function review(User $user, Plan $plan){
-        return $user->role === 'advisor' && $this->isAdvisorOf($user, $plan->student);
     }
 
     /**

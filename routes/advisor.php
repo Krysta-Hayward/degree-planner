@@ -13,8 +13,13 @@ Route::middleware(['auth', AdvisorMiddleware::class])->group(function () {
     Route::get('/advisor/students', [AdvisorStudentController::class, 'index'])->name('advisor.students.index');
     // Advisor students plans list
     Route::get('/advisor/plans', [AdvisorPlanReviewController::class, 'index'])->name('advisor.plans.index');
-    // TODO: Advisor show one student plan
-    // TODO: Advisor sets status to approve 
-    // TODO: Advisor request-changes to student plan
+    
+     // Advisor show one student plan
+    Route::get('/advisor/plans/{programMap}', [AdvisorPlanReviewController::class, 'show'])->name('advisor.plans.show');
+    // Advisor sets status to approve 
+    Route::post('/advisor/plans/{programMap}/approve', [AdvisorPlanReviewController::class, 'approve'])->name('advisor.plans.approve');
+    // Advisor request-changes to student plan
+    Route::post('/advisor/plans/{programMap}/request-changes', [AdvisorPlanReviewController::class, 'requestChanges'])->name('advisor.plans.changes');
+    
    
 });

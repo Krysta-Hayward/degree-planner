@@ -10,7 +10,11 @@
 
     <div class="dashboard-card">
         <h3>Plans Awaiting Review</h3>
-        <p class="record-count">0</p>
+        <p class="record-count">{{ $awaitingReview }}</p>
+
+        <a href="{{ route('advisor.plans.index') }}">
+            View Plans
+        </a>
     </div>
 
     <div class="dashboard-card">

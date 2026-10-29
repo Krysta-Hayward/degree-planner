@@ -62,17 +62,17 @@
                     <tbody>
                         @forelse ($requirements as $course)
                             <tr>
-                                <td>{{ $course->courseNumber }}</td>
-                                <td>{{ $course->name }}</td>
-                                <td>{{ $course->credits }}</td>
-                                <td>
+                                <td data-label="Course">{{ $course->courseNumber }}</td>
+                                <td data-label="Title">{{ $course->name }}</td>
+                                <td data-label="Credits">{{ $course->credits }}</td>
+                                <td data-label="Prerequisites">
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
                                         {{ $prereq->courseNumber }}@if (! $loop->last), @endif
                                     @empty
                                         None
                                     @endforelse
                                 </td>
-                                <td>
+                                <td data-label="Offered">
                                     @forelse ($terms->get($course->id, collect()) as $term)
                                         @php
                                             $missing = $prerequisites->get($course->id, collect())
@@ -121,17 +121,17 @@
                 <tbody>
                     @forelse ($catalog as $course)
                         <tr>
-                            <td>{{ $course->courseNumber }}</td>
-                            <td>{{ $course->name }}</td>
-                            <td>{{ $course->credits }}</td>
-                            <td>
+                            <td data-label="Course">{{ $course->courseNumber }}</td>
+                            <td data-label="Title">{{ $course->name }}</td>
+                            <td data-label="Credits">{{ $course->credits }}</td>
+                            <td data-label="Prerequisites">
                                 @forelse ($prerequisites->get($course->id, collect()) as $prereq)
                                     {{ $prereq->courseNumber }}@if (! $loop->last), @endif
                                 @empty
                                     None
                                 @endforelse
                             </td>
-                            <td>
+                            <td data-label="Terms Offered">
                                 @forelse ($terms->get($course->id, collect()) as $term)
                                     {{ $term->quarterYear }}@if (! $loop->last), @endif
                                 @empty
@@ -164,11 +164,11 @@
                 <tbody>
                     @forelse ($planned as $item)
                         <tr>
-                            <td>{{ $item->quarterYear }}</td>
-                            <td>{{ $item->courseNumber }}</td>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ $item->credits }}</td>
-                            <td>
+                            <td data-label="Term">{{ $item->quarterYear }}</td>
+                            <td data-label="Course">{{ $item->courseNumber }}</td>
+                            <td data-label="Title">{{ $item->name }}</td>
+                            <td data-label="Credits">{{ $item->credits }}</td>
+                            <td data-label="Action">
                                 <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}" class="inline-form">
                                     @csrf
                                     @method('DELETE')

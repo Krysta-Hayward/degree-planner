@@ -49,7 +49,7 @@
                     @endforeach
                 </div>
             @elseif (auth()->user()->role === 'advisor')
-                @include($advisorPage ?? 'partials.advisor.student-list')
+                @include($advisorPage ?? 'partials.advisor.menu')
             @endif
 
         </main>

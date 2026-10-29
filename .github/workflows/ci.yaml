@@ -26,7 +26,7 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
-              - name: Diagnose controller filename
+      - name: Diagnose controller filename
         run: |
           echo "Controller files tracked by Git:"
           git ls-tree -r --name-only HEAD | grep -i 'app/http/controllers/controller.php' || true

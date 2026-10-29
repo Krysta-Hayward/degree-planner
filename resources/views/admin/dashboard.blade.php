@@ -4,16 +4,7 @@
 
 @section('content')
     <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <h2>Degree Planner</h2>
-            <p>Admin Panel</p>
-
-            <nav>
-                <a href="{{ route('admin.dashboard') }}" class="active">Dashboard</a>
-                <a href="{{ route('admin.data') }}">Database Overview</a>
-                <a href="/">Home</a>
-            </nav>
-        </aside>
+        @include('shared.sidebar')
 
         <main class="admin-content">
             <h1>Admin Dashboard</h1>
@@ -24,7 +15,25 @@
                     <div class="dashboard-card">
                         <h3>{{ $label }}</h3>
                         <p class="record-count">{{ $count }}</p>
-                        <a href="{{ route('admin.data') }}">View Database</a>
+
+                        @php
+                            $viewRoutes = [
+                                'Users' => 'admin.users',
+                                'Advisors' => 'admin.advisors',
+                                'Students' => 'admin.students',
+                                'Courses' => 'admin.courses',
+                                'Programs' => 'admin.programs',
+                                'Terms' => 'admin.terms',
+                                'Plans' => 'admin.plans',
+                                'Plan Courses' => 'admin.data',
+                                'Course Programs' => 'admin.data',
+                                'Course Prerequisites' => 'admin.prereqs',
+                            ];
+                        @endphp
+
+                        <a href="{{ route($viewRoutes[$label] ?? 'admin.data') }}">
+                            Manage {{ $label }}
+                        </a>
                     </div>
                 @endforeach
             </div>

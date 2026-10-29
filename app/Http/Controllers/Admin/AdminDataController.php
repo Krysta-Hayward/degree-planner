@@ -11,14 +11,15 @@ class AdminDataController extends Controller
     public function index(?string $table = null)
     {
         $tables = [
-            'users',
-            'programs',
-            'courses',
-            'terms',
-            'plans',
-            'plan_courses',
-            'course_program',
             'course_prerequisites',
+            'course_program',
+            'courses',
+            'plan_courses',
+            'plans',
+            'programs',
+            'students',
+            'terms',
+            'users',
         ];
 
         $data = [];

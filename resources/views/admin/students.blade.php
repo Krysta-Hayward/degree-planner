@@ -31,7 +31,7 @@
                             <td>{{ $student->name }}</td>
                             <td>{{ $student->email }}</td>
                             <td>
-                                {{ $student->advisor?->name ?? 'Not assigned' }}
+                                {{ $student->advisor->first()?->name ?? 'Not assigned' }}
                             </td>
                             <td>
                                 <form action="{{ route('admin.students.advisor.update', $student) }}" method="POST">
@@ -43,7 +43,7 @@
 
                                         @foreach ($advisors as $advisor)
                                             <option value="{{ $advisor->id }}" @selected(
-                                                old('advisor_id', $student->advisor_id)
+                                                old('advisor_id', $student->advisor->first()?->id)
                                                 == $advisor->id
                                             )>
                                                 {{ $advisor->name }}

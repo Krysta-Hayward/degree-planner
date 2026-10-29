@@ -19,5 +19,6 @@
             <h3>Needs attention</h3>
             <p class="record-count">{{ $flaggedStudents }}</p>
         </div>
+        @include($advisorPage ?? 'partials.advisor-main')
     </div>
 @endsection

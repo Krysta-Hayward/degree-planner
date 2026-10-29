@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="admin-layout">
-        @include('shared.sidebar')
+        @include('partials.sidebar')
 
         <main class="admin-content">
             <h1>Manage Terms</h1>

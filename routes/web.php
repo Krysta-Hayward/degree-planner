@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminPrereqController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\AdvisorDashboardController;
 use App\Http\Controllers\AdvisorStudentController;
+use App\Http\Controllers\AdvisorPlanReviewController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdvisorMiddleware;
@@ -70,8 +71,14 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
 // Advisor routes
 Route::middleware(['auth', AdvisorMiddleware::class])->group(function () {
-    Route::get('/advisor', [AdvisorDashboardController::class, 'index'])->name('advisor.dashboard');
-    Route::get('/advisor/students', [AdvisorStudentController::class, 'index'])->name('advisor.students.index');
+    Route::get('/advisor', [AdvisorDashboardController::class, 'index'])
+        ->name('advisor.dashboard');
+
+    Route::get('/advisor/students', [AdvisorStudentController::class, 'index'])
+        ->name('advisor.students.index');
+
+    Route::get('/advisor/plans', [AdvisorPlanReviewController::class, 'index'])
+        ->name('advisor.plans.index');
 });
 
 // Student Routes

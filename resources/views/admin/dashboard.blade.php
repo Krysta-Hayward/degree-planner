@@ -14,16 +14,16 @@
 
                 @php
                     $viewRoutes = [
-                        'Users' => 'admin.users',
                         'Advisors' => 'admin.advisors',
-                        'Students' => 'admin.students',
-                        'Courses' => 'admin.courses',
-                        'Programs' => 'admin.programs',
-                        'Terms' => 'admin.terms',
-                        'Plans' => 'admin.plans',
-                        'Plan Courses' => 'admin.data',
-                        'Course Programs' => 'admin.data',
                         'Course Prerequisites' => 'admin.prereqs',
+                        'Course Programs' => 'admin.data',
+                        'Courses' => 'admin.courses',
+                        'Plan Courses' => 'admin.data',
+                        'Plans' => 'admin.plans',
+                        'Programs' => 'admin.programs',
+                        'Students' => 'admin.students',
+                        'Terms' => 'admin.terms',
+                        'Users' => 'admin.users',
                     ];
                 @endphp
 

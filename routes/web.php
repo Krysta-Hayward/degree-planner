@@ -14,7 +14,6 @@ use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardControll
 use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\AdvisorMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Home route
@@ -74,4 +73,5 @@ Route::middleware(['auth', AdvisorMiddleware::class])->group(function () {
     Route::get('/advisor/students', [AdvisorStudentController::class, 'index'])->name('advisor.students.index');
 });
 
-// Student routes
+// Student Routes
+require __DIR__.'/student.php';

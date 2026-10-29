@@ -18,6 +18,13 @@ plans;
   student FK users
   term FK terms
 
+plan_comments;
+  id
+  plan_id FK plan
+  user_id FK user
+  body
+  ?course fk course?
+
 course_prerequisites;
   id
   course FK courses
@@ -28,7 +35,7 @@ students
   advisor FK users
   student FK users
 
-enrolled;
+enrolls;
   id
   student FK users
   term FK terms

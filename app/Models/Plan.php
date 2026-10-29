@@ -10,4 +10,9 @@ class Plan extends Model
     use HasFactory;
 
     protected $fillable = ['student', 'class'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

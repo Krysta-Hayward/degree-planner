@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminStudentController;
 use App\Http\Controllers\Admin\AdminCourseController;
 use App\Http\Controllers\Admin\AdminProgramController;
 use App\Http\Controllers\Admin\AdminTermController;
+use App\Http\Controllers\Admin\AdminPlanController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
 use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
@@ -60,7 +61,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/programs', [AdminProgramController::class, 'index'])->name('admin.programs');
 
     Route::get('/admin/terms', [AdminTermController::class, 'index'])->name('admin.terms');
-    Route::view('/admin/plans', 'admin.plans')->name('admin.plans');
+    
+    Route::get('/admin/plans', [AdminPlanController::class, 'index'])->name('admin.plans');
     Route::view('/admin/prereqs', 'admin.prereqs')->name('admin.prereqs');
 });
 

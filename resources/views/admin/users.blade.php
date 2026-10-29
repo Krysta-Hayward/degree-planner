@@ -1,23 +1,10 @@
-
 @extends('layouts.app')
 
 @section('title', 'Manage Users - Degree Planner')
 
 @section('content')
     <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <h2>Degree Planner</h2>
-            <p>Admin Panel</p>
-
-            <nav>
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                <a href="{{ route('admin.data') }}">Database Overview</a>
-                <a href="{{ route('admin.users') }}" class="active">Manage Users</a>
-                <a href="{{ route('admin.advisors') }}">Manage Advisors</a>
-                <a href="{{ route('admin.students') }}">Manage Students</a>
-                <a href="/">Home</a>
-            </nav>
-        </aside>
+        @include('shared.sidebar')
 
         <main class="admin-content">
             <h1>Manage Users</h1>

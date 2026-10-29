@@ -5,22 +5,7 @@
 
 @section('content')
     <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <h2>Degree Planner</h2>
-            <p>Admin Panel</p>
-
-            <nav>
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                <a href="{{ route('admin.data') }}">Database Overview</a>
-                <a href="{{ route('admin.users') }}">Manage Users</a>
-                <a href="{{ route('admin.advisors') }}">Manage Advisors</a>
-                <a href="{{ route('admin.students') }}">Manage Students</a>
-                <a href="{{ route('admin.courses') }}" class="active">
-                    Manage Courses
-                </a>
-                <a href="/">Home</a>
-            </nav>
-        </aside>
+        @include('shared.sidebar')
 
         <main class="admin-content">
             <h1>Manage Courses</h1>

@@ -4,19 +4,7 @@
 
 @section('content')
     <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <h2>Degree Planner</h2>
-            <p>Admin Panel</p>
-
-            <nav>
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                <a href="{{ route('admin.data') }}">Database Overview</a>
-                <a href="{{ route('admin.students') }}" class="active">
-                    Manage Students
-                </a>
-                <a href="/">Home</a>
-            </nav>
-        </aside>
+        @include('shared.sidebar')
 
         <main class="admin-content">
             <h1>Manage Students</h1>

@@ -2,11 +2,8 @@
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminDataController;
-use App\Http\Controllers\AdvisorDashboardController;
-use App\Http\Controllers\AdvisorStudentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\AdvisorMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Home route
@@ -40,7 +37,3 @@ require __DIR__.'/advisor.php';
 
 // Student Routes
 require __DIR__.'/student.php';
-
-
-
-

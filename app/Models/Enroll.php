@@ -9,5 +9,5 @@ class Enroll extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['student', 'term'];
+    protected $fillable = ['student', 'course'];
 }

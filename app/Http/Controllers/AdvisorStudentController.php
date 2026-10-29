@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-
 
 class AdvisorStudentController extends Controller
 {
@@ -26,10 +24,9 @@ class AdvisorStudentController extends Controller
             ->orderBy('name')
             ->get();
 
-
         return view('advisor.students.index', [
             'advisorPage' => 'partials.advisor.student-list',
-            'students' => $students
+            'students' => $students,
         ]);
     }
 }

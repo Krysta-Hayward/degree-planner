@@ -14,8 +14,6 @@ Changes to student's program map are saved to the database
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Plan;
 use Illuminate\Support\Facades\DB;
 
@@ -24,22 +22,21 @@ class AdvisorDashboardController extends Controller
     //
     public function index()
     {
-         $advisorId = auth()->id();
+        $advisorId = auth()->id();
 
-         // Students assigned to this advisor
-         $studentCount = DB::table('students')
+        // Students assigned to this advisor
+        $studentCount = DB::table('students')
             ->where('advisor', auth()->id())
             ->count();
-         
-         // TODO: Plans with status 'submitted' for this advisor's student "Add status column to plans table"
-         $awaitingReview = 0;
 
-         // TODO: Students with problems (no plan, failed prerequisite)
-         $flaggedStudents = 0;
-         
+        // TODO: Plans with status 'submitted' for this advisor's student "Add status column to plans table"
+        $awaitingReview = 0;
+
+        // TODO: Students with problems (no plan, failed prerequisite)
+        $flaggedStudents = 0;
 
         return view('advisor.dashboard', [
-            
+
             'advisorPage' => 'partials.advisor.menu', // Show count if student table is not displayed
             'studentCount' => $studentCount,
             'awaitingReview' => $awaitingReview,

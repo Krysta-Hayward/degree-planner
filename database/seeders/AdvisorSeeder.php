@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 class AdvisorSeeder extends Seeder
@@ -17,8 +16,7 @@ class AdvisorSeeder extends Seeder
         // Students assigned to logged in advisor
         $students = User::where('role', 'student')->take(12)->get();
 
-        
-       foreach ($students as $student) {
+        foreach ($students as $student) {
             DB::table('students')->insert([
                 'advisor' => $advisor->id,
                 'student' => $student->id,

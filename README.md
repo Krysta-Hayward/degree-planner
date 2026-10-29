@@ -119,14 +119,16 @@ cp .env.testing.example .env.testing
 composer install
 php artisan key:generate
 php artisan key:generate --env=testing
-New-Item database/database.sqlite -ItemType File
+POWERSHELL: New-Item database/database.sqlite -ItemType File
+BASH: touch database/database.sqlite
 php artisan migrate
 //DATABASE TESTING ONLY
-php artisan db:seed
+   php artisan db:seed
 //END TEST ONLY
 docker compose up -d --build
 docker compose exec test php artisan test
 docker compose exec test vendor/bin/pint --test
+LINUX W/ APACHE: sudo systemctl stop apache2 <- free default localhost
 ```
 
 ## Stop Docker

@@ -12,7 +12,6 @@
             <a href="{{ route('admin.advisors') }}">Advisors</a>
             <a href="{{ route('admin.students') }}">Students</a>
             <a href="{{ route('admin.courses') }}">Courses</a>
-            <a href="{{ route('admin.data') }}">Database Overview</a>
             <a href="{{ route('admin.plans') }}">Plans</a>
             <a href="{{ route('admin.prereqs') }}">Prerequisites</a>
             <a href="{{ route('admin.programs') }}">Programs</a>

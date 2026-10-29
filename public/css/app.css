@@ -154,3 +154,19 @@ td a:hover {
 .dashboard-card a {
     color: #333;
 }
+
+/* Admin sidebar */
+.admin-sidebar details {
+    margin: 8px 0;
+}
+
+.admin-sidebar summary {
+    padding: 10px;
+    cursor: pointer;
+    list-style-position: inside;
+}
+
+.admin-sidebar .sidebar-submenu a {
+    display: block;
+    padding: 8px 10px 8px 24px;
+}

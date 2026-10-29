@@ -20,18 +20,18 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Role</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Role</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach ($users as $user)
                             <tr>
+                                <td>{{ ucfirst($user->role) }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ ucfirst($user->role) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

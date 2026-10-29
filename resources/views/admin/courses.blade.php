@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Manage Courses - Degree Planner')

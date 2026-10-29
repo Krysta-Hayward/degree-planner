@@ -8,7 +8,7 @@
 
         <main class="admin-content">
             <h1>Manage Programs</h1>
-            <p>View programs available in the Degree Planner.</p>
+            <p>View degree programs and their required courses.</p>
 
             <p>
                 <strong>Total programs:</strong> {{ $programs->count() }}
@@ -17,25 +17,35 @@
             @if ($programs->isEmpty())
                 <p>No programs found.</p>
             @else
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Program Number</th>
-                            <th>Program Name</th>
-                            <th>Credits</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($programs as $program)
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $program->programNumber }}</td>
-                                <td>{{ $program->name }}</td>
-                                <td>{{ $program->credits }}</td>
+                                <th>Program Name</th>
+                                <th>Required Courses</th>
+                                <th>Actions</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($programs as $program)
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
+                                            {{ $program->name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ $program->course_count }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
         </main>
     </div>

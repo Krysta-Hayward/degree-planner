@@ -10,4 +10,9 @@ class Program extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'course'];
+
+    public function courseDetails()
+    {
+        return $this->belongsTo(\App\Models\Course::class, 'course');
+    }
 }

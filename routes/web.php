@@ -60,7 +60,10 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/courses', [AdminCourseController::class, 'index'])
         ->name('admin.courses');
 
-    Route::get('/admin/programs', [AdminProgramController::class, 'index'])->name('admin.programs');
+    Route::get('/admin/programs', [AdminProgramController::class, 'index'])
+        ->name('admin.programs');
+    Route::get('/admin/programs/{programName}', [AdminProgramController::class, 'show'])
+        ->name('admin.programs.show');
 
     Route::get('/admin/terms', [AdminTermController::class, 'index'])->name('admin.terms');
 

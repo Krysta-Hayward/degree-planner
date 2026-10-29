@@ -63,8 +63,12 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/programs', [AdminProgramController::class, 'index'])->name('admin.programs');
 
     Route::get('/admin/terms', [AdminTermController::class, 'index'])->name('admin.terms');
-    
-    Route::get('/admin/plans', [AdminPlanController::class, 'index'])->name('admin.plans');
+
+    Route::get('/admin/plans', [AdminPlanController::class, 'index'])
+        ->name('admin.plans');
+
+    Route::get('/admin/plans/{student}', [AdminPlanController::class, 'show'])
+        ->name('admin.plans.show');
     
     Route::get('/admin/prereqs', [AdminPrereqController::class, 'index'])->name('admin.prereqs');
 });

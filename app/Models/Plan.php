@@ -15,4 +15,9 @@ class Plan extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'class');
+    }
 }

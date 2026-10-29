@@ -10,10 +10,11 @@ use App\Http\Controllers\Admin\AdminTermController;
 use App\Http\Controllers\Admin\AdminPlanController;
 use App\Http\Controllers\Admin\AdminPrereqController;
 use App\Http\Controllers\Admin\AdminUserController;
-use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
-use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
+use App\Http\Controllers\AdvisorDashboardController;
+use App\Http\Controllers\AdvisorStudentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\AdvisorMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Home route

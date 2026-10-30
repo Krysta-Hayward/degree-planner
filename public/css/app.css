@@ -52,6 +52,13 @@
     color: inherit;
 }
 
+.button-links-danger {
+    text-decoration: none;
+    color: inherit;
+    background-color: red;
+    border-color: darkred;
+}
+
 body {
     min-height: 100%;
     width: 100%;

@@ -37,7 +37,7 @@
                 </button>
             </form>
 
-            <button class="button-links">
+            <button class="button-links-danger">
                 <a href="{{ route('admin.courses.index') }}">Cancel</a>
             </button>
         </main>

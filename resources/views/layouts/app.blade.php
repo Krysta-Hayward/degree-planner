@@ -28,18 +28,13 @@
                     <button class="button-links">
                         <a href="{{ route('admin.data') }}">Database Overview</a>
                     </button>
-                @endif
-
-                @if (auth()->user()->role === 'advisor')
+                
+                    @elseif (auth()->user()->role === 'advisor')
                     <button class="button-links">
                         <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
                     </button>
-                    <button class="button-links">
-                        <a href="{{ route('advisor.students.index') }}">Students</a>
-                    </button>
-                @endif
 
-                @if (auth()->user()->role === 'student')
+                @elseif (auth()->user()->role === 'student')
                     <button class="button-links">
                         <a href="{{ route('student.dashboard') }}">My Degree Plan</a>
                     </button>

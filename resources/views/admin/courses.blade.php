@@ -10,7 +10,7 @@
             <h1>Manage Courses</h1>
             <p>View courses available in the Degree Planner.</p>
 
-            <button><a href="{{ route('admin.courses.create') }}" class="btn btn-primary"></a>Create Course</button>
+            <button class="button-links"><a href="{{ route('admin.courses.create') }}">Create Course</a></button>
 
             <p>
                 <strong>Total courses:</strong> {{ $courses->count() }}

@@ -46,9 +46,12 @@
 /* Homepage/Main */
     
 /* Button Links */
-.button-links a {
+.button-links a,
+.button-links a:visited {
     text-decoration: none;
+    color: inherit;
 }
+
 body {
     min-height: 100%;
     width: 100%;

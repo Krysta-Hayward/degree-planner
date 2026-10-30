@@ -4,38 +4,42 @@
 
 @section('content')
     <div class="admin-layout">
-        @include('shared.sidebar')
+        @include('partials.sidebar')
 
         <main class="admin-content">
-            <h1>Manage prerequisites</h1>
-            <p>View prerequisites available in the Degree Planner.</p>
+            <h1>Manage Prerequisites</h1>
+            <p>View the prerequisite requirements for courses in the Degree Planner.</p>
 
             <p>
-                <strong>Total prerequisites:</strong> {{ $prereqs->count() }}
+                <strong>Total prerequisite relationships:</strong> {{ $prereqs->count() }}
             </p>
 
             @if ($prereqs->isEmpty())
                 <p>No prerequisites found.</p>
             @else
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Prerequisite Number</th>
-                            <th>Prerequisite Name</th>
-                            <th>Credits</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($prereqs as $prereq)
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $prereq->prereqNumber }}</td>
-                                <td>{{ $prereq->name }}</td>
-                                <td>{{ $prereq->credits }}</td>
+                                <th>Course Number</th>
+                                <th>Course Name</th>
+                                <th>Prerequisite Number</th>
+                                <th>Prerequisite Name</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($prereqs as $prereq)
+                                <tr>
+                                    <td>{{ $prereq->courseDetails?->courseNumber ?? 'Unknown course' }}</td>
+                                    <td>{{ $prereq->courseDetails?->name ?? 'Unknown course' }}</td>
+                                    <td>{{ $prereq->prerequisiteDetails?->courseNumber ?? 'Unknown course' }}</td>
+                                    <td>{{ $prereq->prerequisiteDetails?->name ?? 'Unknown course' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
         </main>
     </div>

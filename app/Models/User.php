@@ -7,8 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -39,15 +38,29 @@ class User extends Authenticatable
     }
 
     // Get advisor assigned to student
-    public function advisor(): BelongsTo
+    public function advisor(): BelongsToMany
     {
-        return $this->belongsTo(User::class, 'advisor_id');
+        return $this->belongsToMany(
+            User::class,
+            'students',
+            'student',
+            'advisor'
+        );
     }
 
-    // Get students assigned to advisors
-    public function students(): HasMany
+    // Get students assigned to advisor
+    public function students(): BelongsToMany
     {
-        return $this->hasMany(User::class, 'advisor_id');
+        return $this->belongsToMany(
+            User::class,
+            'students',
+            'advisor',
+            'student'
+        );
     }
 
+    public function plans()
+    {
+        return $this->hasMany(Plan::class, 'student');
+    }
 }

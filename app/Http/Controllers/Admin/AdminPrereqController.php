@@ -10,7 +10,12 @@ class AdminPrereqController extends Controller
 {
     public function index(): View
     {
-        $prereqs = Course_Prerequisite::orderBy('prereqNumber')->get();
+        $prereqs = Course_Prerequisite::with([
+            'courseDetails',
+            'prerequisiteDetails',
+        ])
+            ->orderBy('course')
+            ->get();
 
         return view('admin.prereqs', compact('prereqs'));
     }

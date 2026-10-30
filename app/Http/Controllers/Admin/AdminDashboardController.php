@@ -12,14 +12,15 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $tables = [
-            'users' => 'Users',
-            'courses' => 'Courses',
-            'programs' => 'Programs',
-            'terms' => 'Terms',
-            'plans' => 'Plans',
-            'plan_courses' => 'Plan Courses',
-            'course_program' => 'Course Programs',
             'course_prerequisites' => 'Course Prerequisites',
+            'course_program' => 'Course Programs',
+            'courses' => 'Courses',
+            'plan_courses' => 'Plan Courses',
+            'plans' => 'Plans',
+            'programs' => 'Programs',
+            'students' => 'Students',
+            'terms' => 'Terms',
+            'users' => 'Users',
         ];
 
         $counts = [];
@@ -34,7 +35,7 @@ class AdminDashboardController extends Controller
             }
         }
 
-        return view('layouts.admin-advisor-dashboards', [
+        return view('admin.dashboard', [
             'counts' => $counts,
         ]);
     }

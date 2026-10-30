@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,22 +33,32 @@ class AdminStudentController extends Controller
             'advisor_id' => [
                 'nullable',
                 'integer',
-                'exists:user,id',
+                'exists:users,id',
             ],
         ]);
 
-        if ($validated['advisor_id'] !== null) {
-            $advisor = User::findOrFail($validated['advisor_id']);
+        $advisorId = $validated['advisor_id'] ?? null;
+
+        if ($advisorId !== null) {
+            $advisor = User::findOrFail($advisorId);
 
             if ($advisor->role !== 'advisor') {
                 return back()->withErrors([
-                    'advisor_id' => 'Please select a valid advisor.'
+                    'advisor_id' => 'The selected user is not an advisor.',
                 ]);
             }
         }
 
-        $student->advisor_id = $validated['advisor_id'];
-        $student->save();
+        // Remove the existing advisor assignment.
+        Student::where('student', $student->id)->delete();
+
+        // Create the new assignment if an advisor was selected.
+        if ($advisorId !== null) {
+            Student::create([
+                'advisor' => $advisorId,
+                'student' => $student->id,
+            ]);
+        }
 
         return back()->with('status', 'Advisor assignement saved.');
     }

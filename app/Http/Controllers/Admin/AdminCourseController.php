@@ -17,7 +17,7 @@ class AdminCourseController extends Controller
     {
         $this->authorize('viewAny', Course::class);
 
-        $courses = Course::orderBy('courseNumber')->paginate(50);
+        $courses = Course::orderBy('courseNumber')->paginate(25);
 
         return view('admin.courses', compact('courses'));
     }

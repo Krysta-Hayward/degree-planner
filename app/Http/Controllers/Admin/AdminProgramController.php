@@ -14,7 +14,7 @@ class AdminProgramController extends Controller
         $programs = Program::select('name')
             ->distinct()
             ->orderBy('name')
-            ->get()
+            ->paginate(25)
             ->map(function ($program) {
                 $program->course_count = Program::where('name', $program->name)
                     ->count();

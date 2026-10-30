@@ -1,14 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Courses - Degree Planner')
+@section('title', 'Add Course - Degree Planner')
 
 @section('content')
     <div class="admin-layout">
         @include('partials.sidebar')
 
         <main class="admin-content">
-
             <h1>Add Course</h1>
+
+            @if (session('success'))
+                <p>{{ session('success') }}</p>
+            @endif
 
             @if ($errors->any())
                 <ul>
@@ -30,10 +33,14 @@
                 <label for="credits">Credits</label>
                 <input id="credits" type="number" name="credits" min="0" step="any" value="{{ old('credits') }}" required>
 
-                <button type="submit">Create Course</button>
+                <button type="submit" class="button-links">
+                    Create Course
+                </button>
             </form>
 
-            <a href="{{ route('admin.courses.index') }}">Cancel</a>
+            <button class="button-links">
+                <a href="{{ route('admin.courses.index') }}">Cancel</a>
+            </button>
         </main>
     </div>
 @endsection

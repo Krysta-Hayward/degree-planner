@@ -11,19 +11,19 @@ class AdminPlanController extends Controller
     public function index(): View
     {
         $students = User::where('role', 'student')
+            ->whereHas('plans')
             ->with('plans.course')
             ->orderBy('name')
-            ->get()
-            ->filter(fn ($student) => $student->plans->isNotEmpty())
-            ->values()
-            ->map(function ($student) {
-                $student->planned_courses = $student->plans->count();
+            ->paginate(10);
 
-                $student->planned_credits = $student->plans
-                    ->sum(fn ($plan) => $plan->course?->credits ?? 0);
+        $students->getCollection()->transform(function ($student) {
+            $student->planned_courses = $student->plans->count();
 
-                return $student;
-            });
+            $student->planned_credits = $student->plans
+                ->sum(fn($plan) => $plan->course?->credits ?? 0);
+
+            return $student;
+        });
 
         return view('admin.plans', compact('students'));
     }
@@ -35,11 +35,11 @@ class AdminPlanController extends Controller
         $student->load('plans.course');
 
         $plans = $student->plans
-            ->sortBy(fn ($plan) => $plan->course?->courseNumber ?? '')
+            ->sortBy(fn($plan) => $plan->course?->courseNumber ?? '')
             ->values();
 
         $totalCredits = $plans->sum(
-            fn ($plan) => $plan->course?->credits ?? 0
+            fn($plan) => $plan->course?->credits ?? 0
         );
 
         return view('admin.plan-details', compact(

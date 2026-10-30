@@ -17,38 +17,44 @@
                 @if ($students->isEmpty())
                     <p>No student plans have been created yet.</p>
                 @else
-                    <div style="overflow-x: auto;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Student</th>
-                                    <th>Planned Courses</th>
-                                    <th>Planned Credits</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($students as $student)
-                                    <tr>
-                                        <td>
-                                            <a href="{{ route('admin.plans.show', $student) }}">
-                                                {{ $student->name }}
-                                            </a>
-                                        </td>
-                                        <td>{{ $student->planned_courses }}</td>
-                                        <td>{{ $student->planned_credits }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.plans.show', $student) }}">
-                                                View Full Plan
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="pagination">
+                        {{ $students->links() }}
                     </div>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Planned Courses</th>
+                                        <th>Planned Credits</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($students as $student)
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('admin.plans.show', $student) }}">
+                                                    {{ $student->name }}
+                                                </a>
+                                            </td>
+                                            <td>{{ $student->planned_courses }}</td>
+                                            <td>{{ $student->planned_credits }}</td>
+                                            <td>
+                                                <a href="{{ route('admin.plans.show', $student) }}">
+                                                    View Full Plan
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                 @endif
             </section>
+            <div class="pagination">
+                {{ $students->links() }}
+            </div>
         </main>
     </div>
 @endsection

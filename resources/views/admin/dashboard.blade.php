@@ -17,7 +17,7 @@
                         'Advisors' => 'admin.advisors',
                         'Course Prerequisites' => 'admin.prereqs',
                         'Course Programs' => 'admin.data',
-                        'Courses' => 'admin.courses',
+                        'Courses' => 'admin.courses.index',
                         'Plan Courses' => 'admin.data',
                         'Plans' => 'admin.plans',
                         'Programs' => 'admin.programs',

@@ -17,26 +17,32 @@
             @if ($advisors->isEmpty())
                 <p>No advisor accounts found.</p>
             @else
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Assigned Students</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($advisors as $advisor)
+                <div class="pagination">
+                    {{ $advisors->links() }}
+                </div>
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $advisor->name }}</td>
-                                <td>{{ $advisor->email }}</td>
-                                <td>{{ $advisor->students_count }}</td>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Assigned Students</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($advisors as $advisor)
+                                <tr>
+                                    <td>{{ $advisor->name }}</td>
+                                    <td>{{ $advisor->email }}</td>
+                                    <td>{{ $advisor->students_count }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
             @endif
+            <div class="pagination">
+                {{ $advisors->links() }}
+            </div>
         </main>
     </div>
 @endsection

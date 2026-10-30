@@ -17,36 +17,42 @@
             @if ($programs->isEmpty())
                 <p>No programs found.</p>
             @else
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Program Name</th>
-                                <th>Required Courses</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach ($programs as $program)
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
-                                            {{ $program->name }}
-                                        </a>
-                                    </td>
-                                    <td>{{ $program->course_count }}</td>
-                                    <td>
-                                        <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
-                                            View Details
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="pagination">
+                    {{ $programs->links() }}
                 </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Program Name</th>
+                                    <th>Required Courses</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($programs as $program)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
+                                                {{ $program->name }}
+                                            </a>
+                                        </td>
+                                        <td>{{ $program->course_count }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
+                                                View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
             @endif
+            <div class="pagination">
+                {{ $programs->links() }}
+            </div>
         </main>
     </div>
 @endsection

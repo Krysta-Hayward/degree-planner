@@ -10,15 +10,19 @@
             <h1>Manage Courses</h1>
             <p>View courses available in the Degree Planner.</p>
 
-            <button class="button-links"><a href="{{ route('admin.courses.create') }}">Create Course</a></button>
-
-            <p>
-                <strong>Total courses:</strong> {{ $courses->count() }}
-            </p>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <p>
+                    <strong>Total courses:</strong> {{ $courses->total() }}
+                </p>
+                <button class="button-links"><a href="{{ route('admin.courses.create') }}">Create Course</a></button>
+            </div>
 
             @if ($courses->isEmpty())
                 <p>No courses found.</p>
             @else
+                <div class="pagination">
+                    {{ $courses->links() }}
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -53,6 +57,9 @@
                     </tbody>
                 </table>
             @endif
+            <div class="pagination">
+                {{ $courses->links() }}
+            </div>
         </main>
     </div>
 @endsection

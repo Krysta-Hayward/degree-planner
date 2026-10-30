@@ -25,6 +25,7 @@
                             <th>Course Number</th>
                             <th>Course Name</th>
                             <th>Credits</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
@@ -34,6 +35,7 @@
                                 <td>{{ $course->courseNumber }}</td>
                                 <td>{{ $course->name }}</td>
                                 <td>{{ $course->credits }}</td>
+                                <td><a href="{{  route('admin.courses.edit', $course) }}" class="button-links">Edit</a></td>
                             </tr>
                         @endforeach
                     </tbody>

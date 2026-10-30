@@ -1,20 +1,16 @@
 <?php
-/**
- * W
- */
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use \App\Models\Plan;
 use App\Models\ProgramMap;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class AdvisorPlanReviewController extends Controller
 {
-   public function index()
-   {
+    // Maps waiting for this advisor's review
+    public function index()
+    {
         $studentIds = DB::table('students')
             ->where('advisor', auth()->id())
             ->pluck('student');
@@ -24,13 +20,12 @@ class AdvisorPlanReviewController extends Controller
             ->with('owner')
             ->get();
 
-        return view('layouts.admin-advisor-dashboards', [
-            'advisorPage' => 'partials.advisor.plans',
+        return view('advisor.plans.index', [
             'maps' => $maps,
         ]);
-   }
+    }
 
-   // One student's map for review
+    // One student's map for review
     public function show(ProgramMap $programMap)
     {
         Gate::authorize('view', $programMap);
@@ -45,14 +40,13 @@ class AdvisorPlanReviewController extends Controller
             ->get()
             ->groupBy('quarterYear');
 
-        return view('layouts.admin-advisor-dashboards', [
-            'advisorPage' => 'partials.advisor.plan-review',
+        return view('advisor.plans.show', [
             'programMap' => $programMap->load('owner'),
             'coursesByQuarter' => $courses,
         ]);
     }
 
-   public function approve(ProgramMap $programMap)
+    public function approve(ProgramMap $programMap)
     {
         Gate::authorize('review', $programMap);
 
@@ -64,7 +58,6 @@ class AdvisorPlanReviewController extends Controller
 
         return redirect()->route('advisor.plans.index')->with('success', 'Program map approved.');
     }
-
 
     public function requestChanges(ProgramMap $programMap)
     {
@@ -78,5 +71,4 @@ class AdvisorPlanReviewController extends Controller
 
         return redirect()->route('advisor.plans.index')->with('success', 'Changes requested.');
     }
-
 }

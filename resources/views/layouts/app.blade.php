@@ -32,9 +32,7 @@
                     <button class="button-links">
                         <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
                     </button>
-                @endif
-
-                @if (auth()->user()->role === 'student')
+                @elseif (auth()->user()->role === 'student')
                     <button class="button-links">
                         <a href="{{ route('student.dashboard') }}">My Degree Plan</a>
                     </button>
@@ -45,12 +43,10 @@
                     <button class="button-links" type="submit">Log Out</button>
                 </form>
 
-                @auth
-                    <span>
-                        {{ Auth::user()->name }}
-                        ({{ ucfirst(Auth::user()->role) }})
-                    </span>
-                @endauth
+                <span>
+                    {{ Auth::user()->name }}
+                    ({{ ucfirst(Auth::user()->role) }})
+                </span>
 
             @else
                 <button class="button-links">

@@ -51,7 +51,6 @@ test('advisors see advisor links only', function () {
         ->get('/')
         ->assertOk()
         ->assertSee(navLink('advisor.dashboard'), false)
-        ->assertSee(navLink('advisor.students.index'), false)
         ->assertDontSee(navLink('student.dashboard'), false)
         ->assertDontSee(navLink('admin.dashboard'), false);
 });

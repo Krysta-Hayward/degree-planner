@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        // advisor example user
         User::updateOrCreate(
             ['email' => 'advisor@example.com'],
             [
@@ -36,6 +37,7 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        // student example user
         User::updateOrCreate(
             ['email' => 'student@example.com'],
             [
@@ -45,16 +47,34 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        User::factory(100)->create(); // and a total of ten to play with for now. (Changed to 100)
-        
+        // A bunch of fake users as test data.
+        User::factory(100)->create();
+
+        // Link some students to the example advisor
         $this->call(AdvisorSeeder::class);
 
-        Course::factory(25)->create(); // TODO: manually rip class list for Programs!
-        // Term::factory(8)->create();
-        // TODO: Plans should not be seeded, make one or two with hard options.
-        // Course_Prerequisites::factory(8)->create(); //low number to minimize weirdness
-        // TODO: Students cannot be seeded; manually assign some students to some advisors.
-        // Enrolls::factory(5)->create(); //low number to minimize weirdness
-        // TODO: Programs cannot be randomly seeded, make manual program or two for testing.
+        // A bunch of fake courses as test data
+        Course::factory(75)->create();
+
+        // Three random students with default advisor each make a plan with three random courses
+        $this->call(PlanSeeder::class);
+
+        // five random classes gain a random prerequisite.
+        $this->call(PrereqSeeder::class);
+
+        // three random terms are created with three random courses each
+        $this->call(TermSeeder::class);
+
+        // three random students enroll in three random courses each
+        $this->call(EnrollSeeder::class);
+
+        // random program with the terms from TermSeeder
+        $this->call(ProgramSeeder::class);
+
+        // AAS-SoftDev data hand-pulled from SCC website
+        $this->call(SoftDevSeeder::class);
+
+        // Program maps for students with plans, until the Submit button exists
+        $this->call(ProgramMapSeeder::class);
     }
 }

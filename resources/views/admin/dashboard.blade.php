@@ -1,33 +1,36 @@
-@extends('layouts.app')
+@extends('layouts.admin-advisor-dashboards')
 
 @section('title', 'Admin Dashboard - Degree Planner')
+@section('heading', 'Admin Dashboard')
 
-@section('content')
-    <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <h2>Degree Planner</h2>
-            <p>Admin Panel</p>
+@section('dashboard')
+    <p>Overview of the Degree Planner database.</p>
 
-            <nav>
-                <a href="{{ route('admin.dashboard') }}" class="active">Dashboard</a>
-                <a href="{{ route('admin.data') }}">Database Overview</a>
-                <a href="/">Home</a>
-            </nav>
-        </aside>
+    <div class="dashboard-cards">
+        @foreach ($counts as $label => $count)
+            <div class="dashboard-card">
+                <h3>{{ $label }}</h3>
+                <p class="record-count">{{ $count }}</p>
 
-        <main class="admin-content">
-            <h1>Admin Dashboard</h1>
-            <p>Overview of the Degree Planner database.</p>
+                @php
+                    $viewRoutes = [
+                        'Advisors' => 'admin.advisors',
+                        'Course Prerequisites' => 'admin.prereqs',
+                        'Course Programs' => 'admin.data',
+                        'Courses' => 'admin.courses',
+                        'Plan Courses' => 'admin.data',
+                        'Plans' => 'admin.plans',
+                        'Programs' => 'admin.programs',
+                        'Students' => 'admin.students',
+                        'Terms' => 'admin.terms',
+                        'Users' => 'admin.users',
+                    ];
+                @endphp
 
-            <div class="dashboard-cards">
-                @foreach ($counts as $label => $count)
-                    <div class="dashboard-card">
-                        <h3>{{ $label }}</h3>
-                        <p class="record-count">{{ $count }}</p>
-                        <a href="{{ route('admin.data') }}">View Database</a>
-                    </div>
-                @endforeach
+                <a href="{{ route($viewRoutes[$label] ?? 'admin.data') }}">
+                    Manage {{ $label }}
+                </a>
             </div>
-        </main>
+        @endforeach
     </div>
 @endsection

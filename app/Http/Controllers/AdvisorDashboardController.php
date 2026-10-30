@@ -7,49 +7,39 @@ awaitingReview - plans submitted for this advisor to review
 flaggedStudents - students needing attention
 
 Advisor can view program maps for students assigned to them
-Advisor can update a student's program map to help plan thier degree
+Advisor can update a student's program map to help plan their degree
 Advisor can view course requirements and prerequisites within a program map
 Changes to student's program map are saved to the database
 */
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Plan;
 use App\Models\ProgramMap;
 use Illuminate\Support\Facades\DB;
 
 class AdvisorDashboardController extends Controller
 {
-    //
     public function index()
     {
-         $advisorId = auth()->id();
-
-         // Students assigned to this advisor
-         $studentIds = DB::table('students')
+        // Students assigned to this advisor
+        $studentIds = DB::table('students')
             ->where('advisor', auth()->id())
             ->pluck('student');
 
         $studentCount = $studentIds->count();
-         
-         // TODO: Plans with status 'submitted' for this advisor's student "Add status column to plans table"
-         $awaitingReview = ProgramMap::where('status', 'submitted')
+
+        // Program maps submitted by this advisor's students
+        $awaitingReview = ProgramMap::where('status', 'submitted')
             ->whereIn('student', $studentIds)
             ->count();
 
-         // TODO: Students with problems (no plan, failed prerequisite)
-         $flaggedStudents = 0;
-         
+        // TODO: Students with problems (no plan, failed prerequisite)
+        $flaggedStudents = 0;
 
         return view('advisor.dashboard', [
-            
-            'advisorPage' => 'partials.advisor.menu', // Show count if student table is not displayed
             'studentCount' => $studentCount,
             'awaitingReview' => $awaitingReview,
             'flaggedStudents' => $flaggedStudents,
-
         ]);
     }
 }

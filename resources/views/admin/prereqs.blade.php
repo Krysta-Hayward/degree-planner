@@ -17,30 +17,36 @@
             @if ($prereqs->isEmpty())
                 <p>No prerequisites found.</p>
             @else
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Course Number</th>
-                                <th>Course Name</th>
-                                <th>Prerequisite Number</th>
-                                <th>Prerequisite Name</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach ($prereqs as $prereq)
-                                <tr>
-                                    <td>{{ $prereq->courseDetails?->courseNumber ?? 'Unknown course' }}</td>
-                                    <td>{{ $prereq->courseDetails?->name ?? 'Unknown course' }}</td>
-                                    <td>{{ $prereq->prerequisiteDetails?->courseNumber ?? 'Unknown course' }}</td>
-                                    <td>{{ $prereq->prerequisiteDetails?->name ?? 'Unknown course' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="pagination">
+                    {{ $prereqs->links() }}
                 </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Course Number</th>
+                                    <th>Course Name</th>
+                                    <th>Prerequisite Number</th>
+                                    <th>Prerequisite Name</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($prereqs as $prereq)
+                                    <tr>
+                                        <td>{{ $prereq->courseDetails?->courseNumber ?? 'Unknown course' }}</td>
+                                        <td>{{ $prereq->courseDetails?->name ?? 'Unknown course' }}</td>
+                                        <td>{{ $prereq->prerequisiteDetails?->courseNumber ?? 'Unknown course' }}</td>
+                                        <td>{{ $prereq->prerequisiteDetails?->name ?? 'Unknown course' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
             @endif
+            <div class="pagination">
+                {{ $prereqs->links() }}
+            </div>
         </main>
     </div>
 @endsection

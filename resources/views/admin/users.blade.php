@@ -17,26 +17,32 @@
             @if ($users->isEmpty())
                 <p>No user accounts found.</p>
             @else
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Role</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($users as $user)
+                <div class="pagination">
+                    {{ $users->links() }}
+                </div>
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ ucfirst($user->role) }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
+                                <th>Role</th>
+                                <th>Name</th>
+                                <th>Email</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($users as $user)
+                                <tr>
+                                    <td>{{ ucfirst($user->role) }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
             @endif
+            <div class="pagination">
+                {{ $users->links() }}
+            </div>
         </main>
     </div>
 @endsection

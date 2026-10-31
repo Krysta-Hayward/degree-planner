@@ -9,7 +9,7 @@ class Program extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'course'];
+    protected $fillable = ['name', 'course', 'requirement_group'];
 
     public function courseDetails()
     {

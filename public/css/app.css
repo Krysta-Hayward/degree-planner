@@ -46,9 +46,70 @@
 /* Homepage/Main */
     
 /* Button Links */
-.button-links a {
+.button-links a,
+.button-links a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+.button-links-danger {
+    text-decoration: none;
+    color: inherit;
+    background-color: red;
+    border-color: darkred;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    margin-left: 80px;
+    margin-top: 20px;
+}
+
+.pagination ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.pagination li {
+    list-style: none;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
     text-decoration: none;
 }
+
+.pagination .active span {
+    background: var(--hover-bg);
+    font-weight: bold;
+}
+
+.pagination a:hover {
+    background: var(--surface-alt);
+}
+
+.pagination .disabled span {
+    color: var(--muted-link);
+    opacity: 0.6;
+}
+
+/* Main site */
 body {
     min-height: 100%;
     width: 100%;
@@ -224,4 +285,44 @@ nav button a {
 
 .advisor-nav a {
     display: block;
+}
+/* Admin program form */
+.program-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 900px;
+}
+
+.program-form input[type="text"],
+.program-form input[type="search"],
+.program-form textarea {
+    padding: 8px;
+    font: inherit;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.program-form h2 {
+    margin-bottom: 0;
+}
+
+.program-form table {
+    width: 100%;
+    margin: 10px 0 20px;
+}
+
+.program-form button[type="submit"] {
+    align-self: flex-start;
+}
+
+.admin-content .notice {
+    padding: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-alt);
+}
+
+.form-errors {
+    color: #c0392b;
 }

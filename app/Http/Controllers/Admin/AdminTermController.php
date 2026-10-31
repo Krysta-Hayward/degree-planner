@@ -10,7 +10,7 @@ class AdminTermController extends Controller
 {
     public function index(): View
     {
-        $terms = Term::orderBy('termNumber')->get();
+        $terms = Term::orderBy('termNumber')->paginate(25);
 
         return view('admin.terms', compact('terms'));
     }

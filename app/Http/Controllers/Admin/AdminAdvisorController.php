@@ -13,7 +13,7 @@ class AdminAdvisorController extends Controller
         $advisors = User::where('role', 'advisor')
             ->withCount('students')
             ->orderBy('name')
-            ->get();
+            ->paginate(25);
 
         return view('admin.advisors', compact('advisors'));
     }

@@ -11,8 +11,16 @@
                 <a href="{{ route('admin.programs') }}">← Back to Programs</a>
             </p>
 
+            @if (session('success'))
+                <p class="notice">{{ session('success') }}</p>
+            @endif
+
             <h1>{{ $programName }}</h1>
-            <p>View the courses associated with this degree program.</p>
+            <p>{{ $description ?: 'No description yet.' }}</p>
+
+            <button class="button-links">
+                <a href="{{ route('admin.programs.edit', ['programName' => $programName]) }}">Edit Program</a>
+            </button>
 
             <section>
                 <h2>Program Overview</h2>
@@ -26,12 +34,14 @@
                 </p>
             </section>
 
-            <section>
-                <h2>Required Courses</h2>
+            @foreach ($groups as $group => $groupCourses)
+                <section>
+                    <h2>{{ $group }}</h2>
+                    <p>
+                        {{ $groupCourses->count() }} {{ \Illuminate\Support\Str::plural('course', $groupCourses->count()) }},
+                        {{ $groupCourses->sum(fn ($program) => $program->courseDetails?->credits ?? 0) }} credits
+                    </p>
 
-                @if ($courses->isEmpty())
-                    <p>No courses are associated with this program.</p>
-                @else
                     <div style="overflow-x: auto;">
                         <table>
                             <thead>
@@ -43,24 +53,18 @@
                             </thead>
 
                             <tbody>
-                                @foreach ($courses as $program)
+                                @foreach ($groupCourses as $program)
                                     <tr>
-                                        <td>
-                                            {{ $program->courseDetails?->courseNumber ?? 'Unknown course' }}
-                                        </td>
-                                        <td>
-                                            {{ $program->courseDetails?->name ?? 'Unknown course' }}
-                                        </td>
-                                        <td>
-                                            {{ $program->courseDetails?->credits ?? 0 }}
-                                        </td>
+                                        <td>{{ $program->courseDetails?->courseNumber ?? 'Unknown course' }}</td>
+                                        <td>{{ $program->courseDetails?->name ?? 'Unknown course' }}</td>
+                                        <td>{{ $program->courseDetails?->credits ?? 0 }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-                @endif
-            </section>
+                </section>
+            @endforeach
         </main>
     </div>
 @endsection

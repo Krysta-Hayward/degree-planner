@@ -74,6 +74,15 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     Route::get('/admin/programs', [AdminProgramController::class, 'index'])
         ->name('admin.programs');
+    // create has to come before {programName} so "create" isn't read as a program name
+    Route::get('/admin/programs/create', [AdminProgramController::class, 'create'])
+        ->name('admin.programs.create');
+    Route::post('/admin/programs', [AdminProgramController::class, 'store'])
+        ->name('admin.programs.store');
+    Route::get('/admin/programs/{programName}/edit', [AdminProgramController::class, 'edit'])
+        ->name('admin.programs.edit');
+    Route::put('/admin/programs/{programName}', [AdminProgramController::class, 'update'])
+        ->name('admin.programs.update');
     Route::get('/admin/programs/{programName}', [AdminProgramController::class, 'show'])
         ->name('admin.programs.show');
 

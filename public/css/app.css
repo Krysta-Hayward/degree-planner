@@ -286,3 +286,43 @@ nav button a {
 .advisor-nav a {
     display: block;
 }
+/* Admin program form */
+.program-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 900px;
+}
+
+.program-form input[type="text"],
+.program-form input[type="search"],
+.program-form textarea {
+    padding: 8px;
+    font: inherit;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.program-form h2 {
+    margin-bottom: 0;
+}
+
+.program-form table {
+    width: 100%;
+    margin: 10px 0 20px;
+}
+
+.program-form button[type="submit"] {
+    align-self: flex-start;
+}
+
+.admin-content .notice {
+    padding: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-alt);
+}
+
+.form-errors {
+    color: #c0392b;
+}

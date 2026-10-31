@@ -13,8 +13,8 @@ class AdvisorSeeder extends Seeder
         // The advisor created in DatabaseSeeder
         $advisor = User::where('email', 'advisor@example.com')->firstOrFail();
 
-        // Students assigned to logged in advisor
-        $students = User::where('role', 'student')->take(12)->get();
+        // Link some students to this advisor (PlanSeeder picks from these)
+        $students = User::where('role', 'student')->take(20)->get();
 
         foreach ($students as $student) {
             DB::table('students')->insert([

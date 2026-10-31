@@ -73,5 +73,8 @@ class DatabaseSeeder extends Seeder
 
         // AAS-SoftDev data hand-pulled from SCC website
         $this->call(SoftDevSeeder::class);
+
+        // Program maps for students with plans, until the Submit button exists
+        $this->call(ProgramMapSeeder::class);
     }
 }

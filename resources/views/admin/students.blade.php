@@ -15,6 +15,10 @@
                 <strong>Available advisors:</strong> {{ $advisors->count() }}
             </p>
 
+            <div class="pagination">
+                {{ $students->links() }}
+            </div>
+
             <table>
                 <thead>
                     <tr>
@@ -43,9 +47,9 @@
 
                                         @foreach ($advisors as $advisor)
                                             <option value="{{ $advisor->id }}" @selected(
-                                                old('advisor_id', $student->advisor->first()?->id)
-                                                == $advisor->id
-                                            )>
+            old('advisor_id', $student->advisor->first()?->id)
+            == $advisor->id
+        )>
                                                 {{ $advisor->name }}
                                             </option>
                                         @endforeach
@@ -60,6 +64,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="pagination">
+                {{ $students->links() }}
+            </div>
         </main>
     </div>
 @endsection

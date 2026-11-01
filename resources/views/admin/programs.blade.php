@@ -42,14 +42,14 @@
                                 @foreach ($programs as $program)
                                     <tr>
                                         <td>
-                                            <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
+                                            <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}">
                                                 {{ $program->name }}
                                             </a>
                                         </td>
                                         <td>{{ \Illuminate\Support\Str::limit($program->description ?? '—', 80) }}</td>
                                         <td>{{ $program->course_count }}</td>
                                         <td>
-                                            <a href="{{ route('admin.programs.show', ['programName' => $program->name]) }}">
+                                            <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}">
                                                 View Details
                                             </a>
                                             |

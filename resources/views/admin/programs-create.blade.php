@@ -19,7 +19,7 @@
             ])
 
             <button class="button-links">
-                <a href="{{ route('admin.programs') }}">Cancel</a>
+                <a href="{{ route('admin.programs.index') }}">Cancel</a>
             </button>
         </main>
     </div>

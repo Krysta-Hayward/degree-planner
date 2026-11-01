@@ -16,7 +16,7 @@
             ])
 
             <button class="button-links">
-                <a href="{{ route('admin.programs.show', ['programName' => $programName]) }}">Cancel</a>
+                <a href="{{ route('admin.programs.index', ['programName' => $programName]) }}">Cancel</a>
             </button>
         </main>
     </div>

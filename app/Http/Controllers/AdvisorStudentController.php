@@ -11,6 +11,9 @@ class AdvisorStudentController extends Controller
     // Finds the student assigned to advisor
     // Need to link students to advisor
     // Display a table of students
+
+    // Need to be updated to based off of student programs and not random students
+    // Admin links students to advisor based off of program?
     public function index()
     {
 
@@ -25,7 +28,6 @@ class AdvisorStudentController extends Controller
             ->get();
 
         return view('advisor.students.index', [
-            'advisorPage' => 'partials.advisor.student-list',
             'students' => $students,
         ]);
     }

@@ -57,7 +57,6 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/users', [AdminUserController::class, 'index'])
         ->name('admin.users');
 
-
     Route::get('/admin/courses', [AdminCourseController::class, 'index'])
         ->name('admin.courses.index');
     Route::get('/admin/courses/create', [AdminCourseController::class, 'create'])
@@ -70,7 +69,6 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         ->name('admin.courses.update');
     Route::delete('/admin/courses/{course}', [AdminCourseController::class, 'destroy'])
         ->name('admin.courses.destroy');
-
 
     Route::get('/admin/programs', [AdminProgramController::class, 'index'])
         ->name('admin.programs');

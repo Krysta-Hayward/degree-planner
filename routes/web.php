@@ -24,11 +24,13 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+
+
 // Admin routes
-require __DIR__.'/admin.php';
+require __DIR__ . '/admin.php';
 
 // Advisor routes
-require __DIR__.'/advisor.php';
+require __DIR__ . '/advisor.php';
 
 // Student Routes
-require __DIR__.'/student.php';
+require __DIR__ . '/student.php';

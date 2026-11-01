@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Term;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class TermPolicy
 {
@@ -13,7 +12,7 @@ class TermPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->role === 'admin';
     }
 
     /**
@@ -21,7 +20,7 @@ class TermPolicy
      */
     public function view(User $user, Term $term): bool
     {
-        return true;
+        return $user->role === 'admin';
     }
 
     /**

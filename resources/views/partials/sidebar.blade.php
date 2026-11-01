@@ -15,7 +15,7 @@
             <a href="{{ route('admin.plans') }}">Plans</a>
             <a href="{{ route('admin.prereqs') }}">Prerequisites</a>
             <a href="{{ route('admin.programs.index') }}">Programs</a>
-            <a href="{{ route('admin.terms') }}">Terms</a>
+            <a href="{{ route('admin.terms.index') }}">Terms</a>
 
         @elseif (auth()->user()->role === 'advisor')
             @include('partials.advisor.navbar')

@@ -64,7 +64,18 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         ->name('admin.programs.details');
 
     // Terms routes
-    Route::get('/admin/terms', [AdminTermController::class, 'index'])->name('admin.terms');
+    Route::get('/admin/terms', [AdminTermController::class, 'index'])
+        ->name('admin.terms.index');
+    Route::get('/admin/terms/create', [AdminTermController::class, 'create'])
+        ->name('admin.terms.create');
+    Route::post('/admin/terms', [AdminTermController::class, 'store'])
+        ->name('admin.terms.store');
+    Route::get('/admin/terms/{term}/edit', [AdminTermController::class, 'edit'])
+        ->name('admin.terms.edit');
+    Route::put('/admin/terms/{term}', [AdminTermController::class, 'update'])
+        ->name('admin.terms.update');
+    Route::delete('/admin/terms/{term}', [AdminTermController::class, 'destroy'])
+        ->name('admin.terms.destroy');
 
     // Plans and Prereqs routes
     Route::get('/admin/plans', [AdminPlanController::class, 'index'])

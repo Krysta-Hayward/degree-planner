@@ -12,6 +12,7 @@ use Illuminate\View\View;
 class AdminCourseController extends Controller
 {
     use AuthorizesRequests;
+
     // Display all courses
     public function index(): View
     {
@@ -71,7 +72,7 @@ class AdminCourseController extends Controller
                 'required',
                 'string',
                 'max:255',
-                'unique:courses,courseNumber,' . $course->id,
+                'unique:courses,courseNumber,'.$course->id,
             ],
             'name' => ['required', 'string', 'max:255'],
             'credits' => ['required', 'numeric', 'min:0'],

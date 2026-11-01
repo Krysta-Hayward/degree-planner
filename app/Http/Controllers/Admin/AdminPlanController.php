@@ -20,7 +20,7 @@ class AdminPlanController extends Controller
             $student->planned_courses = $student->plans->count();
 
             $student->planned_credits = $student->plans
-                ->sum(fn($plan) => $plan->course?->credits ?? 0);
+                ->sum(fn ($plan) => $plan->course?->credits ?? 0);
 
             return $student;
         });
@@ -35,11 +35,11 @@ class AdminPlanController extends Controller
         $student->load('plans.course');
 
         $plans = $student->plans
-            ->sortBy(fn($plan) => $plan->course?->courseNumber ?? '')
+            ->sortBy(fn ($plan) => $plan->course?->courseNumber ?? '')
             ->values();
 
         $totalCredits = $plans->sum(
-            fn($plan) => $plan->course?->credits ?? 0
+            fn ($plan) => $plan->course?->credits ?? 0
         );
 
         return view('admin.plan-details', compact(

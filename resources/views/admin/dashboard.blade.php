@@ -20,7 +20,7 @@
                         'Courses' => 'admin.courses.index',
                         'Plan Courses' => 'admin.data',
                         'Plans' => 'admin.plans',
-                        'Programs' => 'admin.programs',
+                        'Programs' => 'admin.programs.index',
                         'Students' => 'admin.students',
                         'Terms' => 'admin.terms',
                         'Users' => 'admin.users',

@@ -14,7 +14,7 @@
                 <p>
                     <strong>Total courses:</strong> {{ $courses->total() }}
                 </p>
-                <button class="button-links"><a href="{{ route('admin.courses.create') }}">Create Course</a></button>
+                <a href="{{ route('admin.courses.create') }}" class="button-links">Create Course</a>
             </div>
 
             @if ($courses->isEmpty())

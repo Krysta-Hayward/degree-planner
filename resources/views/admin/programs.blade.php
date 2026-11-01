@@ -18,7 +18,7 @@
                 <p>
                     <strong>Total programs:</strong> {{ $programs->total() }}
                 </p>
-                <button class="button-links"><a href="{{ route('admin.programs.create') }}">Create Program</a></button>
+                <a href="{{ route('admin.programs.create') }}" class="button-links">Create Program</a>
             </div>
 
             @if ($programs->isEmpty())

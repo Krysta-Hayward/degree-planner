@@ -48,7 +48,8 @@
 /* Button Links */
 .button-links,
 a.button-links,
-a.button-links:visited {
+a.button-links:visited,
+div.button-links {
     display: inline-block;
     text-decoration: none;
     color: inherit;

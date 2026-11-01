@@ -35,14 +35,14 @@ class AdminDataController extends Controller
 
         if ($table !== null && array_key_exists($table, $data)) {
             $columns = Schema::getColumnListing($table);
-            $records = DB::table($table)->limit(100)->get();
+            $records = DB::table($table)->limit(100)->paginate(25);
 
             // Display student and advisor names alongside their IDs.
             if ($table === 'students') {
                 // Get user names indexed by their IDs.
                 $users = DB::table('users')->pluck('name', 'id');
 
-                $records = $records->map(function ($record) use ($users) {
+                $records->getCollection()->transform(function ($record) use ($users) {
                     // Preserve the original IDs.
                     $studentId = $record->student;
                     $advisorId = $record->advisor;

@@ -16,7 +16,7 @@ class AdminStudentController extends Controller
         $students = User::where('role', 'student')
             ->with('advisor')
             ->orderBy('name')
-            ->get();
+            ->paginate(25);
 
         $advisors = User::where('role', 'advisor')
             ->orderBy('name')

@@ -28,8 +28,8 @@
                     <button class="button-links">
                         <a href="{{ route('admin.data') }}">Database Overview</a>
                     </button>
-                
-                    @elseif (auth()->user()->role === 'advisor')
+
+                @elseif (auth()->user()->role === 'advisor')
                     <button class="button-links">
                         <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
                     </button>
@@ -63,6 +63,24 @@
     <main>
         @yield('content')
     </main>
+    <script>
+        document.addEventListener('click', function (event) {
+            const link = event.target.closest('.pagination a');
+
+            if (link) {
+                sessionStorage.setItem('tableScroll', window.scrollY);
+            }
+        });
+
+        window.addEventListener('load', function () {
+            const savedPosition = sessionStorage.getItem('tableScroll');
+
+            if (savedPosition !== null) {
+                window.scrollTo(0, parseInt(savedPosition, 10));
+                sessionStorage.removeItem('tableScroll');
+            }
+        });
+    </script>
 </body>
 
 </html>

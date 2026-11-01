@@ -17,26 +17,32 @@
             @if ($terms->isEmpty())
                 <p>No terms found.</p>
             @else
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Term ID</th>
-                            <th>Quarter / Year</th>
-                            <th>Course ID</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($terms as $term)
+                <div class="pagination">
+                    {{ $terms->links() }}
+                </div>
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $term->id }}</td>
-                                <td>{{ $term->quarterYear }}</td>
-                                <td>{{ $term->course }}</td>
+                                <th>Term ID</th>
+                                <th>Quarter / Year</th>
+                                <th>Course ID</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($terms as $term)
+                                <tr>
+                                    <td>{{ $term->id }}</td>
+                                    <td>{{ $term->quarterYear }}</td>
+                                    <td>{{ $term->course }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
             @endif
+            <div class="pagination">
+                {{ $terms->links() }}
+            </div>
         </main>
     </div>
 @endsection

@@ -108,7 +108,7 @@ class AdminProgramController extends Controller
         });
 
         return redirect()
-            ->route('admin.programs.index', ['programName' => $validated['name']])
+            ->route('admin.programs.details', ['programName' => $validated['name']])
             ->with('success', 'Program created successfully.');
     }
 
@@ -169,7 +169,7 @@ class AdminProgramController extends Controller
         });
 
         return redirect()
-            ->route('admin.programs.index', ['programName' => $newName])
+            ->route('admin.programs.details', ['programName' => $newName])
             ->with('success', 'Program updated successfully.');
     }
 

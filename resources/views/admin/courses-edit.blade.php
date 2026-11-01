@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Course - Degree Planner')
+@section('title', 'Edit ' . $course->courseNumber . ' - Degree Planner')
 
 @section('content')
     <div class="admin-layout">
         @include('partials.sidebar')
 
         <main class="admin-content">
-            <h1>Edit Course</h1>
+            <h1>Edit {{ $course->courseNumber }}</h1>
 
             @if ($errors->any())
                 <ul>

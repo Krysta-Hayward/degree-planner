@@ -1,8 +1,8 @@
 @extends('layouts.admin-advisor-dashboards')
 
-@section('dashboard')
-    <h2>My Students</h2>
+@section('heading', 'My Students')
 
+@section('dashboard')
     @if ($students->isEmpty())
         <p>No students are assigned to you yet.</p>
     @else

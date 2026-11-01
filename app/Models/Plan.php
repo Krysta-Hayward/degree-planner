@@ -20,4 +20,10 @@ class Plan extends Model
     {
         return $this->belongsTo(Course::class, 'class');
     }
+
+    // The student's program map, matched through the shared student column
+    public function programMap()
+    {
+        return $this->belongsTo(ProgramMap::class, 'student', 'student');
+    }
 }

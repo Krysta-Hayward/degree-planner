@@ -26,6 +26,17 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
+      - name: Diagnose controller filename
+        run: |
+          echo "Controller files tracked by Git:"
+          git ls-tree -r --name-only HEAD | grep -i 'app/http/controllers/controller.php' || true
+
+          echo "Controller files on disk:"
+          find app/Http/Controllers -maxdepth 1 -type f -iname '*controller.php' -print
+
+          echo "Controller class autoload check:"
+          php -r "require 'vendor/autoload.php'; var_dump(class_exists('App\\Http\\Controllers\\Controller'));"
+
       - name: Create environment file
         run: cp .env.example .env
 

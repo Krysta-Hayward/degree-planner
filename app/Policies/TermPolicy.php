@@ -46,5 +46,4 @@ class TermPolicy
     {
         return $user->role === 'admin';
     }
-
 }

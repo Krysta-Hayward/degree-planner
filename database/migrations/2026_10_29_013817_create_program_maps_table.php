@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('program_maps', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('student')->unique()->constrained('users')->cascadeOnDelete();
-        $table->string('status')->default('draft');
-        $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();
-        $table->timestamp('reviewed_at')->nullable();
-        $table->timestamps();
-    });
+            $table->id();
+            $table->foreignId('student')->unique()->constrained('users')->cascadeOnDelete();
+            $table->string('status')->default('draft');
+            $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('reviewed_at')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

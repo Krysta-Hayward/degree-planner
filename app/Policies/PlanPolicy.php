@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Determines roles for each on who can do what with the plans
  */
@@ -7,7 +8,6 @@ namespace App\Policies;
 
 use App\Models\Plan;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PlanPolicy
 {
@@ -16,7 +16,7 @@ class PlanPolicy
      */
     public function viewAny(User $user, Plan $plan): bool
     {
-        return match($user->role){
+        return match ($user->role) {
             'admin' => true,
             default => false,
         };
@@ -59,7 +59,7 @@ class PlanPolicy
 
     /**
      * Determine who can resotre plan
-     * Should be Admin? 
+     * Should be Admin?
      * Plan gets saved into database?
      */
     public function restore(User $user, Plan $plan): bool
@@ -79,8 +79,8 @@ class PlanPolicy
     /**
      * If Advisor is assigned to student
      */
-
-    public function isAdvisorOf(User $user, Plan $plan){
+    public function isAdvisorOf(User $user, Plan $plan)
+    {
         return DB::table('student')
             ->where('advisor'->advisor->id)
             ->where('student'->studentId)

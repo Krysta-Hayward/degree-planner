@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\AdminTermController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Middleware\AdminMiddleware;
 
-require __DIR__ . '/student.php';
+require __DIR__.'/student.php';
 
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     // Database view route

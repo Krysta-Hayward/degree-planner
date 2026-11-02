@@ -77,12 +77,17 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::delete('/admin/terms/{term}', [AdminTermController::class, 'destroy'])
         ->name('admin.terms.destroy');
 
-    // Plans and Prereqs routes
+    // Plans routes
     Route::get('/admin/plans', [AdminPlanController::class, 'index'])
         ->name('admin.plans');
-
     Route::get('/admin/plans/{student}', [AdminPlanController::class, 'show'])
         ->name('admin.plans.show');
 
+    // Prerequisites routes
     Route::get('/admin/prereqs', [AdminPrereqController::class, 'index'])->name('admin.prereqs');
+    Route::get('/admin/prereqs/create', [AdminPrereqController::class, 'create'])->name('admin.prereqs.create');
+    Route::post('/admin/prereqs', [AdminPrereqController::class, 'store'])->name('admin.prereqs.store');
+    Route::get('/admin/prereqs/{prereq}/edit', [AdminPrereqController::class, 'edit'])->name('admin.prereqs.edit');
+    Route::put('/admin/prereqs/{prereq}', [AdminPrereqController::class, 'update'])->name('admin.prereqs.update');
+    Route::delete('/admin/prereqs/{prereq}', [AdminPrereqController::class, 'destroy'])->name('admin.prereqs.destroy');
 });

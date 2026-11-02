@@ -13,7 +13,7 @@
             <a href="{{ route('admin.students') }}">Students</a>
             <a href="{{ route('admin.courses.index') }}">Courses</a>
             <a href="{{ route('admin.plans') }}">Plans</a>
-            <a href="{{ route('admin.prereqs') }}">Prerequisites</a>
+            <a href="{{ route('admin.prereqs.index') }}">Prerequisites</a>
             <a href="{{ route('admin.programs.index') }}">Programs</a>
             <a href="{{ route('admin.terms.index') }}">Terms</a>
 

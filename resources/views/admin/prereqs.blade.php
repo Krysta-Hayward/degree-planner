@@ -1,4 +1,3 @@
-```blade
 @extends('layouts.app')
 
 @section('title', 'Manage Prerequisites - Degree Planner')
@@ -82,4 +81,3 @@
         </main>
     </div>
 @endsection
-```

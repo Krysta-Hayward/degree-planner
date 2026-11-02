@@ -1,14 +1,15 @@
 <?php
+
 /**
- * Student can view, update (only while in status of draft or request_change), comment on thier own program map. 
+ * Student can view, update (only while in status of draft or request_change), comment on thier own program map.
  * Advisor can view, review (only while submitted) and comment on thier assigned student'program map,
- * Admin can view all maps  
- */ 
+ * Admin can view all maps
+ */
+
 namespace App\Policies;
 
 use App\Models\ProgramMap;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\DB;
 
 class ProgramMapPolicy
@@ -55,7 +56,7 @@ class ProgramMapPolicy
     /**
      * Who can comment on a map
      */
-     public function comment(User $user, ProgramMap $map): bool
+    public function comment(User $user, ProgramMap $map): bool
     {
         return match ($user->role) {
             'student' => (int) $map->student === $user->id,
@@ -64,7 +65,7 @@ class ProgramMapPolicy
         };
     }
 
-     // Who can approve or request changes
+    // Who can approve or request changes
     public function review(User $user, ProgramMap $map): bool
     {
         return $user->role === 'advisor'
@@ -96,7 +97,7 @@ class ProgramMapPolicy
         return false;
     }
 
-     // Is this advisor assigned to this student?
+    // Is this advisor assigned to this student?
     private function isAdvisorOf(User $advisor, int $studentId): bool
     {
         return DB::table('students')

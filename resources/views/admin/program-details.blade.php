@@ -8,7 +8,7 @@
 
         <main class="admin-content">
             <p>
-                <a href="{{ route('admin.programs') }}">← Back to Programs</a>
+                <a href="{{ route('admin.programs.index') }}">← Back to Programs</a>
             </p>
 
             @if (session('success'))

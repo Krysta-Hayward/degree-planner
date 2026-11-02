@@ -84,7 +84,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         ->name('admin.plans.show');
 
     // Prerequisites routes
-    Route::get('/admin/prereqs', [AdminPrereqController::class, 'index'])->name('admin.prereqs');
+    Route::get('/admin/prereqs', [AdminPrereqController::class, 'index'])->name('admin.prereqs.index');
     Route::get('/admin/prereqs/create', [AdminPrereqController::class, 'create'])->name('admin.prereqs.create');
     Route::post('/admin/prereqs', [AdminPrereqController::class, 'store'])->name('admin.prereqs.store');
     Route::get('/admin/prereqs/{prereq}/edit', [AdminPrereqController::class, 'edit'])->name('admin.prereqs.edit');

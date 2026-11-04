@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PublicProgramController;
+use App\Http\Controllers\PublicCourseController;
 
 // Home route
 Route::get('/', function () {
@@ -22,6 +24,13 @@ Route::get('/health', function () {
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Public routes
+Route::get('/programs', [PublicProgramController::class, 'index'])
+    ->name('public.programs');
+
+Route::get('/courses', [PublicCourseController::class, 'index'])
+    ->name('public.courses');
 
 // Admin routes
 require __DIR__.'/admin.php';

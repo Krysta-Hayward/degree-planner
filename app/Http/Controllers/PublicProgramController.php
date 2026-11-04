@@ -8,10 +8,11 @@ class PublicProgramController extends Controller
 {
     public function index()
     {
-        $programs = Program::with('courseDetails')
+        $programGroups = Program::with('courseDetails')
             ->orderBy('name')
-            ->paginate(10);
+            ->get()
+            ->groupBy('name');
 
-        return view('programs.index', compact('programs'));
+        return view('public.programs', compact('programGroups'));
     }
 }

@@ -13,4 +13,9 @@ class PublicCourseController extends Controller
 
         return view('public.courses', compact('courses'));
     }
+
+    public function show(Course $course)
+    {
+        return view('public.course-details', compact('course'));
+    }
 }

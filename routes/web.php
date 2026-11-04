@@ -33,6 +33,8 @@ Route::get('/programs/{program}', [PublicProgramController::class, 'show'])
 
 Route::get('/courses', [PublicCourseController::class, 'index'])
     ->name('public.courses');
+Route::get('/courses/{course}', [PublicCourseController::class, 'show'])
+    ->name('public.courses.show');
 
 // Admin routes
 require __DIR__.'/admin.php';

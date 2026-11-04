@@ -11,6 +11,6 @@ class PublicCourseController extends Controller
         $courses = Course::orderBy('courseNumber')
             ->paginate(15);
 
-        return view('courses.index', compact('courses'));
+        return view('public.courses', compact('courses'));
     }
 }

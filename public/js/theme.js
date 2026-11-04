@@ -22,10 +22,17 @@
     }
 
     function updateButtons() {
-        var isDark = currentTheme() === 'dark';
-        document.querySelectorAll('.theme-toggle').forEach(function (button) {
-            button.textContent = isDark ? 'Light Mode' : 'Dark Mode';
-            button.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        var isDark = currentTheme() === "dark";
+
+        document.querySelectorAll(".theme-toggle").forEach(function (button) {
+            button.innerHTML =
+                (isDark ? "☀️ Light Mode" : "🌙 Dark Mode");
+
+            button.setAttribute(
+                "aria-label",
+                isDark ? "Switch to light mode" : "Switch to dark mode",
+            );
+            button.setAttribute("aria-pressed", isDark ? "true" : "false");
         });
     }
 

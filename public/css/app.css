@@ -46,6 +46,22 @@
 /* Homepage/Main */
     
 /* Button Links */
+.dark-light-mode-toggle {
+    position: absolute;
+    right: 36px;
+    top: 5%;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+}
+
 .button-links,
 a.button-links,
 a.button-links:visited,

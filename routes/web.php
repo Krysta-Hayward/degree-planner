@@ -28,6 +28,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Public routes
 Route::get('/programs', [PublicProgramController::class, 'index'])
     ->name('public.programs');
+Route::get('/programs/{program}', [PublicProgramController::class, 'show'])
+    ->name('public.programs.show');
 
 Route::get('/courses', [PublicCourseController::class, 'index'])
     ->name('public.courses');

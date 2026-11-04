@@ -15,4 +15,13 @@ class PublicProgramController extends Controller
 
         return view('public.programs', compact('programGroups'));
     }
+
+    public function show(Program $program)
+    {
+        $programRows = Program::with('courseDetails')
+            ->where('name', $program->name)
+            ->get();
+
+        return view('public.program-details', compact('program', 'programRows'));
+    }
 }

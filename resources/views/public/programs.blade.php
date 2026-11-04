@@ -20,6 +20,7 @@
                             <th>Course Number</th>
                             <th>Course Name</th>
                             <th>Credits</th>
+                            <th>Details</th>
                         </tr>
                     </thead>
 
@@ -35,6 +36,11 @@
                                     </td>
                                     <td>
                                         {{ $program->courseDetails->credits }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('public.programs.show', $program->id) }}">
+                                            View Details
+                                        </a>
                                     </td>
                                 </tr>
                             @endif

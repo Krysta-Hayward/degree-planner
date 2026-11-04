@@ -15,7 +15,7 @@
                 @php
                     $viewRoutes = [
                         'Advisors' => 'admin.advisors',
-                        'Course Prerequisites' => 'admin.prereqs',
+                        'Course Prerequisites' => 'admin.prereqs.index',
                         'Course Programs' => 'admin.data',
                         'Courses' => 'admin.courses.index',
                         'Plan Courses' => 'admin.data',

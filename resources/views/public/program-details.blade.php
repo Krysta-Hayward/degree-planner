@@ -23,7 +23,9 @@
                 @forelse ($programRows as $row)
                     @if ($row->courseDetails)
                         <tr>
-                            <td>{{ $row->courseDetails->courseNumber }}</td>
+                            <td><a href="{{ route('public.courses.show', $program->courseDetails->id) }}">
+                                {{ $program->courseDetails->courseNumber }}
+                            </a></td>
                             <td>{{ $row->courseDetails->name }}</td>
                             <td>{{ $row->courseDetails->credits }}</td>
                         </tr>
@@ -36,8 +38,6 @@
             </tbody>
         </table>
 
-        <p>
-            <a href="{{ route('public.programs') }}">Back to Programs</a>
-        </p>
+            <a href="{{ route('public.programs') }}" class="button-links">Back to Programs</a>
     </div>
 @endsection

@@ -29,7 +29,9 @@
                             @if ($program->courseDetails)
                                 <tr>
                                     <td>
-                                        {{ $program->courseDetails->courseNumber }}
+                                        <a href="{{ route('public.courses.show', $program->courseDetails->id) }}">
+                                            {{ $program->courseDetails->courseNumber }}
+                                        </a>
                                     </td>
                                     <td>
                                         {{ $program->courseDetails->name }}

@@ -27,8 +27,7 @@
             </tbody>
         </table>
 
-        <p>
-            <a href="{{ route('public.courses') }}">Back to Courses</a>
-        </p>
+        <a href="{{ route('public.courses') }}" class="button-links">Back to Courses</a>
+        <a href="{{ route('public.programs') }}" class="button-links">Back to Programs</a>
     </div>
 @endsection

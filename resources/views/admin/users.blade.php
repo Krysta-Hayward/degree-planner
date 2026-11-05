@@ -8,38 +8,65 @@
 
         <main class="admin-content">
             <h1>Manage Users</h1>
-            <p>View all user accounts in the Degree Planner.</p>
+
+            <p>View and manage user accounts in the Degree Planner.</p>
 
             <p>
-                <strong>Total users:</strong> {{ $users->count() }}
+                <strong>Total users:</strong> {{ $users->total() }}
             </p>
 
-            @if ($users->isEmpty())
-                <p>No user accounts found.</p>
-            @else
-                <div class="pagination">
-                    {{ $users->links() }}
-                </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Role</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                            </tr>
-                        </thead>
+            <a href="{{ route('admin.users.create') }}" class="button-links">
+                Create User
+            </a>
 
-                        <tbody>
-                            @foreach ($users as $user)
-                                <tr>
-                                    <td>{{ ucfirst($user->role) }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            @if (session('success'))
+                <p class="success-message">{{ session('success') }}</p>
             @endif
+
+            @if (session('error'))
+                <p class="error-message">{{ session('error') }}</p>
+            @endif
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($users as $user)
+                        <tr>
+                            <td>{{ ucfirst($user->role) }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>
+                                <a href="{{ route('admin.users.edit', $user) }}" class="button-links">
+                                    Edit
+                                </a>
+
+                                @if ($user->id !== auth()->id())
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST"  style="display: inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" class="button-links-danger">Delete</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4">No user accounts found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
             <div class="pagination">
                 {{ $users->links() }}
             </div>

@@ -12,8 +12,8 @@ uses(DatabaseTransactions::class);
 function prereqTestUser(string $role): User
 {
     $id = DB::table('users')->insertGetId([
-        'name' => ucfirst($role) . ' Prerequisite Test',
-        'email' => $role . '-' . Str::random(10) . '@example.com',
+        'name' => ucfirst($role).' Prerequisite Test',
+        'email' => $role.'-'.Str::random(10).'@example.com',
         'password' => Hash::make('password'),
         'role' => $role,
         'created_at' => now(),
@@ -26,7 +26,7 @@ function prereqTestUser(string $role): User
 // Create a test course.
 function prereqTestCourse(string $name = 'Prerequisite Test Course'): int
 {
-    $number = 'PRQ' . strtoupper(Str::random(6));
+    $number = 'PRQ'.strtoupper(Str::random(6));
 
     return DB::table('courses')->insertGetId([
         'courseNumber' => $number,

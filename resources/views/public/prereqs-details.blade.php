@@ -6,16 +6,11 @@
     <div>
         <h1>Course Prerequisite Details</h1>
 
-        <h2>Course</h2>
+        <h2>{{ $course->courseNumber }} - {{ $course->name }}</h2>
 
-        <p>
-            <strong>{{ $prereqs->first()->courseDetails->courseNumber }}</strong>
-            - {{ $prereqs->first()->courseDetails->name }}
-        </p>
-
-        <h2>
-            Required {{ $prereqs->count() > 1 ? 'Prerequisites' : 'Prerequisite' }}
-        </h2>
+        <h3>
+            Required {{ $course->prerequisites->count() > 1 ? 'Prerequisites' : 'Prerequisite' }}
+        </h3>
 
         <table>
             <thead>
@@ -27,11 +22,13 @@
             </thead>
 
             <tbody>
-                @foreach ($prereqs as $prereq)
+                @foreach ($course->prerequisites as $prereq)
                     <tr>
-                        <td><a href="{{ route('public.courses.show', $prereq->prerequisiteDetails->id) }}">
-                            {{ $prereq->prerequisiteDetails->courseNumber }}
-                        </a></td>
+                        <td>
+                            <a href="{{ route('public.courses.show', $prereq->prerequisiteDetails->id) }}">
+                                {{ $prereq->prerequisiteDetails->courseNumber }}
+                            </a>
+                        </td>
                         <td>{{ $prereq->prerequisiteDetails->name }}</td>
                         <td>{{ $prereq->prerequisiteDetails->credits }}</td>
                     </tr>

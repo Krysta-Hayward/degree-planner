@@ -2,28 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course_Prerequisite;
+use App\Models\Course;
 
 class PublicPrereqController extends Controller
 {
 
     public function index()
     {
-        $prereqs = Course_Prerequisite::with([
-            'courseDetails',
-            'prerequisiteDetails'
-        ])->paginate(25);
+        $courses = Course::whereHas('prerequisites')
+            ->withCount('prerequisites')
+            ->orderBy('courseNumber')
+            ->paginate(50);
 
-        return view('public.prereqs', compact('prereqs'));
+        return view('public.prereqs', compact('courses'));
     }
 
-    public function show(Course_Prerequisite $prereq)
+    public function show(Course $course)
     {
-        $prereqs = Course_Prerequisite::with([
-            'courseDetails',
-            'prerequisiteDetails'
-        ])->where('course', $prereq->course)->get();
+        $course->load('prerequisites.prerequisiteDetails');
 
-        return view('public.prereqs-details', compact('prereqs'));
+        return view('public.prereqs-details', compact('course'));
     }
 }

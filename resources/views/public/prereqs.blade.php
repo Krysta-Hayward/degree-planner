@@ -10,27 +10,28 @@
             Browse the prerequisites required for available courses.
         </p>
 
-        @if ($prereqs->count())
+        @if ($courses->count())
             <table>
                 <thead>
                     <tr>
                         <th>Course</th>
                         <th>Course Name</th>
                         <th>Prerequisite</th>
-                        <th>Prerequisite Name</th>
                         <th>Details</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($prereqs as $prereq)
+                    @foreach ($courses as $course)
                         <tr>
-                            <td>{{ $prereq->courseDetails->courseNumber }}</td>
-                            <td>{{ $prereq->courseDetails->name }}</td>
-                            <td>{{ $prereq->prerequisiteDetails->courseNumber }}</td>
-                            <td>{{ $prereq->prerequisiteDetails->name }}</td>
+                            <td>{{ $course->courseNumber }}</td>
+                            <td>{{ $course->name }}</td>
                             <td>
-                                <a href="{{ route('public.prereqs-details', $prereq->id) }}">
+                                {{ $course->prerequisites_count }}
+                                {{ Str::plural('prerequisite', $course->prerequisites_count) }}
+                            </td>
+                            <td>
+                                <a href="{{ route('public.prereqs-details', $course->id) }}">
                                     View Details
                                 </a>
                             </td>
@@ -39,7 +40,7 @@
                 </tbody>
             </table>
 
-            {{ $prereqs->links() }}
+            {{ $courses->links() }}
         @else
             <p>No course prerequisites are currently available.</p>
         @endif

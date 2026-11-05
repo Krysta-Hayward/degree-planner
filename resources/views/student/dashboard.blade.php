@@ -29,7 +29,7 @@
                         <option value="{{ $name }}">{{ $name }}</option>
                     @endforeach
                 </select>
-                <button type="submit">Save Program</button>
+                <button type="submit" class="button-links">Save Program</button>
             </form>
 
             @if ($user->program)
@@ -67,29 +67,29 @@
                                 <td data-label="Credits">{{ $course->credits }}</td>
                                 <td data-label="Prerequisites">
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
-                                        {{ $prereq->courseNumber }}@if (! $loop->last), @endif
+                                        {{ $prereq->courseNumber }}@if (!$loop->last), @endif
                                     @empty
                                         None
                                     @endforelse
                                 </td>
                                 <td data-label="Offered">
                                     @forelse ($terms->get($course->id, collect()) as $term)
-                                        @php
-                                            $missing = $prerequisites->get($course->id, collect())
-                                                ->reject(fn ($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
-                                                ->pluck('courseNumber');
-                                        @endphp
-                                        @if (in_array($term->id, $plannedTermIds))
-                                            {{ $term->quarterYear }} (planned)
-                                        @elseif ($missing->isNotEmpty())
-                                            {{ $term->quarterYear }}: add {{ $missing->join(', ') }} first
-                                        @else
-                                            <form method="POST" action="{{ route('student.plan.add') }}" class="inline-form">
-                                                @csrf
-                                                <input type="hidden" name="term" value="{{ $term->id }}">
-                                                <button type="submit">Add {{ $term->quarterYear }}</button>
-                                            </form>
-                                        @endif
+                                                                    @php
+            $missing = $prerequisites->get($course->id, collect())
+                ->reject(fn($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
+                ->pluck('courseNumber');
+                                                                    @endphp
+                                                                    @if (in_array($term->id, $plannedTermIds))
+                                                                        {{ $term->quarterYear }} (planned)
+                                                                    @elseif ($missing->isNotEmpty())
+                                                                        {{ $term->quarterYear }}: add {{ $missing->join(', ') }} first
+                                                                    @else
+                                                                        <form method="POST" action="{{ route('student.plan.add') }}" class="inline-form">
+                                                                            @csrf
+                                                                            <input type="hidden" name="term" value="{{ $term->id }}">
+                                                                            <button type="submit" class="button-links">Add {{ $term->quarterYear }}</button>
+                                                                        </form>
+                                                                    @endif
                                     @empty
                                         Not scheduled yet
                                     @endforelse
@@ -126,14 +126,14 @@
                             <td data-label="Credits">{{ $course->credits }}</td>
                             <td data-label="Prerequisites">
                                 @forelse ($prerequisites->get($course->id, collect()) as $prereq)
-                                    {{ $prereq->courseNumber }}@if (! $loop->last), @endif
+                                    {{ $prereq->courseNumber }}@if (!$loop->last), @endif
                                 @empty
                                     None
                                 @endforelse
                             </td>
                             <td data-label="Terms Offered">
                                 @forelse ($terms->get($course->id, collect()) as $term)
-                                    {{ $term->quarterYear }}@if (! $loop->last), @endif
+                                    {{ $term->quarterYear }}@if (!$loop->last), @endif
                                 @empty
                                     Not scheduled yet
                                 @endforelse
@@ -172,7 +172,7 @@
                                 <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}" class="inline-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit">Remove</button>
+                                    <button type="submit" class="button-links">Remove</button>
                                 </form>
                             </td>
                         </tr>

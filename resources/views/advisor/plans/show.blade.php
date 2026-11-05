@@ -38,12 +38,12 @@
     @can('review', $programMap)
         <form method="POST" action="{{ route('advisor.plans.approve', $programMap) }}">
             @csrf
-            <button type="submit">Approve</button>
+            <button type="submit" class="button-links">Approve</button>
         </form>
 
         <form method="POST" action="{{ route('advisor.plans.changes', $programMap) }}">
             @csrf
-            <button type="submit">Request changes</button>
+            <button type="submit" class="button-links">Request changes</button>
         </form>
     @endcan
 

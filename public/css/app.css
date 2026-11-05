@@ -394,11 +394,36 @@ nav button a {
     cursor: pointer;
 }
 
+/* Forms */
 .form-actions {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-top: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-group label {
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
 }
 
 @media (max-width: 650px) {

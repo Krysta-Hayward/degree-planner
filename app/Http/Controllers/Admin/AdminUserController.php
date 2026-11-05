@@ -35,7 +35,7 @@ class AdminUserController extends Controller
         User::create($validated);
 
         return redirect()
-            ->route('admin.users.index')
+            ->route('admin.users')
             ->with('success', 'User created successfully.');
     }
 
@@ -81,7 +81,7 @@ class AdminUserController extends Controller
         $user->update($validated);
 
         return redirect()
-            ->route('admin.users.index')
+            ->route('admin.users')
             ->with('success', 'User updated successfully.');
     }
 
@@ -112,7 +112,7 @@ class AdminUserController extends Controller
         $user->delete();
 
         return redirect()
-            ->route('admin.users.index')
+            ->route('admin.users')
             ->with('success', 'User deleted successfully.');
     }
 }

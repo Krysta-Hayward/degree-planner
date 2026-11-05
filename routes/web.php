@@ -45,6 +45,8 @@ Route::get('/terms/{term}', [PublicTermController::class, 'show'])
 
 Route::get('/prerequisites', [PublicPrereqController::class, 'index'])
     ->name('public.prereqs');
+Route::get('/prerequisites/{prereq}', [PublicPrereqController::class, 'show'])
+    ->name('public.prereqs-details');
 
 // Admin routes
 require __DIR__.'/admin.php';

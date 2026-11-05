@@ -3,63 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course_Prerequisite;
-use Illuminate\Http\Request;
 
 class PublicPrereqController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
+        $prereqs = Course_Prerequisite::with([
+            'courseDetails',
+            'prerequisiteDetails'
+        ])->paginate(25);
+
+        return view('public.prereqs', compact('prereqs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(Course_Prerequisite $prereq)
     {
-        //
-    }
+        $prereqs = Course_Prerequisite::with([
+            'courseDetails',
+            'prerequisiteDetails'
+        ])->where('course', $prereq->course)->get();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Course_Prerequisite $course_Prerequisite)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Course_Prerequisite $course_Prerequisite)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Course_Prerequisite $course_Prerequisite)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Course_Prerequisite $course_Prerequisite)
-    {
-        //
+        return view('public.prereqs-details', compact('prereqs'));
     }
 }

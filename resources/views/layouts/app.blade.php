@@ -19,7 +19,7 @@
             <button class="button-links"><a href="/programs">Programs</a></button>
             <button class="button-links"><a href="/courses">Courses</a></button>
             <button class="button-links"><a href="/terms">Terms</a></button>
-            <button class="button-links"><a href="/rerequisites">Prerequisites</a></button>
+            <button class="button-links"><a href="/prerequisites">Prerequisites</a></button>
 
             @auth
                 @if (auth()->user()->role === 'admin')

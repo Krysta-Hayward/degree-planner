@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Term;
-use Illuminate\Http\Request;
 
 class PublicTermController extends Controller
 {

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicProgramController;
 use App\Http\Controllers\PublicCourseController;
 use App\Http\Controllers\PublicTermController;
-use App\Http\Controllers\PublicPrereqsController;
+use App\Http\Controllers\PublicPrereqController;
 
 // Home route
 Route::get('/', function () {

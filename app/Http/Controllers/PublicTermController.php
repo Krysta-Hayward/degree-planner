@@ -7,59 +7,21 @@ use Illuminate\Http\Request;
 
 class PublicTermController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
+        $terms = Term::with('courseDetails')
+            ->orderBy('quarterYear')
+            ->paginate(50);
+
+        return view('public.terms', compact('terms'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Term $term)
     {
-        //
-    }
+        $term->load('courseDetails');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Term $term)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Term $term)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Term $term)
-    {
-        //
+        return view('public.terms-details', compact('term'));
     }
 }

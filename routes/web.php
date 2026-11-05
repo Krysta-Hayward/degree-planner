@@ -39,7 +39,9 @@ Route::get('/courses/{course}', [PublicCourseController::class, 'show'])
     ->name('public.courses.show');
 
 Route::get('/terms', [PublicTermController::class, 'index'])
-    ->name('public.terms');
+    ->name('public.terms.index');
+Route::get('/terms/{term}', [PublicTermController::class, 'show'])
+    ->name('public.terms.show');
 
 Route::get('/prerequisites', [PublicPrereqController::class, 'index'])
     ->name('public.prereqs');

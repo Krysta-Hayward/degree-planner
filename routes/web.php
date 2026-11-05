@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicProgramController;
 use App\Http\Controllers\PublicCourseController;
+use App\Http\Controllers\PublicTermController;
+use App\Http\Controllers\PublicPrereqController;
 
 // Home route
 Route::get('/', function () {
@@ -35,6 +37,12 @@ Route::get('/courses', [PublicCourseController::class, 'index'])
     ->name('public.courses');
 Route::get('/courses/{course}', [PublicCourseController::class, 'show'])
     ->name('public.courses.show');
+
+Route::get('/terms', [PublicTermController::class, 'index'])
+    ->name('public.terms');
+
+Route::get('/prerequisites', [PublicPrereqsController::class, 'index'])
+    ->name('public.prereqs');
 
 // Admin routes
 require __DIR__.'/admin.php';

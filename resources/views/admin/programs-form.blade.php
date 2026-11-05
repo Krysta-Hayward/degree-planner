@@ -91,7 +91,6 @@
 </form>
 
 <script>
-    // Hide course rows that don't match the filter text.
     document.getElementById('course-filter').addEventListener('input', function () {
         const term = this.value.trim().toLowerCase();
 

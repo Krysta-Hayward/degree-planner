@@ -27,7 +27,7 @@
                     ];
                 @endphp
 
-                <a href="{{ route($viewRoutes[$label] ?? 'admin.data') }}">
+                <a href="{{ route($viewRoutes[$label] ?? 'admin.data') }}" class="button-links">
                     Manage {{ $label }}
                 </a>
             </div>

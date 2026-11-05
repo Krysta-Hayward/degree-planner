@@ -47,5 +47,5 @@
         </form>
     @endcan
 
-    <a href="{{ route('advisor.plans.index') }}">Back to plan reviews</a>
+    <a href="{{ route('advisor.plans.index') }}" class="button-links">Back to plan reviews</a>
 @endsection

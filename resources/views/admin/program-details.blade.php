@@ -7,9 +7,7 @@
         @include('partials.sidebar')
 
         <main class="admin-content">
-            <p>
-                <a href="{{ route('admin.programs.index') }}">← Back to Programs</a>
-            </p>
+            <a href="{{ route('admin.programs.index') }}" class="button-links">← Back to Programs</a>
 
             @if (session('success'))
                 <div class="alert-success">
@@ -20,9 +18,8 @@
             <h1>{{ $programName }}</h1>
             <p>{{ $description ?: 'No description yet.' }}</p>
 
-            <button class="button-links">
-                <a href="{{ route('admin.programs.edit', ['programName' => $programName]) }}">Edit Program</a>
-            </button>
+            <a href="{{ route('admin.programs.edit', ['programName' => $programName]) }}" class="button-links">Edit
+                Program</a>
 
             <section>
                 <h2>Program Overview</h2>

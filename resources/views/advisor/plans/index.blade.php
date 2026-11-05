@@ -25,7 +25,7 @@
                     <tr>
                         <td>{{ $map->owner->name }}</td>
                         <td>{{ $map->updated_at->format('M j, Y') }}</td>
-                        <td><a href="{{ route('advisor.plans.show', $map) }}">Review</a></td>
+                        <td><a href="{{ route('advisor.plans.show', $map) }}" class="button-links">Review</a></td>
                     </tr>
                 @endforeach
             </tbody>

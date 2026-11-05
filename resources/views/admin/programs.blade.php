@@ -51,11 +51,10 @@
                                     <td>{{ \Illuminate\Support\Str::limit($program->description ?? '—', 80) }}</td>
                                     <td>{{ $program->course_count }}</td>
                                     <td>
-                                        <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}">
+                                        <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}" class="button-links">
                                             View Details
                                         </a>
-                                        |
-                                        <a href="{{ route('admin.programs.edit', ['programName' => $program->name]) }}">
+                                        <a href="{{ route('admin.programs.edit', ['programName' => $program->name]) }}" class="button-links">
                                             Edit
                                         </a>
                                     </td>

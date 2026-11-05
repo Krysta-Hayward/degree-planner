@@ -1,8 +1,8 @@
 @php
-    $selectedCourse = old('course', $prereq->course ?? '');
+$selectedCourse = old('course', $prereq->course ?? '');
 
-    $selectedPrereqs = old('prereqs', $selectedPrereqs ?? []);
-    $selectedPrereqs = array_map('strval', $selectedPrereqs);
+$selectedPrereqs = old('prereqs', $selectedPrereqs ?? []);
+$selectedPrereqs = array_map('strval', $selectedPrereqs);
 @endphp
 
 <div class="form-group">
@@ -54,18 +54,18 @@
 @enderror
 
 <div class="form-actions">
-    <button type="submit">
+    <button type="submit" class="button-links">
         {{ isset($prereq) ? 'Update Prerequisites' : 'Create Prerequisites' }}
     </button>
 
-    <a href="{{ route('admin.prereqs.index') }}">Cancel</a>
+    <a href="{{ route('admin.prereqs.index') }}" class="button-links-danger">Cancel</a>
 </div>
 
 <script>
     const allCourses = @json($courses->map(fn($course) => [
-        'id' => (string) $course->id,
-        'label' => $course->courseNumber . ' - ' . $course->name,
-    ])->values());
+    'id' => (string) $course->id,
+    'label' => $course->courseNumber . ' - ' . $course->name,
+])->values());
 
     const courseSelect = document.getElementById('course');
     const availableList = document.getElementById('available-prereqs');

@@ -10,48 +10,30 @@
             Browse the degree programs available through Degree Planner.
         </p>
 
-        @forelse ($programGroups as $programName => $programRows)
-            <section class="catalog-item">
-                <h2>{{ $programName }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Program Name</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Course Number</th>
-                            <th>Course Name</th>
-                            <th>Credits</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($programRows as $program)
-                            @if ($program->courseDetails)
-                                <tr>
-                                    <td>
-                                        <a href="{{ route('public.courses.show', $program->courseDetails->id) }}">
-                                            {{ $program->courseDetails->courseNumber }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        {{ $program->courseDetails->name }}
-                                    </td>
-                                    <td>
-                                        {{ $program->courseDetails->credits }}
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('public.programs.show', $program->id) }}">
-                                            View Details
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
-                    </tbody>
-                </table>
-            </section>
-        @empty
-            <p>No programs are currently available.</p>
-        @endforelse
+            <tbody>
+                @forelse ($programGroups as $programName => $programRows)
+                    <tr>
+                        <td>{{ $programName }}</td>
+                        <td>
+                            <a href="{{ route('public.programs.show', $programRows->first()->id) }}">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="2">No programs are currently available.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 @endsection

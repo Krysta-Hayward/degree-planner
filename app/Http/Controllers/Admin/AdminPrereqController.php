@@ -81,7 +81,7 @@ class AdminPrereqController extends Controller
             $prereq->course
         )
             ->pluck('prereq')
-            ->map(fn($id) => (string) $id)
+            ->map(fn ($id) => (string) $id)
             ->toArray();
 
         return view('admin.prereqs-edit', compact(

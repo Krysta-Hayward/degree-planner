@@ -10,7 +10,9 @@
             <h1>Add Course</h1>
 
             @if (session('success'))
-                <p>{{ session('success') }}</p>
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             @if ($errors->any())

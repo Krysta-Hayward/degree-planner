@@ -4,7 +4,9 @@
 
 @section('dashboard')
     @if (session('success'))
-        <p class="success">{{ session('success') }}</p>
+        <div class="alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
     @if ($maps->isEmpty())

@@ -11,7 +11,9 @@
             <p>View, create, and edit degree programs and their required courses.</p>
 
             @if (session('success'))
-                <p class="notice">{{ session('success') }}</p>
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             <div style="display: flex; align-items: center; gap: 20px;">
@@ -27,41 +29,41 @@
                 <div class="pagination">
                     {{ $programs->links() }}
                 </div>
-                    <div style="overflow-x: auto;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Program Name</th>
-                                    <th>Description</th>
-                                    <th>Required Courses</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Program Name</th>
+                                <th>Description</th>
+                                <th>Required Courses</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
-                            <tbody>
-                                @foreach ($programs as $program)
-                                    <tr>
-                                        <td>
-                                            <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}">
-                                                {{ $program->name }}
-                                            </a>
-                                        </td>
-                                        <td>{{ \Illuminate\Support\Str::limit($program->description ?? '—', 80) }}</td>
-                                        <td>{{ $program->course_count }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}">
-                                                View Details
-                                            </a>
-                                            |
-                                            <a href="{{ route('admin.programs.edit', ['programName' => $program->name]) }}">
-                                                Edit
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                        <tbody>
+                            @foreach ($programs as $program)
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}">
+                                            {{ $program->name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ \Illuminate\Support\Str::limit($program->description ?? '—', 80) }}</td>
+                                    <td>{{ $program->course_count }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.programs.details', ['programName' => $program->name]) }}">
+                                            View Details
+                                        </a>
+                                        |
+                                        <a href="{{ route('admin.programs.edit', ['programName' => $program->name]) }}">
+                                            Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
             <div class="pagination">
                 {{ $programs->links() }}

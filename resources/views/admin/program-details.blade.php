@@ -12,7 +12,9 @@
             </p>
 
             @if (session('success'))
-                <p class="notice">{{ session('success') }}</p>
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             <h1>{{ $programName }}</h1>
@@ -39,7 +41,7 @@
                     <h2>{{ $group }}</h2>
                     <p>
                         {{ $groupCourses->count() }} {{ \Illuminate\Support\Str::plural('course', $groupCourses->count()) }},
-                        {{ $groupCourses->sum(fn ($program) => $program->courseDetails?->credits ?? 0) }} credits
+                        {{ $groupCourses->sum(fn($program) => $program->courseDetails?->credits ?? 0) }} credits
                     </p>
 
                     <div style="overflow-x: auto;">

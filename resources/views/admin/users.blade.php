@@ -20,7 +20,9 @@
             </a>
 
             @if (session('success'))
-                <p class="success-message">{{ session('success') }}</p>
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             @if (session('error'))
@@ -49,7 +51,7 @@
                                 </a>
 
                                 @if ($user->id !== auth()->id())
-                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST"  style="display: inline;"
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline;"
                                         onsubmit="return confirm('Are you sure you want to delete this user?');">
                                         @csrf
                                         @method('DELETE')

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course_Prerequisite;
 use Illuminate\Http\Request;
 
-class PublicPrereqsController extends Controller
+class PublicPrereqController extends Controller
 {
     /**
      * Display a listing of the resource.

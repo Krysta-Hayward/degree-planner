@@ -41,7 +41,7 @@ Route::get('/courses/{course}', [PublicCourseController::class, 'show'])
 Route::get('/terms', [PublicTermController::class, 'index'])
     ->name('public.terms');
 
-Route::get('/prerequisites', [PublicPrereqsController::class, 'index'])
+Route::get('/prerequisites', [PublicPrereqController::class, 'index'])
     ->name('public.prereqs');
 
 // Admin routes

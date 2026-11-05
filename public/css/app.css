@@ -1,4 +1,8 @@
-/* Theme colors (light is the default; dark applies via the header toggle or the OS setting) */
+
+/* =========================================
+   THEME COLORS
+========================================= */
+
 :root {
     color-scheme: light;
     --bg: #ffffff;
@@ -43,13 +47,60 @@
     }
 }
 
-/* Homepage/Main */
-    
-/* Button Links */
+
+/* =========================================
+   GENERAL STYLING
+========================================= */
+
+body {
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+main {
+    width: 100%;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 35px;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+.site-header {
+    padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+/* =========================================
+   BUTTONS AND LINKS
+========================================= */
+
 .button-links,
 a.button-links,
 a.button-links:visited,
-div.button-links {
+div.button-links,
+.button-links-danger,
+a.button-links-danger,
+a.button-links-danger:visited {
     display: inline-block;
     text-decoration: none;
     color: inherit;
@@ -64,27 +115,86 @@ div.button-links {
 .button-links-danger,
 a.button-links-danger,
 a.button-links-danger:visited {
-    display: inline-block;
-    text-decoration: none;
-    color: inherit;
-    padding: 8px 12px;
-    margin: 0;
-    border: 1px solid #333;
-    border-radius: 4px;
-    cursor: pointer;
-    font: inherit;
     background-color: red;
     border-color: darkred;
 }
 
-.program-form .button-links {
-    display: inline-block;
-    width: fit-content;
-    margin: 10px 5px;
-    padding: 8px 14px;
+nav button {
+    margin: 5px;
+    padding: 10px 15px;
 }
 
-/* Pagination */
+section button {
+    margin: 5px;
+    padding: 10px 15px;
+}
+
+nav button a {
+    color: inherit;
+}
+
+.theme-toggle {
+    cursor: pointer;
+}
+
+
+/* =========================================
+   TABLES
+========================================= */
+
+table {
+    width: 90%;
+    max-width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid var(--border-soft);
+    text-align: left;
+    overflow-wrap: break-word;
+}
+
+th {
+    background: var(--surface-alt);
+}
+
+td {
+    background: var(--surface);
+}
+
+td a {
+    color: var(--link);
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Admin tables */
+.admin-content table {
+    width: 100%;
+    margin: 20px 0;
+    table-layout: fixed;
+}
+
+/* Allow wide tables to scroll within admin content */
+.admin-content {
+    flex: 1;
+    min-width: 0;
+    padding: 35px;
+    text-align: left;
+    overflow-x: auto;
+}
+
+
+/* =========================================
+   PAGINATION
+========================================= */
+
 .pagination {
     display: flex;
     margin-left: 80px;
@@ -134,86 +244,11 @@ a.button-links-danger:visited {
     opacity: 0.6;
 }
 
-/* Main site */
-body {
-    min-height: 100%;
-    width: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-}
 
-.site-header {
-    padding: 20px;
-    text-align: center;
-}
+/* =========================================
+   ADMIN DASHBOARD
+========================================= */
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-nav button {
-    margin: 5px;
-    padding: 10px 15px;
-}
-
-main {
-    width: 100%;
-    padding: 40px 20px;
-    text-align: center;
-}
-
-h1 {
-    font-size: 35px;
-}
-
-section {
-    margin-bottom: 40px;
-}
-
-section button {
-    margin: 5px;
-    padding: 10px 15px;
-}
-
-/* Database Overview */
-table {
-    width: 90%;
-    border-collapse: collapse;
-    margin: 20px auto;
-}
-
-th,
-td {
-    padding: 12px;
-    border: 1px solid var(--border-soft);
-    text-align: left;
-}
-
-th {
-    background: var(--surface-alt);
-}
-
-td {
-    background: var(--surface);
-}
-
-td a {
-    color: var(--link);
-    text-decoration: none;
-}
-
-td a:hover {
-    text-decoration: underline;
-}
-
-/* Admin Dashboard */
 .admin-layout {
     display: flex;
     align-items: stretch;
@@ -251,13 +286,6 @@ td a:hover {
     background: var(--hover-bg);
 }
 
-.admin-content {
-    flex: 1;
-    min-width: 0;
-    padding: 35px;
-    text-align: left;
-}
-
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -278,26 +306,20 @@ td a:hover {
     margin-top: 0;
 }
 
+.dashboard-card a {
+    color: var(--muted-link);
+}
+
 .record-count {
     font-size: 30px;
     font-weight: bold;
 }
 
-.dashboard-card a {
-    color: var(--muted-link);
-}
 
+/* =========================================
+   ADVISOR NAVIGATION
+========================================= */
 
-/* Dark mode toggle */
-.theme-toggle {
-    cursor: pointer;
-}
-
-nav button a {
-    color: inherit;
-}
-
-/* Advisor Edits */
 .advisor-nav {
     list-style: none;
     margin: 0;
@@ -311,7 +333,49 @@ nav button a {
 .advisor-nav a {
     display: block;
 }
-/* Admin program form */
+
+
+/* =========================================
+   FORMS
+========================================= */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-group label {
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+
+/* =========================================
+   PROGRAM FORMS
+========================================= */
+
 .program-form {
     display: flex;
     flex-direction: column;
@@ -338,21 +402,21 @@ nav button a {
     margin: 10px 0 20px;
 }
 
+.program-form .button-links {
+    display: inline-block;
+    width: fit-content;
+    margin: 10px 5px;
+    padding: 8px 14px;
+}
+
 .program-form button[type="submit"] {
     align-self: flex-start;
 }
 
-.admin-content .notice {
-    padding: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface-alt);
-}
 
-.form-errors {
-    color: #c0392b;
-}
-
-/* Admin Prereqs */
+/* =========================================
+   PREREQUISITE MANAGEMENT
+========================================= */
 
 .prereq-selector {
     display: grid;
@@ -394,39 +458,17 @@ nav button a {
     cursor: pointer;
 }
 
-/* Forms */
-.form-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 20px;
-}
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 20px;
-    width: 100%;
-}
+/* =========================================
+   NOTICES AND ALERTS
+========================================= */
 
-.form-group label {
-    font-weight: 600;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    max-width: 500px;
-    padding: 10px 12px;
+.admin-content .notice {
+    padding: 10px;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface);
-    color: var(--text);
+    background: var(--surface-alt);
 }
 
-/* Alerts */
 .alert-success {
     background-color: #d1e7dd;
     color: #0f5132;
@@ -438,6 +480,15 @@ nav button a {
     max-width: fit-content;
 }
 
+.form-errors {
+    color: #c0392b;
+}
+
+
+/* =========================================
+   RESPONSIVE STYLING
+========================================= */
+
 @media (max-width: 650px) {
     .prereq-selector {
         grid-template-columns: 1fr;
@@ -446,5 +497,18 @@ nav button a {
     .prereq-arrows {
         flex-direction: row;
         justify-content: center;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-content {
+        padding: 20px;
+    }
+
+    .admin-sidebar {
+        flex-basis: 160px;
+        padding: 20px 12px;
     }
 }

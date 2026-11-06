@@ -26,12 +26,83 @@
 
 .student-page .notice {
     padding: 10px;
-    background: #e6f4ea;
-    border: 1px solid #b7dfc2;
+    background: var(--notice-bg, #e6f4ea);
+    border: 1px solid var(--notice-border, #b7dfc2);
 }
 
 .student-page .error {
     padding: 10px;
-    background: #fdecea;
-    border: 1px solid #f5c2bd;
+    background: var(--error-bg, #fdecea);
+    border: 1px solid var(--error-border, #f5c2bd);
+}
+
+/* Dark mode versions of the notice/error boxes */
+:root[data-theme="dark"] .student-page {
+    --notice-bg: #1d3325;
+    --notice-border: #2f5a3c;
+    --error-bg: #3a1f1d;
+    --error-border: #6b3430;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .student-page {
+        --notice-bg: #1d3325;
+        --notice-border: #2f5a3c;
+        --error-bg: #3a1f1d;
+        --error-border: #6b3430;
+    }
+}
+
+/* Phones: each table row becomes a small card with labelled lines */
+@media (max-width: 700px) {
+    .student-page table,
+    .student-page thead,
+    .student-page tbody,
+    .student-page tr,
+    .student-page td {
+        display: block;
+    }
+
+    .student-page table {
+        overflow-x: visible;
+    }
+
+    .student-page thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+
+    .student-page tr {
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        margin-bottom: 12px;
+        padding: 4px 0;
+    }
+
+    .student-page td {
+        border: 0;
+        padding: 6px 12px;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    .student-page td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        opacity: 0.7;
+    }
+
+    .student-page .inline-form {
+        display: inline-block;
+    }
+
+    .student-page button {
+        white-space: nowrap;
+        padding: 8px 12px;
+    }
 }

@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminDataController;
-use App\Http\Controllers\Advisor\DashboardController as AdvisorDashboardController;
-use App\Http\Controllers\Advisor\StudentController as AdvisorStudentController;
 use App\Http\Controllers\AuthController;
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\AdvisorMiddleware;
+use App\Http\Controllers\PublicCourseController;
+use App\Http\Controllers\PublicPrereqController;
+use App\Http\Controllers\PublicProgramController;
+use App\Http\Controllers\PublicTermController;
 use Illuminate\Support\Facades\Route;
 
 // Home route
@@ -29,18 +27,32 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin routes
-require __DIR__.'/student.php';
+// Public routes
+Route::get('/programs', [PublicProgramController::class, 'index'])
+    ->name('public.programs');
+Route::get('/programs/{program}', [PublicProgramController::class, 'show'])
+    ->name('public.programs.show');
 
-Route::middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::get('/admin/data/{table?}', [AdminDataController::class, 'index'])->name('admin.data');
-    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-});
+Route::get('/courses', [PublicCourseController::class, 'index'])
+    ->name('public.courses');
+Route::get('/courses/{course}', [PublicCourseController::class, 'show'])
+    ->name('public.courses.show');
+
+Route::get('/terms', [PublicTermController::class, 'index'])
+    ->name('public.terms.index');
+Route::get('/terms/{term}', [PublicTermController::class, 'show'])
+    ->name('public.terms.show');
+
+Route::get('/prerequisites', [PublicPrereqController::class, 'index'])
+    ->name('public.prereqs');
+Route::get('/prerequisites/{course}', [PublicPrereqController::class, 'show'])
+    ->name('public.prereqs-details');
+
+// Admin routes
+require __DIR__.'/admin.php';
 
 // Advisor routes
-Route::middleware(['auth', AdvisorMiddleware::class])->group(function () {
-    Route::get('/advisor', [AdvisorDashboardController::class, 'index'])->name('advisor.dashboard');
-    Route::get('/advisor/students', [AdvisorStudentController::class, 'index'])->name('advisor.students.index');
-});
+require __DIR__.'/advisor.php';
 
-// Student routes
+// Student Routes
+require __DIR__.'/student.php';

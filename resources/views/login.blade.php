@@ -29,7 +29,7 @@
             <input type="password" id="password" name="password" required>
         </div>
 
-        <button type="submit">Log In</button>
+        <button type="submit" class="button-links">Log In</button>
     </form>
 
     <a href="/" class="button-links">Back to Home</a>

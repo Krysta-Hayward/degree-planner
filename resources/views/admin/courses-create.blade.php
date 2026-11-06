@@ -10,7 +10,9 @@
             <h1>Add Course</h1>
 
             @if (session('success'))
-                <p>{{ session('success') }}</p>
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             @if ($errors->any())
@@ -37,10 +39,7 @@
                     Create Course
                 </button>
             </form>
-
-            <button class="button-links">
-                <a href="{{ route('admin.courses.index') }}">Cancel</a>
-            </button>
+                <a href="{{ route('admin.courses.index') }}" class="button-links-danger">Cancel</a>
         </main>
     </div>
 @endsection

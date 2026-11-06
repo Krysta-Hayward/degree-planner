@@ -7,20 +7,19 @@
         @include('partials.sidebar')
 
         <main class="admin-content">
-            <p>
-                <a href="{{ route('admin.programs.index') }}">← Back to Programs</a>
-            </p>
+            <a href="{{ route('admin.programs.index') }}" class="button-links">← Back to Programs</a>
 
             @if (session('success'))
-                <p class="notice">{{ session('success') }}</p>
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             <h1>{{ $programName }}</h1>
             <p>{{ $description ?: 'No description yet.' }}</p>
 
-            <button class="button-links">
-                <a href="{{ route('admin.programs.edit', ['programName' => $programName]) }}">Edit Program</a>
-            </button>
+            <a href="{{ route('admin.programs.edit', ['programName' => $programName]) }}" class="button-links">Edit
+                Program</a>
 
             <section>
                 <h2>Program Overview</h2>
@@ -39,7 +38,7 @@
                     <h2>{{ $group }}</h2>
                     <p>
                         {{ $groupCourses->count() }} {{ \Illuminate\Support\Str::plural('course', $groupCourses->count()) }},
-                        {{ $groupCourses->sum(fn ($program) => $program->courseDetails?->credits ?? 0) }} credits
+                        {{ $groupCourses->sum(fn($program) => $program->courseDetails?->credits ?? 0) }} credits
                     </p>
 
                     <div style="overflow-x: auto;">

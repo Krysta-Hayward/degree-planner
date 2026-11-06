@@ -4,7 +4,9 @@
 
 @section('dashboard')
     @if (session('success'))
-        <p class="success">{{ session('success') }}</p>
+        <div class="alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
     @if ($maps->isEmpty())
@@ -23,7 +25,7 @@
                     <tr>
                         <td>{{ $map->owner->name }}</td>
                         <td>{{ $map->updated_at->format('M j, Y') }}</td>
-                        <td><a href="{{ route('advisor.plans.show', $map) }}">Review</a></td>
+                        <td><a href="{{ route('advisor.plans.show', $map) }}" class="button-links">Review</a></td>
                     </tr>
                 @endforeach
             </tbody>

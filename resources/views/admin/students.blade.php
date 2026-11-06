@@ -55,7 +55,7 @@
                                         @endforeach
                                     </select>
 
-                                    <button type="submit">
+                                    <button type="submit" class="button-links">
                                         Save Assignment
                                     </button>
                                 </form>

@@ -7,7 +7,7 @@
         @include('partials.sidebar')
 
         <main class="admin-content">
-            <p><a href="{{ route('admin.plans') }}">← Back to Student Plans</a></p>
+            <p><a href="{{ route('admin.plans') }}" class="button-links">← Back to Student Plans</a></p>
 
             <h1>{{ $student->name }}'s Degree Plan</h1>
             <p>Review the courses currently included in this student's plan.</p>

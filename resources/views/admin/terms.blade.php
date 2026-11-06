@@ -12,7 +12,9 @@
 
             {{-- Success message --}}
             @if (session('success'))
-                <p>{{ session('success') }}</p>
+                <div class="alert-success">
+        {{ session('success') }}
+    </div>
             @endif
 
             {{-- Add Term button --}}

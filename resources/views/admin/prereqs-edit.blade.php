@@ -7,7 +7,8 @@
         @include('partials.sidebar')
 
         <main class="admin-content">
-            <h1>Edit Prerequisite</h1>
+            <h1>Edit Prerequisites for: {{ $prereq->courseDetails->courseNumber }}
+            - {{ $prereq->courseDetails->name }}</h1>
 
             <p>Update the prerequisite requirement for this course.</p>
 

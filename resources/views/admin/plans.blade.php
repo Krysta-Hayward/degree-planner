@@ -41,7 +41,7 @@
                                             <td>{{ $student->planned_courses }}</td>
                                             <td>{{ $student->planned_credits }}</td>
                                             <td>
-                                                <a href="{{ route('admin.plans.show', $student) }}">
+                                                <a href="{{ route('admin.plans.show', $student) }}" class="button-links">
                                                     View Full Plan
                                                 </a>
                                             </td>

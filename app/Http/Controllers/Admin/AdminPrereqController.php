@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Course_Prerequisite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -19,7 +20,7 @@ class AdminPrereqController extends Controller
             'prerequisiteDetails',
         ])
             ->orderBy('course')
-            ->paginate(25);
+            ->paginate(50);
 
         return view('admin.prereqs', compact('prereqs'));
     }
@@ -27,45 +28,103 @@ class AdminPrereqController extends Controller
     public function create(): View
     {
         $courses = Course::orderBy('courseNumber')->get();
+        $selectedPrereqs = [];
 
-        return view('admin.prereqs-create', compact('courses'));
+        return view('admin.prereqs-create', compact(
+            'courses',
+            'selectedPrereqs'
+        ));
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate($this->validationRules($request));
-
-        Course_Prerequisite::create([
-            'course' => $request->course,
-            'prereq' => $request->prereq,
+        $validated = $request->validate([
+            'course' => [
+                'required',
+                'integer',
+                'exists:courses,id',
+            ],
+            'prereqs' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+            'prereqs.*' => [
+                'required',
+                'integer',
+                'exists:courses,id',
+                'distinct',
+                Rule::notIn([$request->input('course')]),
+            ],
         ]);
+
+        DB::transaction(function () use ($validated) {
+            foreach ($validated['prereqs'] as $prereq) {
+                Course_Prerequisite::create([
+                    'course' => $validated['course'],
+                    'prereq' => $prereq,
+                ]);
+            }
+        });
 
         return redirect()
             ->route('admin.prereqs.index')
-            ->with('success', 'Prerequisite created successfully.');
+            ->with('success', 'Prerequisites created successfully.');
     }
 
     public function edit(Course_Prerequisite $prereq): View
     {
         $courses = Course::orderBy('courseNumber')->get();
 
-        return view('admin.prereqs-edit', compact('prereq', 'courses'));
+        $selectedPrereqs = Course_Prerequisite::where(
+            'course',
+            $prereq->course
+        )
+            ->pluck('prereq')
+            ->map(fn ($id) => (string) $id)
+            ->toArray();
+
+        return view('admin.prereqs-edit', compact(
+            'prereq',
+            'courses',
+            'selectedPrereqs'
+        ));
     }
 
     public function update(
         Request $request,
         Course_Prerequisite $prereq
     ): RedirectResponse {
-        $request->validate($this->validationRules($request, $prereq));
-
-        $prereq->update([
-            'course' => $request->course,
-            'prereq' => $request->prereq,
+        $validated = $request->validate([
+            'prereqs' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+            'prereqs.*' => [
+                'required',
+                'integer',
+                'exists:courses,id',
+                'distinct',
+                Rule::notIn([$prereq->course]),
+            ],
         ]);
+
+        DB::transaction(function () use ($validated, $prereq) {
+            // Replace the prerequisite list for this course.
+            Course_Prerequisite::where('course', $prereq->course)->delete();
+
+            foreach ($validated['prereqs'] as $prerequisiteId) {
+                Course_Prerequisite::create([
+                    'course' => $prereq->course,
+                    'prereq' => $prerequisiteId,
+                ]);
+            }
+        });
 
         return redirect()
             ->route('admin.prereqs.index')
-            ->with('success', 'Prerequisite updated successfully.');
+            ->with('success', 'Prerequisites updated successfully.');
     }
 
     public function destroy(Course_Prerequisite $prereq): RedirectResponse
@@ -75,32 +134,5 @@ class AdminPrereqController extends Controller
         return redirect()
             ->route('admin.prereqs.index')
             ->with('success', 'Prerequisite deleted successfully.');
-    }
-
-    private function validationRules(
-        Request $request,
-        ?Course_Prerequisite $prereq = null
-    ): array {
-        $uniqueRule = Rule::unique('course_prerequisites', 'course')
-            ->where('prereq', $request->input('prereq'));
-
-        if ($prereq) {
-            $uniqueRule->ignore($prereq->id);
-        }
-
-        return [
-            'course' => [
-                'required',
-                'integer',
-                'exists:courses,id',
-                'different:prereq',
-                $uniqueRule,
-            ],
-            'prereq' => [
-                'required',
-                'integer',
-                'exists:courses,id',
-            ],
-        ];
     }
 }

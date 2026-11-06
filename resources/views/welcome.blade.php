@@ -12,8 +12,8 @@
         </p>
 
         <div>
-            <button>My Degree Plan</button>
-            <button>View Programs</button>
+            <button class="button-links">My Degree Plan</button>
+            <button class="button-links">View Programs</button>
         </div>
     </section>
 

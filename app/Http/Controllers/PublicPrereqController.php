@@ -6,7 +6,6 @@ use App\Models\Course;
 
 class PublicPrereqController extends Controller
 {
-
     public function index()
     {
         $courses = Course::whereHas('prerequisites')

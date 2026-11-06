@@ -6,7 +6,6 @@ use App\Models\Term;
 
 class PublicTermController extends Controller
 {
-
     public function index()
     {
         $terms = Term::with('courseDetails')
@@ -15,7 +14,6 @@ class PublicTermController extends Controller
 
         return view('public.terms', compact('terms'));
     }
-
 
     public function show(Term $term)
     {

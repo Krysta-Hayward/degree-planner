@@ -47,52 +47,21 @@
     }
 }
 
-
-/* =========================================
-   GENERAL STYLING
-========================================= */
-
-body {
-    min-height: 100%;
-    width: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+/* Homepage/Main */
+    
+/* Button Links */
+.dark-light-mode-toggle {
+    display: inline-flex;
     align-items: center;
-    font-family: Arial, sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
 }
-
-main {
-    width: 100%;
-    padding: 40px 20px;
-    text-align: center;
-}
-
-h1 {
-    font-size: 35px;
-}
-
-section {
-    margin-bottom: 40px;
-}
-
-.site-header {
-    padding: 20px;
-    text-align: center;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-
-/* =========================================
-   BUTTONS AND LINKS
-========================================= */
 
 .button-links,
 a.button-links,

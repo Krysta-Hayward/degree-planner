@@ -10,4 +10,9 @@ class Term extends Model
     use HasFactory;
 
     protected $fillable = ['quarterYear', 'course'];
+
+    public function courseDetails()
+    {
+        return $this->belongsTo(Course::class, 'course');
+    }
 }

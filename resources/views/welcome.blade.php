@@ -12,8 +12,22 @@
         </p>
 
         <div>
-            <button class="button-links">My Degree Plan</button>
-            <button class="button-links">View Programs</button>
+            @auth
+                @if (auth()->user()->role === 'student')
+                    <a href="{{ route('student.dashboard') }}" class="button-links">
+                        My Degree Plan
+                    </a>
+                @else
+                    <a href="{{ route('public.programs') }}" class="button-links">
+                        My Degree Plan
+                    </a>
+                @endif
+            @else
+                <a href="{{ route('login') }}" class="button-links">
+                    My Degree Plan
+                </a>
+            @endauth
+            <a href="/programs" class="button-links">View Programs</a>
         </div>
     </section>
 

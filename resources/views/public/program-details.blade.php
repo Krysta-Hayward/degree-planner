@@ -23,8 +23,8 @@
                 @forelse ($programRows as $row)
                     @if ($row->courseDetails)
                         <tr>
-                            <td><a href="{{ route('public.courses.show', $program->courseDetails->id) }}">
-                                {{ $program->courseDetails->courseNumber }}
+                            <td><a href="{{ route('public.courses.show', $row->courseDetails->id) }}">
+                                {{ $row->courseDetails->courseNumber }}
                             </a></td>
                             <td>{{ $row->courseDetails->name }}</td>
                             <td>{{ $row->courseDetails->credits }}</td>

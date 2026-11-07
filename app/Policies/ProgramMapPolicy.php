@@ -44,6 +44,7 @@ class ProgramMapPolicy
 
     /**
      * Determine whether the user can update the model.
+     * Advisor can only update status of map
      */
     public function update(User $user, ProgramMap $map): bool
     {

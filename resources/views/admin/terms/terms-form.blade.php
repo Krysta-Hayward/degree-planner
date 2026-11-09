@@ -1,4 +1,3 @@
-{{-- Quarter / Year --}}
 <div class="form-group">
     <label for="quarterYear">Quarter / Year</label>
 
@@ -10,7 +9,6 @@
     @enderror
 </div>
 
-{{-- Course --}}
 <div class="form-group">
     <label for="course">Course</label>
 

@@ -25,7 +25,6 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/advisors', [AdminAdvisorController::class, 'index'])->name('admin.advisors');
     Route::get('/admin/advisors/{advisor}', [AdminAdvisorController::class, 'show'])->name('admin.advisors.details');
 
-
     // Student routes
     Route::get('/admin/students', [AdminStudentController::class, 'index'])->name('admin.students');
     Route::put('/admin/students/{student}/advisor', [

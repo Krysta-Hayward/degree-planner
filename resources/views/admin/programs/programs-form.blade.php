@@ -1,4 +1,3 @@
-{{-- Shared program form used by programs-create and programs-edit --}}
 @if ($errors->any())
     <ul class="form-errors">
         @foreach ($errors->all() as $error)

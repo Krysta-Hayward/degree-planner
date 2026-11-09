@@ -10,14 +10,12 @@
             <h1>Manage Terms</h1>
             <p>View and manage terms available in the Degree Planner.</p>
 
-            {{-- Success message --}}
             @if (session('success'))
                 <div class="alert-success">
                     {{ session('success') }}
                 </div>
             @endif
 
-            {{-- Add Term button --}}
             <a href="{{ route('admin.terms.create') }}" class="button-links">
                 Add Term
             </a>

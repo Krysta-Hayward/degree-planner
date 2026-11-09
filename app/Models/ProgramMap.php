@@ -36,4 +36,10 @@ class ProgramMap extends Model
     {
         return in_array($this->status, ['draft', 'changes_requested']);
     }
+
+    // Advisors who can comment on thier student map
+    public function comments()
+    {
+        return $this->hasMany(PlanComment::class, 'program_map')->oldest();
+    }
 }

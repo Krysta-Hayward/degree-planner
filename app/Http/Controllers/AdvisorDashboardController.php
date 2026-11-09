@@ -15,6 +15,7 @@ Changes to student's program map are saved to the database
 namespace App\Http\Controllers;
 
 use App\Models\ProgramMap;
+use App\Models\user;
 use Illuminate\Support\Facades\DB;
 
 class AdvisorDashboardController extends Controller
@@ -32,6 +33,13 @@ class AdvisorDashboardController extends Controller
         $awaitingReview = ProgramMap::where('status', 'submitted')
             ->whereIn('student', $studentIds)
             ->count();
+
+        // Needs Attention: No Program Selected
+        $noProgram = User::whereIn('id', $studentIds)
+            ->whereNull('program')
+            ->pluck('id');
+
+       
 
         // TODO: Students with problems (no plan, failed prerequisite)
         $flaggedStudents = 0;

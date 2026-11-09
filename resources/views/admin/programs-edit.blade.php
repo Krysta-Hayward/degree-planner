@@ -15,9 +15,6 @@
                 'submitLabel' => 'Save Changes',
             ])
 
-            <button class="button-links">
-                <a href="{{ route('admin.programs.show', ['programName' => $programName]) }}">Cancel</a>
-            </button>
         </main>
     </div>
 @endsection

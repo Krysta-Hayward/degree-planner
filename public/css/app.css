@@ -46,17 +46,55 @@
 /* Homepage/Main */
     
 /* Button Links */
-.button-links a,
-.button-links a:visited {
-    text-decoration: none;
+.dark-light-mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: transparent;
     color: inherit;
+    cursor: pointer;
+    font: inherit;
 }
 
-.button-links-danger {
+.button-links,
+a.button-links,
+a.button-links:visited,
+div.button-links {
+    display: inline-block;
     text-decoration: none;
     color: inherit;
+    padding: 8px 12px;
+    margin: 0;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.button-links-danger,
+a.button-links-danger,
+a.button-links-danger:visited {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+    padding: 8px 12px;
+    margin: 0;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font: inherit;
     background-color: red;
     border-color: darkred;
+}
+
+.program-form .button-links {
+    display: inline-block;
+    width: fit-content;
+    margin: 10px 5px;
+    padding: 8px 14px;
 }
 
 /* Pagination */
@@ -286,6 +324,31 @@ nav button a {
 .advisor-nav a {
     display: block;
 }
+
+/*
+* Advisor plan comments form
+*/
+.plan-comment {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid #d1d5db;
+    background: #f9fafb;
+}
+
+.plan-comment p {
+    margin: 0 0 4px;
+}
+
+/*
+* Approved & Request change buttons
+*/
+.review-actions {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+
 /* Admin program form */
 .program-form {
     display: flex;

@@ -24,4 +24,7 @@ Route::middleware(['auth', AdvisorMiddleware::class])->group(function () {
 
     // Send a program map back for changes
     Route::post('/advisor/plans/{programMap}/request-changes', [AdvisorPlanReviewController::class, 'requestChanges'])->name('advisor.plans.changes');
+
+    // Comment on a student's program map
+    Route::post('/advisor/plans/{programMap}/comments', [AdvisorPlanReviewController::class, 'storeComment'])->name('advisor.plans.comments.store');
 });

@@ -29,10 +29,10 @@
             <input type="password" id="password" name="password" required>
         </div>
 
-        <button type="submit">Log In</button>
+        <button type="submit" class="button-links">Log In</button>
     </form>
 
-    <p><a href="/">Back to Home</a></p>
+    <a href="/" class="button-links">Back to Home</a>
     <button class="button-links theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
 </body>
 

@@ -15,19 +15,19 @@
                 @php
                     $viewRoutes = [
                         'Advisors' => 'admin.advisors',
-                        'Course Prerequisites' => 'admin.prereqs',
+                        'Course Prerequisites' => 'admin.prereqs.index',
                         'Course Programs' => 'admin.data',
                         'Courses' => 'admin.courses.index',
                         'Plan Courses' => 'admin.data',
                         'Plans' => 'admin.plans',
-                        'Programs' => 'admin.programs',
+                        'Programs' => 'admin.programs.index',
                         'Students' => 'admin.students',
-                        'Terms' => 'admin.terms',
+                        'Terms' => 'admin.terms.index',
                         'Users' => 'admin.users',
                     ];
                 @endphp
 
-                <a href="{{ route($viewRoutes[$label] ?? 'admin.data') }}">
+                <a href="{{ route($viewRoutes[$label] ?? 'admin.data') }}" class="button-links">
                     Manage {{ $label }}
                 </a>
             </div>

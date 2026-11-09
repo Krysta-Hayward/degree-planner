@@ -8,7 +8,7 @@
 @endif
 
 @php
-    $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn ($id) => (int) $id);
+    $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
 @endphp
 
 <form method="POST" action="{{ $action }}" class="program-form">
@@ -17,11 +17,22 @@
         @method('PUT')
     @endif
 
+    <div class="form-buttons">
+        <button type="submit" class="button-links">
+            {{ $submitLabel }}
+        </button>
+
+        <a href="{{ route('admin.programs.index') }}" class="button-links-danger">
+            Cancel
+        </a>
+    </div>
+
     <label for="name">Program Name</label>
     <input id="name" type="text" name="name" value="{{ old('name', $programName) }}" maxlength="255" required>
 
     <label for="description">Description</label>
-    <textarea id="description" name="description" rows="4" maxlength="2000">{{ old('description', $description) }}</textarea>
+    <textarea id="description" name="description" rows="4"
+        maxlength="2000">{{ old('description', $description) }}</textarea>
 
     <h2>Required Courses</h2>
     <p>
@@ -54,8 +65,7 @@
                 @foreach ($courses as $course)
                     <tr data-search="{{ strtolower($course->courseNumber . ' ' . $course->name) }}">
                         <td>
-                            <input type="checkbox" name="courses[]" value="{{ $course->id }}"
-                                id="course-{{ $course->id }}"
+                            <input type="checkbox" name="courses[]" value="{{ $course->id }}" id="course-{{ $course->id }}"
                                 aria-label="Require {{ $course->courseNumber }}"
                                 @checked($oldCourses->contains($course->id))>
                         </td>
@@ -63,9 +73,8 @@
                         <td>{{ $course->name }}</td>
                         <td>{{ $course->credits }}</td>
                         <td>
-                            <input type="text" name="groups[{{ $course->id }}]" list="requirement-groups"
-                                maxlength="100" placeholder="Core"
-                                aria-label="Requirement group for {{ $course->courseNumber }}"
+                            <input type="text" name="groups[{{ $course->id }}]" list="requirement-groups" maxlength="100"
+                                placeholder="Core" aria-label="Requirement group for {{ $course->courseNumber }}"
                                 value="{{ old('groups.' . $course->id, $current[$course->id] ?? '') }}">
                         </td>
                     </tr>
@@ -74,11 +83,14 @@
         </table>
     </div>
 
-    <button type="submit" class="button-links">{{ $submitLabel }}</button>
+    <div class="form-buttons">
+        <button type="submit" class="button-links">{{ $submitLabel }}</button>
+        <a href="{{ route('admin.programs.index', ['programName' => $programName]) }}"
+            class="button-links-danger">Cancel</a>
+    </div>
 </form>
 
 <script>
-    // Hide course rows that don't match the filter text.
     document.getElementById('course-filter').addEventListener('input', function () {
         const term = this.value.trim().toLowerCase();
 

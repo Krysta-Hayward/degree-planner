@@ -16,9 +16,10 @@
 
         <nav>
             <button class="button-links"><a href="/">Home</a></button>
-            <button class="button-links">Programs</button>
-            <button class="button-links">Courses</button>
-            <button class="button-links theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
+            <button class="button-links"><a href="/programs">Programs</a></button>
+            <button class="button-links"><a href="/courses">Courses</a></button>
+            <button class="button-links"><a href="/terms">Terms</a></button>
+            <button class="button-links"><a href="/prerequisites">Prerequisites</a></button>
 
             @auth
                 @if (auth()->user()->role === 'admin')
@@ -55,6 +56,11 @@
                 </button>
             @endauth
         </nav>
+        <div>
+            <button class="dark-light-mode-toggle theme-toggle" type="button" aria-pressed="false">
+                💡 Dark Mode
+            </button>
+        </div>
     </header>
 
     <main>

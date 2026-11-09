@@ -25,7 +25,7 @@
                         <td>{{ ucwords(str_replace('_', ' ', $name)) }}</td>
                         <td>{{ $count }}</td>
                         <td>
-                            <a href="{{ route('admin.data', ['table' => $name]) }}">
+                            <a href="{{ route('admin.data', ['table' => $name]) }}" class="button-links">
                                 View Records
                             </a>
                         </td>

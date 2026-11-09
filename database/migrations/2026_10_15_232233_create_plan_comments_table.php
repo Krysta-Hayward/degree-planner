@@ -13,16 +13,10 @@ return new class extends Migration
     {
         Schema::create('plan_comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('plan_id')->constrained()->cascadeOnDelete(); // Link comment to plan
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // Link who wrote comment
-            $table->text('body'); // The comment itself
+            $table->foreignId('program_map')->constrained()->cascadeOnDelete(); 
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); 
+            $table->text('body'); 
             $table->timestamps();
-            $table->integer('course');
-
-            $table->foreign('course')
-                ->references('id')
-                ->on('courses')
-                ->onUpdate('cascade');
         });
     }
 

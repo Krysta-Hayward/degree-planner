@@ -38,7 +38,7 @@
                                 <td>{{ $advisor->students_count }}</td>
                                 <td>
                                     <a href="{{ route('admin.advisors.details', ['advisor' => $advisor->id]) }}" class="button-links">
-                                        View Details
+                                        View Students
                                     </a>
                                 </td>
                             </tr>

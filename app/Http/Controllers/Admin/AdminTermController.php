@@ -14,7 +14,6 @@ class AdminTermController extends Controller
 {
     use AuthorizesRequests;
 
-    // Display all terms for admin management.
     public function index(): View
     {
         $this->authorize('viewAny', Term::class);
@@ -24,7 +23,6 @@ class AdminTermController extends Controller
         return view('admin.terms.terms', compact('terms'));
     }
 
-    // Display the create form.
     public function create(): View
     {
         $this->authorize('create', Term::class);
@@ -34,15 +32,19 @@ class AdminTermController extends Controller
         return view('admin.terms.terms-create', compact('courses'));
     }
 
-    // Save a new term.
     public function store(Request $request): RedirectResponse
     {
         $this->authorize('create', Term::class);
 
-        $validated = $request->validate([
-            'quarterYear' => ['required', 'string', 'max:255'],
-            'course' => ['required', 'integer', 'exists:courses,id'],
-        ]);
+        $validated = $request->validate(
+            [
+                'quarterYear' => ['required', 'string', 'regex:/^(Winter|Spring|Summer|Fall) [0-9]{4}$/'],
+                'course' => ['required', 'integer', 'exists:courses,id'],
+            ],
+            [
+                'quarterYear.regex' => 'Term must be in the format: Season YYYY (e.g., Winter 2026).',
+            ]
+        );
 
         Term::create($validated);
 
@@ -51,7 +53,6 @@ class AdminTermController extends Controller
             ->with('success', 'Term created successfully.');
     }
 
-    // Display the edit form.
     public function edit(Term $term): View
     {
         $this->authorize('update', $term);
@@ -61,15 +62,19 @@ class AdminTermController extends Controller
         return view('admin.terms.terms-edit', compact('term', 'courses'));
     }
 
-    // Save changes to an existing term.
     public function update(Request $request, Term $term): RedirectResponse
     {
         $this->authorize('update', $term);
 
-        $validated = $request->validate([
-            'quarterYear' => ['required', 'string', 'max:255'],
-            'course' => ['required', 'integer', 'exists:courses,id'],
-        ]);
+        $validated = $request->validate(
+            [
+                'quarterYear' => ['required', 'string', 'regex:/^(Winter|Spring|Summer|Fall) [0-9]{4}$/'],
+                'course' => ['required', 'integer', 'exists:courses,id'],
+            ],
+            [
+                'quarterYear.regex' => 'Term must be in the format: Season YYYY (e.g., Winter 2026).',
+            ]
+        );
 
         $term->update($validated);
 
@@ -78,7 +83,6 @@ class AdminTermController extends Controller
             ->with('success', 'Term updated successfully.');
     }
 
-    // Delete a term.
     public function destroy(Term $term): RedirectResponse
     {
         $this->authorize('delete', $term);

@@ -476,7 +476,18 @@ td a:hover {
     border-radius: 6px;
     padding: 12px 16px;
     margin: 15px 0;
-    font-weight: 500;
+    font-weight: bold;
+    max-width: fit-content;
+}
+
+.alert-error {
+    background-color: #e7d1d1;
+    color: #510f0f;
+    border: 1px solid #cfa3a3;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 15px 0;
+    font-weight: bold;
     max-width: fit-content;
 }
 

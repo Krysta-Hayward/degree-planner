@@ -13,8 +13,8 @@
             {{-- Success message --}}
             @if (session('success'))
                 <div class="alert-success">
-        {{ session('success') }}
-    </div>
+                    {{ session('success') }}
+                </div>
             @endif
 
             {{-- Add Term button --}}

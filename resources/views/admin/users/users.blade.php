@@ -26,7 +26,7 @@
             @endif
 
             @if (session('error'))
-                <p class="error-message">{{ session('error') }}</p>
+                <div class="alert-error">{{ session('error') }}</div>
             @endif
 
             <table>

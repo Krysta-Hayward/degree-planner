@@ -9,35 +9,15 @@
         <main class="admin-content">
             <h1>Edit {{ $course->courseNumber }}</h1>
 
-            @if ($errors->any())
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            @endif
+            <p>Update the course information below.</p>
 
-            <form method="POST" action="{{ route('admin.courses.update', $course) }}">
+            <form action="{{ route('admin.courses.update', $course) }}" method="POST">
+
                 @csrf
                 @method('PUT')
 
-                <label for="courseNumber">Course Number</label>
-                <input id="courseNumber" type="text" name="courseNumber"
-                    value="{{ old('courseNumber', $course->courseNumber) }}" required>
-
-                <label for="name">Course Name</label>
-                <input id="name" type="text" name="name" value="{{ old('name', $course->name) }}" required>
-
-                <label for="credits">Credits</label>
-                <input id="credits" type="number" name="credits" min="0" step="any"
-                    value="{{ old('credits', $course->credits) }}" required>
-
-                <button type="submit" class="button-links">
-                    Save Changes
-                </button>
+                @include('admin.courses.courses-form')
             </form>
-
-            <a href="{{ route('admin.courses.index') }}" class="button-links-danger">Cancel</a>
         </main>
     </div>
 @endsection

@@ -34,16 +34,21 @@ class AdminCourseController extends Controller
     {
         $this->authorize('create', Course::class);
 
-        $validated = $request->validate([
-            'courseNumber' => [
-                'required',
-                'string',
-                'max:255',
-                'unique:courses,courseNumber',
+        $validated = $request->validate(
+            [
+                'courseNumber' => [
+                    'required',
+                    'string',
+                    'regex:/^[A-Z]{3} [0-9]{3}$/',
+                    'unique:courses,courseNumber',
+                ],
+                'name' => ['required', 'string', 'max:255'],
+                'credits' => ['required', 'numeric', 'min:0', 'max:5'],
             ],
-            'name' => ['required', 'string', 'max:255'],
-            'credits' => ['required', 'numeric', 'min:0'],
-        ]);
+            [
+                'courseNumber.regex' => 'Course number must be in the format AAA 123 (e.g., CIS 272).',
+            ]
+        );
 
         Course::create($validated);
 
@@ -63,16 +68,21 @@ class AdminCourseController extends Controller
     {
         $this->authorize('update', $course);
 
-        $validated = $request->validate([
-            'courseNumber' => [
-                'required',
-                'string',
-                'max:255',
-                'unique:courses,courseNumber,' . $course->id,
+        $validated = $request->validate(
+            [
+                'courseNumber' => [
+                    'required',
+                    'string',
+                    'regex:/^[A-Z]{3} [0-9]{3}$/',
+                    'unique:courses,courseNumber,' . $course->id,
+                ],
+                'name' => ['required', 'string', 'max:255'],
+                'credits' => ['required', 'numeric', 'min:0', 'max:5'],
             ],
-            'name' => ['required', 'string', 'max:255'],
-            'credits' => ['required', 'numeric', 'min:0'],
-        ]);
+            [
+                'courseNumber.regex' => 'Course number must be in the format AAA 123 (e.g., CIS 272).',
+            ]
+        );
 
         $course->update($validated);
 

@@ -10,4 +10,9 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = ['courseNumber', 'name', 'credits'];
+
+    public function prerequisites()
+    {
+        return $this->hasMany(Course_Prerequisite::class, 'course');
+    }
 }

@@ -25,7 +25,7 @@
                         <td>{{ ucwords(str_replace('_', ' ', $name)) }}</td>
                         <td>{{ $count }}</td>
                         <td>
-                            <a href="{{ route('admin.data', ['table' => $name]) }}">
+                            <a href="{{ route('admin.data', ['table' => $name]) }}" class="button-links">
                                 View Records
                             </a>
                         </td>
@@ -39,6 +39,11 @@
         <section>
             <h2>{{ ucwords(str_replace('_', ' ', $selectedTable)) }}</h2>
             <p><a href="{{ route('admin.data') }}">Back to overview</a></p>
+            @if ($selectedTable && $records instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                <div class="pagination pagination-bottom">
+                    {{ $records->links() }}
+                </div>
+            @endif
 
             @if ($records->isEmpty())
                 <p>No records found in this table.</p>

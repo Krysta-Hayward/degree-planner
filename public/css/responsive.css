@@ -1,0 +1,106 @@
+/*
+ * Responsive rules for every page that uses the shared layout.
+ * This file only adds rules. It does not change anything in app.css.
+ * Above 900px wide the pages look the same as before.
+ */
+
+/* Width + padding add up to the screen instead of running past it */
+main,
+.admin-layout,
+.admin-content,
+.admin-sidebar {
+    box-sizing: border-box;
+}
+
+/* Forms and inputs never get wider than their container */
+input,
+select,
+button {
+    max-width: 100%;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Tablets and small laptops */
+@media (max-width: 900px) {
+    /* The menu wraps onto more lines instead of running off the screen */
+    .site-header nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-content {
+        padding: 25px;
+    }
+}
+
+/* Phones and narrow windows */
+@media (max-width: 700px) {
+    .site-header {
+        padding: 12px;
+    }
+
+    main {
+        padding: 20px 12px;
+    }
+
+    /* Wide tables scroll sideways inside themselves instead of the whole page */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        box-sizing: border-box;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        white-space: nowrap;
+    }
+
+    /* Admin sidebar moves above the content */
+    .admin-layout {
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .admin-sidebar {
+        flex: 0 0 auto;
+        padding: 15px 12px;
+    }
+
+    .admin-sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .admin-content {
+        padding: 20px 12px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .dashboard-cards {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .site-header nav button {
+        padding: 8px 10px;
+    }
+}

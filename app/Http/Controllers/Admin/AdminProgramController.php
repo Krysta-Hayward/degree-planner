@@ -40,7 +40,7 @@ class AdminProgramController extends Controller
                 return $program;
             });
 
-        return view('admin.programs', compact('programs'));
+        return view('admin.programs.programs', compact('programs'));
     }
 
     // Show one program and its required courses, grouped by requirement group
@@ -65,7 +65,7 @@ class AdminProgramController extends Controller
 
         $description = ProgramDetail::where('name', $programName)->value('description');
 
-        return view('admin.program-details', compact(
+        return view('admin.programs.program-details', compact(
             'programName',
             'description',
             'courses',
@@ -79,7 +79,7 @@ class AdminProgramController extends Controller
     {
         $this->authorize('create', Program::class);
 
-        return view('admin.programs-create', [
+        return view('admin.programs.programs-create', [
             'courses' => Course::orderBy('courseNumber')->get(),
             'groupOptions' => $this->groupOptions(),
         ]);
@@ -121,7 +121,7 @@ class AdminProgramController extends Controller
 
         abort_if($current->isEmpty(), 404);
 
-        return view('admin.programs-edit', [
+        return view('admin.programs.programs-edit', [
             'programName' => $programName,
             'description' => ProgramDetail::where('name', $programName)->value('description'),
             'current' => $current,

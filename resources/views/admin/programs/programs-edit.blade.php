@@ -9,7 +9,7 @@
         <main class="admin-content">
             <h1>Edit {{ $programName }}</h1>
 
-            @include('admin.programs-form', [
+            @include('admin.programs.programs-form', [
                 'action' => route('admin.programs.update', ['programName' => $programName]),
                 'method' => 'PUT',
                 'submitLabel' => 'Save Changes',

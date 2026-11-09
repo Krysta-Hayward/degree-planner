@@ -14,7 +14,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('admin.terms-form')
+                @include('admin.terms.terms-form')
 
                 <div class="form-buttons">
                     <button type="submit" class="button-links">

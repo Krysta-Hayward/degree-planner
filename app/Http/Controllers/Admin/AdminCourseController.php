@@ -20,7 +20,7 @@ class AdminCourseController extends Controller
 
         $courses = Course::orderBy('courseNumber')->paginate(25);
 
-        return view('admin.courses', compact('courses'));
+        return view('admin.courses.courses', compact('courses'));
     }
 
     // Show the create course form
@@ -28,7 +28,7 @@ class AdminCourseController extends Controller
     {
         $this->authorize('create', Course::class);
 
-        return view('admin.courses-create');
+        return view('admin.courses.courses-create');
     }
 
     // Save a new course
@@ -59,7 +59,7 @@ class AdminCourseController extends Controller
     {
         $this->authorize('update', $course);
 
-        return view('admin.courses-edit', compact('course'));
+        return view('admin.courses.courses-edit', compact('course'));
     }
 
     // Save changes to a course

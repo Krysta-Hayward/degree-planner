@@ -21,7 +21,7 @@ class AdminTermController extends Controller
 
         $terms = Term::orderBy('termNumber')->paginate(25);
 
-        return view('admin.terms', compact('terms'));
+        return view('admin.terms.terms', compact('terms'));
     }
 
     // Display the create form.
@@ -31,7 +31,7 @@ class AdminTermController extends Controller
 
         $courses = Course::orderBy('courseNumber')->get();
 
-        return view('admin.terms-create', compact('courses'));
+        return view('admin.terms.terms-create', compact('courses'));
     }
 
     // Save a new term.
@@ -58,7 +58,7 @@ class AdminTermController extends Controller
 
         $courses = Course::orderBy('courseNumber')->get();
 
-        return view('admin.terms-edit', compact('term', 'courses'));
+        return view('admin.terms.terms-edit', compact('term', 'courses'));
     }
 
     // Save changes to an existing term.

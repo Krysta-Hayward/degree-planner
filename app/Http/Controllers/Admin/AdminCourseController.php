@@ -74,7 +74,7 @@ class AdminCourseController extends Controller
                     'required',
                     'string',
                     'regex:/^[A-Z]{3} [0-9]{3}$/',
-                    'unique:courses,courseNumber,' . $course->id,
+                    'unique:courses,courseNumber,'.$course->id,
                 ],
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],

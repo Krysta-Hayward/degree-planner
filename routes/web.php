@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\PublicCourseController;
 use App\Http\Controllers\PublicPrereqController;
 use App\Http\Controllers\PublicProgramController;
@@ -47,6 +48,12 @@ Route::get('/prerequisites', [PublicPrereqController::class, 'index'])
     ->name('public.prereqs');
 Route::get('/prerequisites/{course}', [PublicPrereqController::class, 'show'])
     ->name('public.prereqs-details');
+
+// Class Availability Routes
+Route::get('/classes', [ClassesController::class, 'index'])
+    ->name('classes');
+Route::get('/classes/{class}', [ClassesController::class, 'show'])
+    ->name('class-details');
 
 // Admin routes
 require __DIR__.'/admin.php';

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('courseNumber');
             $table->string('name');
             $table->integer('credits');
+            $table->text('description')->nullable();
         });
     }
 

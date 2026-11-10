@@ -26,6 +26,16 @@
                 </tr>
             </tbody>
         </table>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Course Description</th>
+                </tr>
+                <tr>
+                    <td>{{ $course->description }}</td>
+                </tr>
+            </tbody>
+        </table>
 
         <a href="{{ route('public.courses') }}" class="button-links">Back to Courses</a>
     </div>

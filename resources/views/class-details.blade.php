@@ -32,7 +32,9 @@
                 <tr>
                     <th>Course Description</th>
                 </tr>
-                
+                <tr>
+                    <td>{{ $course->description }}</td>
+                </tr>
             </tbody>
         </table>
 

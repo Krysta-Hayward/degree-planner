@@ -83,10 +83,46 @@ section {
     text-align: center;
 }
 
-.logo {
+.logo-text {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+    margin-top: 50px;
+}
+
+.logo-img img {
+  height: 100px;
+  width: auto;
+  display: block;
+  justify-content: left;
+}
+
+.logo-img {
+    position: absolute;
+    left: 380px;
+    top: 10px;
+}
+
+@media screen and (max-width: 1350px) {
+    .site-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 0;
+    }
+
+    .site-header .logo-img {
+        position: static;
+        left: auto;
+        top: auto;
+        transform: none;
+    }
+
+    .site-header .logo-text {
+        text-align: center;
+    }
 }
 
 

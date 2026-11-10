@@ -12,7 +12,10 @@
 
 <body>
     <header class="site-header">
-        <div class="logo">Degree Planner</div>
+        <a href="/" class="logo-img">
+            <img src="{{ asset('degree-icon.png') }}" alt="Degree Planner Logo">
+        </a>
+        <div class="logo-text">Degree Planner</div>
 
         <nav>
             <button class="button-links"><a href="/">Home</a></button>

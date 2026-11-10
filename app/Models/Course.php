@@ -15,4 +15,14 @@ class Course extends Model
     {
         return $this->hasMany(Course_Prerequisite::class, 'course');
     }
+
+    public function prerequisiteCourses()
+    {
+        return $this->belongsToMany(
+            Course::class,
+            'course_prerequisites',
+            'course',
+            'prereq'
+        );
+    }
 }

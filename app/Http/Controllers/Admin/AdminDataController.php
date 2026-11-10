@@ -35,7 +35,7 @@ class AdminDataController extends Controller
 
         if ($table !== null && array_key_exists($table, $data)) {
             $columns = Schema::getColumnListing($table);
-            $records = DB::table($table)->limit(100)->paginate(25);
+            $records = DB::table($table)->paginate(25);
 
             // Display student and advisor names alongside their IDs.
             if ($table === 'students') {

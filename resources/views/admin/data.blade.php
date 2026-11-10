@@ -68,7 +68,6 @@
                         </tbody>
                     </table>
                 </div>
-                <p>Showing up to 100 records.</p>
             @endif
         </section>
     @endif

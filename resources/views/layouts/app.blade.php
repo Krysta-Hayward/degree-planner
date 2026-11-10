@@ -22,6 +22,9 @@
             <button class="button-links"><a href="/prerequisites">Prerequisites</a></button>
 
             @auth
+                <button class="button-links">
+                    <a href="{{ route('classes') }}">Classes</a>
+                </button>
                 @if (auth()->user()->role === 'admin')
                     <button class="button-links">
                         <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
@@ -29,7 +32,6 @@
                     <button class="button-links">
                         <a href="{{ route('admin.data') }}">Database Overview</a>
                     </button>
-
                 @elseif (auth()->user()->role === 'advisor')
                     <button class="button-links">
                         <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>

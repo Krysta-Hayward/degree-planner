@@ -21,6 +21,7 @@ class AdminDashboardController extends Controller
             'students' => 'Students',
             'terms' => 'Terms',
             'users' => 'Users',
+            'classes' => 'Classes'
         ];
 
         $counts = [];

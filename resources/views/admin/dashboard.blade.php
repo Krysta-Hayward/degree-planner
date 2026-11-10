@@ -24,6 +24,7 @@
                         'Students' => 'admin.students',
                         'Terms' => 'admin.terms.index',
                         'Users' => 'admin.users',
+                        'Classes' => 'classes',
                     ];
                 @endphp
 

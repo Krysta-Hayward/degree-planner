@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Plan;
 use App\Models\Program;
 use App\Models\Term;
+use App\Models\Course;
+use App\Models\Enroll;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -211,5 +213,26 @@ class StudentController extends Controller
     private function toTop(): RedirectResponse
     {
         return redirect(route('student.dashboard').'#student-top');
+    }
+
+    /**
+     * Enroll the logged-in student in a course.
+     */
+    public function enroll(Request $request, Course $course): RedirectResponse
+    {
+        $enrollment = Enroll::firstOrCreate([
+            'student' => $request->user()->id,
+            'course' => $course->id,
+        ]);
+
+        if (!$enrollment->wasRecentlyCreated) {
+            return redirect()
+                ->route('class-details', ['course' => $course->id])
+                ->with('error', 'You are already enrolled in this course.');
+        }
+
+        return redirect()
+            ->route('class-details', ['course' => $course->id])
+            ->with('success', 'Successfully enrolled in ' . $course->courseNumber . '.');
     }
 }

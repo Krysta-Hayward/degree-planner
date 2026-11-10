@@ -506,6 +506,29 @@ nav button a {
     cursor: pointer;
 }
 
+/* =========================================
+   COURSE ENROLLMENT
+========================================= */
+
+.enroll-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 15px;
+}
+
+.enroll-container form {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+}
+
+.enroll-container .alert-success,
+.enroll-container .alert-error {
+    grid-column: 3;
+    grid-row: 1;
+    margin: 0;
+}
 
 /* =========================================
    NOTICES AND ALERTS

@@ -49,10 +49,10 @@ Route::get('/prerequisites', [PublicPrereqController::class, 'index'])
 Route::get('/prerequisites/{course}', [PublicPrereqController::class, 'show'])
     ->name('public.prereqs-details');
 
-// Class Availability Routes
+// Class Routes
 Route::get('/classes', [ClassesController::class, 'index'])
     ->name('classes');
-Route::get('/classes/{class}', [ClassesController::class, 'show'])
+Route::get('/classes/{course}', [ClassesController::class, 'show'])
     ->name('class-details');
 
 // Admin routes

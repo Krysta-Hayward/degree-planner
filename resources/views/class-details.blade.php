@@ -3,7 +3,8 @@
 @section('title', $course->courseNumber . ' | Degree Planner')
 
 @section('content')
-    <div class="public-catalog">
+
+    <div>
         <h1>{{ $course->courseNumber }}</h1>
 
         <h2>{{ $course->name }}</h2>
@@ -51,9 +52,31 @@
             </tbody>
         </table>
 
-        <div>
-            <button class="button-links-primary">Enroll</button>
-        </div>
+        @auth
+            @if (auth()->user()->role === 'student')
+                <div class="enroll-container">
+                    <form action="{{ route('student.enroll', ['course' => $course->id]) }}" method="POST">
+                        @csrf
+
+                        <button type="submit" class="button-links-primary">
+                            Enroll
+                        </button>
+                    </form>
+
+                    @if (session()->has('success'))
+                        <div class="alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if (session()->has('error'))
+                        <div class="alert-error">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                </div>
+            @endif
+        @endauth
 
         <a href="{{ route('classes') }}" class="button-links">Back to Classes</a>
     </div>

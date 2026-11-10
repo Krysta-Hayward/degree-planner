@@ -38,6 +38,23 @@
             </tbody>
         </table>
 
+        <table>
+            <tbody>
+                <tr>
+                    <th>Class Dates</th>
+                    <td>##date placeholder</td>
+                </tr>
+                <tr>
+                    <th>Class Times</th>
+                    <td>##time placeholder</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div>
+            <button class="button-links-primary">Enroll</button>
+        </div>
+
         <a href="{{ route('classes') }}" class="button-links">Back to Classes</a>
     </div>
 @endsection

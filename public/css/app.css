@@ -115,11 +115,28 @@ div.button-links {
     text-decoration: none;
     color: inherit;
     padding: 8px 12px;
-    margin: 0;
+    margin: 10px 0px;
     border: 1px solid #333;
     border-radius: 4px;
     cursor: pointer;
     font: inherit;
+}
+
+.button-links-primary,
+a.button-links-primary,
+a.button-links-primary:visited,
+div.button-links-primary {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+    padding: 8px 12px;
+    margin: 10px 0px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font: inherit;
+    background-color: rgb(64, 99, 255);
+    border-color: rgb(14, 0, 139);
 }
 
 .button-links-danger,
@@ -129,7 +146,7 @@ a.button-links-danger:visited {
     text-decoration: none;
     color: inherit;
     padding: 8px 12px;
-    margin: 0;
+    margin: 10px 0px;
     border: 1px solid #333;
     border-radius: 4px;
     cursor: pointer;

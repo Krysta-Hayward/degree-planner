@@ -1,16 +1,18 @@
-{{-- Quarter / Year --}}
+@if ($errors->any())
+    <div class="alert-error">
+        @foreach ($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
+    </div>
+@endif
+
 <div class="form-group">
     <label for="quarterYear">Quarter / Year</label>
 
     <input type="text" id="quarterYear" name="quarterYear" value="{{ old('quarterYear', $term->quarterYear ?? '') }}"
         placeholder="Example: Fall 2026" required>
-
-    @error('quarterYear')
-        <p class="error">{{ $message }}</p>
-    @enderror
 </div>
 
-{{-- Course --}}
 <div class="form-group">
     <label for="course">Course</label>
 
@@ -23,8 +25,4 @@
             </option>
         @endforeach
     </select>
-
-    @error('course')
-        <p class="error">{{ $message }}</p>
-    @enderror
 </div>

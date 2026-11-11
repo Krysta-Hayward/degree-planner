@@ -17,7 +17,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('admin.prereqs-form')
+                @include('admin.prereqs.prereqs-form')
             </form>
         </main>
     </div>

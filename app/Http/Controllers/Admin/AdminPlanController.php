@@ -25,7 +25,7 @@ class AdminPlanController extends Controller
             return $student;
         });
 
-        return view('admin.plans', compact('students'));
+        return view('admin.plans.plans', compact('students'));
     }
 
     public function show(User $student): View
@@ -42,7 +42,7 @@ class AdminPlanController extends Controller
             fn ($plan) => $plan->course?->credits ?? 0
         );
 
-        return view('admin.plan-details', compact(
+        return view('admin.plans.plan-details', compact(
             'student',
             'plans',
             'totalCredits'

@@ -15,12 +15,12 @@ class AdminUserController extends Controller
     {
         $users = User::orderBy('name')->paginate(50);
 
-        return view('admin.users', compact('users'));
+        return view('admin.users.users', compact('users'));
     }
 
     public function create(): View
     {
-        return view('admin.users-create');
+        return view('admin.users.users-create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -41,7 +41,7 @@ class AdminUserController extends Controller
 
     public function edit(User $user): View
     {
-        return view('admin.users-edit', compact('user'));
+        return view('admin.users.users-edit', compact('user'));
     }
 
     public function update(Request $request, User $user): RedirectResponse

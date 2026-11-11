@@ -9,7 +9,7 @@
             <main class="admin-content">
                 <h1>Add Program</h1>
 
-                @include('admin.programs-form', [
+                @include('admin.programs.programs-form', [
         'action' => route('admin.programs.store'),
         'method' => 'POST',
         'programName' => '',

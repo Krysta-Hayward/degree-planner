@@ -22,7 +22,7 @@ class AdminPrereqController extends Controller
             ->orderBy('course')
             ->paginate(50);
 
-        return view('admin.prereqs', compact('prereqs'));
+        return view('admin.prereqs.prereqs', compact('prereqs'));
     }
 
     public function create(): View
@@ -30,7 +30,7 @@ class AdminPrereqController extends Controller
         $courses = Course::orderBy('courseNumber')->get();
         $selectedPrereqs = [];
 
-        return view('admin.prereqs-create', compact(
+        return view('admin.prereqs.prereqs-create', compact(
             'courses',
             'selectedPrereqs'
         ));
@@ -84,7 +84,7 @@ class AdminPrereqController extends Controller
             ->map(fn ($id) => (string) $id)
             ->toArray();
 
-        return view('admin.prereqs-edit', compact(
+        return view('admin.prereqs.prereqs-edit', compact(
             'prereq',
             'courses',
             'selectedPrereqs'

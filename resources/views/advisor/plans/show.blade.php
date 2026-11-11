@@ -7,11 +7,16 @@
     <p>Status: {{ ucfirst(str_replace('_', ' ', $programMap->status)) }}</p>
     <p>Program: {{ $programName ?? 'Not Selected'}}</p>
 
+<!-- Planned Courses --> 
+    <h3>Planned Courses</h3>
     @if ($coursesByQuarter->isEmpty())
         <p>This student hasn't planned any courses yet.</p>
     @else
         @foreach ($coursesByQuarter as $quarter => $courses)
-            <h3>{{ $quarter }}</h3>
+        <details>
+            <summary>
+                    {{ $quarter }} · {{ $courses->count() }} {{ Str::plural('course', $courses->count()) }} · {{ $courses->sum('credits') }} credits
+            </summary>
 
             <table class="student-table">
                 <thead>
@@ -22,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($courses as $course)
+                   @foreach ($courses as $course)
                         <tr>
                             <td>{{ $course->courseNumber }}</td>
                             <td>{{ $course->name }}</td>
@@ -33,6 +38,7 @@
             </table>
 
             <p>Total credits: {{ $courses->sum('credits') }}</p>
+        </details>
         @endforeach
     @endif
 

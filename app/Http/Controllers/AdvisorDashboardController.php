@@ -16,6 +16,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProgramMap;
 use App\Models\user;
+use App\Services\NeedsAttention;
 use Illuminate\Support\Facades\DB;
 
 class AdvisorDashboardController extends Controller
@@ -27,27 +28,11 @@ class AdvisorDashboardController extends Controller
             ->where('advisor', auth()->id())
             ->pluck('student');
 
-        $studentCount = $studentIds->count();
-
-        // Program maps submitted by this advisor's students
-        $awaitingReview = ProgramMap::where('status', 'submitted')
-            ->whereIn('student', $studentIds)
-            ->count();
-
-        // Needs Attention: No Program Selected
-        $noProgram = User::whereIn('id', $studentIds)
-            ->whereNull('program')
-            ->pluck('id');
-
-       
-
-        // TODO: Students with problems (no plan, failed prerequisite)
-        $flaggedStudents = 0;
 
         return view('advisor.dashboard', [
-            'studentCount' => $studentCount,
-            'awaitingReview' => $awaitingReview,
-            'flaggedStudents' => $flaggedStudents,
+            'studentCount' => $studentIds->count(),
+            'awaitingReview' => ProgramMap::where('status', 'submitted')->whereIn('student', $studentIds)->count(),
+            'flaggedCount' => NeedsAttention::forAdvisor(auth()->id())->count(),
         ]);
     }
 }

@@ -5,6 +5,7 @@
 @section('dashboard')
     <h2>{{ $programMap->owner->name }}</h2>
     <p>Status: {{ ucfirst(str_replace('_', ' ', $programMap->status)) }}</p>
+    <p>Program: {{ $programName ?? 'Not Selected'}}</p>
 
     @if ($coursesByQuarter->isEmpty())
         <p>This student hasn't planned any courses yet.</p>
@@ -35,6 +36,80 @@
         @endforeach
     @endif
 
+<!-- Program Requirements-->   
+    <details class="comments-panel">
+        <summary>Program requirements</summary>
+
+        @if (! $programName)
+            <p>This student hasn't selected a program yet.</p>
+        @elseif ($requirements->isEmpty())
+            <p>No requirements found for {{ $programName }}.</p>
+        @else
+            <p>{{ $requirements->whereNotNull('plannedIn')->count() }} of {{ $requirements->count() }} required courses planned</p>
+
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Name</th>
+                        <th>Credits</th>
+                        <th>Planned</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($requirements as $course)
+                        <tr>
+                            <td>{{ $course->courseNumber }}</td>
+                            <td>{{ $course->name }}</td>
+                            <td>{{ $course->credits }}</td>
+                            <td>
+                                @if ($course->plannedIn)
+                                    <span class="plan-status plan-status--ok">{{ $course->plannedIn }}</span>
+                                @else
+                                    <span class="plan-status plan-status--missing">Not planned</span>
+                                @endif
+                            </td>
+                        </tr>
+                     @endforeach
+                </tbody>
+            </table>
+        @endif
+    </details>
+<!-- Program Prerequisites-->
+    <details class="comments-panel">
+        <summary>Prerequisites</summary>
+
+        @if ($prerequisites->isEmpty())
+            <p>None of the planned courses have prerequisites.</p>
+        @else
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Requires</th>
+                        <th>Prerequisite</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($prerequisites as $row)
+                        <tr>
+                            <td>{{ $row->course_number }}</td>
+                            <td>{{ $row->prereq_number }}</td>
+                            <td>
+                                @if ($row->prereqPlannedIn)
+                                    <span class="plan-status plan-status--ok">Planned in {{ $row->prereqPlannedIn }}</span>
+                                @else
+                                    <span class="plan-status plan-status--missing">Missing from plan</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </details>
+
+<!--Comments-->
     <details>
         <summary>Comments ({{ $programMap->comments->count() }})</summary>
 

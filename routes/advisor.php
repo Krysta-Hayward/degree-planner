@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdvisorDashboardController;
 use App\Http\Controllers\AdvisorPlanReviewController;
 use App\Http\Controllers\AdvisorStudentController;
+use App\Http\Controllers\AdvisorAttentionController;
 use App\Http\Middleware\AdvisorMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,7 @@ Route::middleware(['auth', AdvisorMiddleware::class])->group(function () {
 
     // Comment on a student's program map
     Route::post('/advisor/plans/{programMap}/comments', [AdvisorPlanReviewController::class, 'storeComment'])->name('advisor.plans.comments.store');
+
+    // Students who need attention
+    Route::get('/advisor/attention', [AdvisorAttentionController::class, 'index'])->name('advisor.attention.index');
 });

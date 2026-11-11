@@ -15,6 +15,17 @@ class AdminAdvisorController extends Controller
             ->orderBy('name')
             ->paginate(25);
 
-        return view('admin.advisors', compact('advisors'));
+        return view('admin.advisors.advisors', compact('advisors'));
+    }
+
+    public function show(User $advisor): View
+    {
+        abort_unless($advisor->role === 'advisor', 404);
+
+        $students = $advisor->students()
+            ->orderBy('name')
+            ->paginate(25);
+
+        return view('admin.advisors.advisor-details', compact('advisor', 'students'));
     }
 }

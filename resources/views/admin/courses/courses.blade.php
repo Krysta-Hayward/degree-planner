@@ -17,6 +17,18 @@
                 <a href="{{ route('admin.courses.create') }}" class="button-links">Create Course</a>
             </div>
 
+            @if (session('success'))
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert-error">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @if ($courses->isEmpty())
                 <p>No courses found.</p>
             @else

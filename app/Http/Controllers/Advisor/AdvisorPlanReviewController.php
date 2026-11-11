@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Advisor;
 
+use App\Http\Controllers\Controller;
 use App\Models\ProgramMap;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-
 
 
 class AdvisorPlanReviewController extends Controller

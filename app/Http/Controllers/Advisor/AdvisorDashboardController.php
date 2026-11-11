@@ -12,10 +12,10 @@ Advisor can view course requirements and prerequisites within a program map
 Changes to student's program map are saved to the database
 */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Advisor;
 
+use App\Http\Controllers\Controller;
 use App\Models\ProgramMap;
-use App\Models\user;
 use App\Services\NeedsAttention;
 use Illuminate\Support\Facades\DB;
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Advisor;
 
+use App\Http\Controllers\Controller;
 use App\Services\NeedsAttention;
 
 class AdvisorAttentionController extends Controller

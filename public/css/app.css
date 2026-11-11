@@ -340,6 +340,16 @@ nav button a {
 }
 
 /*
+* Advisor Attention reason list
+*/
+.reason-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+/*
 * Approved & Request change buttons
 */
 .review-actions {

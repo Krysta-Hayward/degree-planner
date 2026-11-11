@@ -12,6 +12,7 @@
                     <th>Student</th>
                     <th>Email</th>
                     <th>Reason</th>
+                    <th>Plan</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,9 +21,18 @@
                         <td>{{ $student->name }}</td>
                         <td>{{ $student->email }}</td>
                         <td>
-                            @foreach ($student->reasons as $reason)
-                                <span class="plan-status plan-status--missing">{{ $reason }}</span>
-                            @endforeach
+                            <div class="reason-list">
+                                @foreach ($student->reasons as $reason)
+                                    <span class="plan-status plan-status--missing">{{ $reason }}</span>
+                                @endforeach
+                            </div>
+                        </td>
+                        <td>
+                            @if ($student->mapId)
+                                <a href="{{ route('advisor.plans.show', $student->mapId) }}" class="button-links">View plan</a>
+                            @else
+                                —
+                            @endif
                         </td>
                     </tr>
                 @endforeach

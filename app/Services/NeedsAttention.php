@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ProgramMap;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -15,20 +16,17 @@ class NeedsAttention
             ->where('advisor', $advisorId)
             ->pluck('student');
 
-        // No program selected
-        $noProgram = User::whereIn('id', $studentIds)
-            ->whereNull('program')
-            ->pluck('id');
+        $students = User::whereIn('id', $studentIds)->get()->keyBy('id');
 
-        // No courses planned
-        $hasPlans = DB::table('plans')
-            ->whereIn('student', $studentIds)
-            ->distinct()
-            ->pluck('student');
+        // Each student's planned course IDs
+        $plannedByStudent = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->whereIn('plans.student', $studentIds)
+            ->get(['plans.student', 'terms.course'])
+            ->groupBy('student')
+            ->map(fn ($rows) => $rows->pluck('course'));
 
-        $noPlan = $studentIds->diff($hasPlans);
-
-        // A planned course's prerequisite isn't on the plan
+        // Students with a planned course whose prerequisite isn't on their plan
         $missingPrereq = DB::table('plans as checked_plan')
             ->join('terms as checked_term', 'checked_plan.class', '=', 'checked_term.id')
             ->join('course_prerequisites', 'course_prerequisites.course', '=', 'checked_term.course')
@@ -43,26 +41,58 @@ class NeedsAttention
             ->distinct()
             ->pluck('checked_plan.student');
 
-        // Combine: student ID → list of reasons
+        // Required courses for each program
+        $requiredByProgram = DB::table('programs')
+            ->get(['name', 'course'])
+            ->groupBy('name')
+            ->map(fn ($rows) => $rows->pluck('course'));
+
+        // Decide each student's reasons, in order
         $flagged = collect();
 
-        foreach ($noProgram as $id) {
-            $flagged[$id] = [...($flagged[$id] ?? []), 'No program selected'];
+        foreach ($students as $id => $student) {
+            $planned = $plannedByStudent[$id] ?? collect();
+
+            // 1. No program: nothing else can be checked
+            if (! $student->program) {
+                $flagged[$id] = ['No program selected'];
+                continue;
+            }
+
+            // 2. No courses yet: nothing else can be checked
+            if ($planned->isEmpty()) {
+                $flagged[$id] = ['No plan yet'];
+                continue;
+            }
+
+            // 3. Problems with the plan itself
+            $reasons = [];
+
+            if ($missingPrereq->contains($id)) {
+                $reasons[] = 'Missing a prerequisite';
+            }
+
+            $required = $requiredByProgram[$student->program] ?? collect();
+
+            if ($required->diff($planned)->isNotEmpty()) {
+                $reasons[] = 'Missing required courses';
+            }
+
+            if ($reasons) {
+                $flagged[$id] = $reasons;
+            }
         }
 
-        foreach ($noPlan as $id) {
-            $flagged[$id] = [...($flagged[$id] ?? []), 'No courses planned'];
-        }
-
-        foreach ($missingPrereq as $id) {
-            $flagged[$id] = [...($flagged[$id] ?? []), 'Missing a prerequisite'];
-        }
+        // Each flagged student's program map ID, if they have one
+        $mapIds = ProgramMap::whereIn('student', $flagged->keys())
+            ->pluck('id', 'student');
 
         return User::whereIn('id', $flagged->keys())
             ->orderBy('name')
             ->get()
-            ->map(function ($student) use ($flagged) {
+            ->map(function ($student) use ($flagged, $mapIds) {
                 $student->reasons = $flagged[$student->id];
+                $student->mapId = $mapIds[$student->id] ?? null;
                 return $student;
             });
     }

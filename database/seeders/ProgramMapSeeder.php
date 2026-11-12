@@ -37,6 +37,7 @@ class ProgramMapSeeder extends Seeder
             ->where('advisor', $advisorId)
             ->pluck('student')
             ->diff(ProgramMap::pluck('student'))
+            ->diff(User::where('email', 'student@example.com')->pluck('id'))
             ->take(20);
 
         foreach ($students as $studentId) {

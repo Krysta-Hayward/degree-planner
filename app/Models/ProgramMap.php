@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable(['student', 'status', 'reviewed_by', 'reviewed_at'])]
 class ProgramMap extends Model
 {
+    // New maps start as drafts, matching the database default
+    protected $attributes = [
+        'status' => 'draft',
+    ];
+
     protected function casts(): array
     {
         return ['reviewed_at' => 'datetime'];

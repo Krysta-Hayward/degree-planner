@@ -125,9 +125,9 @@ class AdvisorPlanReviewController extends Controller
                 return $row;
             });
         
-
+        // Add 'comments.author' after testing students
         return view('advisor.plans.show', [
-            'programMap' => $programMap->load('owner', 'comments.author'),
+            'programMap' => $programMap->load('owner'),
             'coursesByQuarter' => $courses,
             'programName' => $student->program,
             'requirements' => $requirements,

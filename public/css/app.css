@@ -365,48 +365,41 @@ nav button a {
     display: block;
 }
 
+/*
+* Advisor plan comments form
+*/
+.plan-comment {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid #d1d5db;
+    background: #f9fafb;
+}
 
-/* =========================================
-   FORMS
-========================================= */
+.plan-comment p {
+    margin: 0 0 4px;
+}
 
-.form-group {
+/*
+* Advisor Attention reason list
+*/
+.reason-list {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 20px;
-    width: 100%;
+    gap: 4px;
 }
 
-.form-group label {
-    font-weight: 600;
-}
-
-.form-group input,
-.form-group select {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 500px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface);
-    color: var(--text);
-}
-
-.form-actions {
+/*
+* Approved & Request change buttons
+*/
+.review-actions {
     display: flex;
-    align-items: center;
     gap: 12px;
-    margin-top: 20px;
+    margin: 16px 0;
 }
 
 
-/* =========================================
-   PROGRAM FORMS
-========================================= */
-
+/* Admin program form */
 .program-form {
     display: flex;
     flex-direction: column;

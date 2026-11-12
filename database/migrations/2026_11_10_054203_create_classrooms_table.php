@@ -11,21 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //>>> Scheduling Table! <<<
-        Schema::table('classrooms', function (Blueprint $table) {
+        // >>> Scheduling Table! <<<
+        Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('course'); //The course being taught
-            $table->string('teacher'); //Teacher teaching (name)
-            $table->integer('seats'); //how many seats?
-            $table->integer('seatsOpen'); //how full is the class?
-            $table->boolean('fall'); //is it offered this fall?
-            $table->boolean('winter'); //this winter?
-            $table->boolean('spring'); //this spring?
-            $table->boolean('summer'); //this summer?
+            $table->integer('course'); // The course being taught
+            $table->string('teacher'); // Teacher teaching (name)
+            $table->integer('seats'); // how many seats?
+            $table->integer('seatsOpen'); // how full is the class?
+            $table->boolean('fall'); // is it offered this fall?
+            $table->boolean('winter'); // this winter?
+            $table->boolean('spring'); // this spring?
+            $table->boolean('summer'); // this summer?
             $table->integer('timeStart'); // 1-24 what time is class?
             $table->integer('timeEnd'); // 1-24 when does class end?
-
 
             $table->foreign('course')->references('id')->on('courses')->onUpdate('cascade');
         });

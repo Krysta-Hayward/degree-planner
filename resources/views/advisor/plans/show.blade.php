@@ -116,8 +116,37 @@
     </details>
 
 <!--Comments-->
-<!-- Uncomment after testing -->
+    <details>
+        <summary>Comments ({{ $programMap->comments->count() }})</summary>
+
+         @forelse ($programMap->comments as $comment)
+        <div>
+            <p><strong>{{ $comment->author->name }}</strong> {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+            <p>{{ $comment->body }}</p>
+        </div>
+        @empty
+            <p>No comments.</p>
+        @endforelse
+
+        @if (session('success'))
+            <p>{{ session('success') }}</p>
+        @endif
+
+        @can('comment', $programMap)
+            <form method="POST" action="{{ route('advisor.plans.comments.store', $programMap) }}">
+                @csrf
+                <label for="body">Add a comment</label>
+                <br>
+                <textarea name="body" id="body" rows="3">{{ old('body') }}</textarea>
+
+                @error('body')
+                    <p class="plan-status plan-status--missing">{{ $message }}</p>
+                @enderror
     
+                <button type="submit" name="post-comment">Post Comment</button>
+            </form>
+        @endcan
+    </details>
 
     @can('review', $programMap)
         <div class="review-actions">

@@ -199,7 +199,8 @@
             <!-- Advisor review {Marquis}-->
             <div class="plan-review-box">
                 <h3>Advisor review</h3>
-
+                
+                <!-- Status submitted -->
                 @if ($status === 'submitted')
                     <p><span class="plan-status">Submitted</span> Waiting for your advisor to review.</p>
                 @elseif ($status === 'approved')
@@ -208,17 +209,33 @@
                         by {{ $programMap->reviewer?->name ?? 'your advisor' }}
                         on {{ $programMap->reviewed_at?->format('M j, Y') }}
                     </p>
+                <!-- Status request changes -->
                 @elseif ($status === 'changes_requested')
                     <p><span class="plan-status plan-status--missing">Changes requested</span> Update your plan, then submit it again.</p>
                 @else
+                <!-- Status drafted (never submitted)-->
                     <p>Draft. Submit your program map when you're ready for your advisor to review it.</p>
                 @endif
-
+                <!-- Submit when plan is not locked  -->
                 @if (! $locked && $planned->isNotEmpty())
                     <form method="POST" action="{{ route('student.plan.submit') }}">
                         @csrf
                         <button type="submit" class="button-links">Submit for review</button>
                     </form>
+                @endif
+
+                <!--Advisor Comments-->
+                @if ($programMap && $programMap->comments->isNotEmpty())
+                    <details class="comments-panel" open>
+                        <summary>Advisor comments ({{ $programMap->comments->count() }})</summary>
+
+                        @foreach ($programMap->comments as $comment)
+                            <div class="plan-comment">
+                                <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                                <p>{{ $comment->body }}</p>
+                            </div>
+                        @endforeach
+                    </details>
                 @endif
             </div>
         </section>

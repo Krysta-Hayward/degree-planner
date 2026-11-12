@@ -73,9 +73,8 @@ class StudentController extends Controller
 
         /* Marquis */
         // Student program map/advisor as reviewer
-        // TODO: Add 'comments.author' back when plan_comments links to program map
         $programMap = ProgramMap::where('student', $user->id)
-            ->with('reviewer')
+            ->with('reviewer', 'comments.author')
             ->first();
 
         return view('student.dashboard', [
@@ -143,7 +142,7 @@ class StudentController extends Controller
             return $this->toTop()
                 ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
         }
-        
+
         $data = $request->validate([
             'term' => ['required', 'integer', 'exists:terms,id'],
         ]);

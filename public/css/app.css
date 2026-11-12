@@ -99,11 +99,11 @@ section {
 
 .logo-img {
     position: absolute;
-    left: 380px;
+    left: 750px;
     top: 10px;
 }
 
-@media screen and (max-width: 1350px) {
+@media screen and (max-width: 1883px) {
     .site-header {
         display: flex;
         flex-direction: column;

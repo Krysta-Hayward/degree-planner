@@ -24,6 +24,27 @@
                     <th>Credits</th>
                     <td>{{ $course->credits }}</td>
                 </tr>
+
+                <tr>
+                    <th>Prerequisites</th>
+                    <td>
+                        @forelse ($course->prerequisiteCourses as $prerequisite)
+                            {{ $prerequisite->courseNumber }} - {{ $prerequisite->name }}<br>
+                        @empty
+                            None
+                        @endforelse
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Course Description</th>
+                </tr>
+                <tr>
+                    <td>{{ $course->description }}</td>
+                </tr>
             </tbody>
         </table>
 

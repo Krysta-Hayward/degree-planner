@@ -14,4 +14,9 @@ Route::middleware(['auth', StudentMiddleware::class])
         Route::delete('/program', [StudentController::class, 'clearProgram'])->name('program.clear');
         Route::post('/plan', [StudentController::class, 'addToPlan'])->name('plan.add');
         Route::delete('/plan/{plan}', [StudentController::class, 'removeFromPlan'])->name('plan.remove');
+
+        // Student enrollment
+        Route::post('/enroll/{course}', [StudentController::class, 'enroll'])
+            ->name('enroll');
     });
+    

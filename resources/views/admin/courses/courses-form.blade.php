@@ -15,8 +15,7 @@
 <div class="form-group">
     <label for="courseNumber">Course Number</label>
 
-    <input type="text" id="courseNumber" name="courseNumber" value="{{ $courseNumber }}" placeholder="CIS 272"
-        maxlength="7" required>
+    <input type="text" id="courseNumber" name="courseNumber" value="{{ $courseNumber }}" placeholder="CIS 272">
 </div>
 
 <div class="form-group">

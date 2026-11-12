@@ -421,11 +421,12 @@ nav button a {
 /*
 * Advisor plan comments form
 */
+/* TODO: Configure to match dark mode better for comment box when */
 .plan-comment {
     padding: 10px 12px;
     margin-bottom: 10px;
-    border-left: 3px solid #d1d5db;
-    background: #f9fafb;
+    border-left: 3px solid rgba(127, 127, 127, 0.4);
+    background: rgba(127, 127, 127, 0.08);
 }
 
 .plan-comment p {

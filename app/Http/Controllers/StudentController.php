@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Plan;
 use App\Models\Program;
 use App\Models\Term;
-use App\Models\Course;
-use App\Models\Enroll;
+use App\Models\ProgramMap;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,6 +71,12 @@ class StudentController extends Controller
             )
             ->get();
 
+        /* Marquis */
+        // Student program map/advisor as reviewer
+        $programMap = ProgramMap::where('student', $user->id)
+            ->with('reviewer', 'comments.author')
+            ->first();
+
         return view('student.dashboard', [
             'user' => $user,
             'programs' => $programs,
@@ -82,6 +87,7 @@ class StudentController extends Controller
             'planned' => $planned,
             'plannedTermIds' => $planned->pluck('term_id')->all(),
             'plannedCourseIds' => $planned->pluck('course_id')->all(),
+            'programMap' => $programMap,
         ]);
     }
 
@@ -127,6 +133,16 @@ class StudentController extends Controller
      */
     public function addToPlan(Request $request): RedirectResponse
     {
+
+        /* Marquis */
+        // A submitted or approved program map can't be changed
+        $map = ProgramMap::where('student', $request->user()->id)->first();
+
+        if ($map && ! $map->isEditable()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+        }
+
         $data = $request->validate([
             'term' => ['required', 'integer', 'exists:terms,id'],
         ]);
@@ -187,6 +203,32 @@ class StudentController extends Controller
         $plan->delete();
 
         return $this->toTop()->with('status', 'Removed from your program map.');
+    }
+
+    /* {{ Marquis }} */
+    // Submit program map to advisor
+    public function submitPlan(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        // Can't submit an empty plan
+        if (! DB::table('plans')->where('student', $user->id)->exists()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Add courses to your program map before submitting.']);
+        }
+
+        // The student's map, created as a draft the first time
+        $map = ProgramMap::firstOrCreate(['student' => $user->id]);
+
+        // Only drafts, or plans sent back, can be submitted
+        if (! $map->isEditable()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is already submitted or approved.']);
+        }
+
+        $map->update(['status' => 'submitted']);
+
+        return $this->toTop()->with('status', 'Program map submitted to your advisor.');
     }
 
     /**

@@ -12,7 +12,10 @@
 
 <body>
     <header class="site-header">
-        <div class="logo">Degree Planner</div>
+        <a href="/" class="logo-img">
+            <img src="{{ asset('degree-icon.png') }}" alt="Degree Planner Logo">
+        </a>
+        <div class="logo-text">Degree Planner</div>
 
         <nav>
             <button class="button-links"><a href="/">Home</a></button>
@@ -22,6 +25,9 @@
             <button class="button-links"><a href="/prerequisites">Prerequisites</a></button>
 
             @auth
+                <button class="button-links">
+                    <a href="{{ route('classes') }}">Classes</a>
+                </button>
                 @if (auth()->user()->role === 'admin')
                     <button class="button-links">
                         <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
@@ -29,7 +35,6 @@
                     <button class="button-links">
                         <a href="{{ route('admin.data') }}">Database Overview</a>
                     </button>
-
                 @elseif (auth()->user()->role === 'advisor')
                     <button class="button-links">
                         <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>

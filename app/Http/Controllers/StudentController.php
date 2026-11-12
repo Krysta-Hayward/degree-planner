@@ -256,4 +256,25 @@ class StudentController extends Controller
     {
         return redirect(route('student.dashboard').'#student-top');
     }
+
+    /**
+     * Enroll the logged-in student in a course.
+     */
+    public function enroll(Request $request, Course $course): RedirectResponse
+    {
+        $enrollment = Enroll::firstOrCreate([
+            'student' => $request->user()->id,
+            'course' => $course->id,
+        ]);
+
+        if (!$enrollment->wasRecentlyCreated) {
+            return redirect()
+                ->route('class-details', ['course' => $course->id])
+                ->with('error', 'You are already enrolled in this course.');
+        }
+
+        return redirect()
+            ->route('class-details', ['course' => $course->id])
+            ->with('success', 'Successfully enrolled in ' . $course->courseNumber . '.');
+    }
 }

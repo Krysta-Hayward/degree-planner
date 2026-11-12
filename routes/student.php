@@ -22,3 +22,4 @@ Route::middleware(['auth', StudentMiddleware::class])
         // Submits to program map
         Route::post('/plan/submit', [StudentController::class, 'submitPlan'])->name('plan.submit');
     });
+    

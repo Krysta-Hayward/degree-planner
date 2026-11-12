@@ -39,14 +39,14 @@ class AdminCourseController extends Controller
                 'courseNumber' => [
                     'required',
                     'string',
-                    'regex:/^[A-Z]{3} [0-9]{3}$/',
+                    'regex:/^(?:[A-Z]{3} [0-9]{3}|[A-Z]{4}&[0-9]{3})$/',
                     'unique:courses,courseNumber',
                 ],
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],
             ],
             [
-                'courseNumber.regex' => 'Course number must be in the format AAA 123 (e.g., CIS 272).',
+                'courseNumber.regex' => 'Course number must be in the format AAA 123 or AAA&123 (e.g., CIS 272 or CMST&210).',
             ]
         );
 
@@ -73,14 +73,14 @@ class AdminCourseController extends Controller
                 'courseNumber' => [
                     'required',
                     'string',
-                    'regex:/^[A-Z]{3} [0-9]{3}$/',
+                    'regex:/^(?:[A-Z]{3} [0-9]{3}|[A-Z]{4}&[0-9]{3})$/',
                     'unique:courses,courseNumber,'.$course->id,
                 ],
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],
             ],
             [
-                'courseNumber.regex' => 'Course number must be in the format AAA 123 (e.g., CIS 272).',
+                'courseNumber.regex' => 'Course number must be in the format AAA 123 or AAA&123 (e.g., CIS 272 or CMST&210.',
             ]
         );
 

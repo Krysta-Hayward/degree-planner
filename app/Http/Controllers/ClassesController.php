@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
+use App\Models\Classroom;
 
 class ClassesController extends Controller
 {
     public function index()
     {
-        $classes = Course::orderBy('courseNumber')
+        $classes = Classroom::with('course')
+            ->join('courses', 'classrooms.course', '=', 'courses.id')
+            ->select('classrooms.*')
+            ->orderBy('courses.courseNumber')
             ->paginate(15);
 
         return view('classes', compact('classes'));
     }
 
-    public function show(Course $course)
+    public function show(Classroom $classroom)
     {
-        return view('class-details', compact('course'));
+        $classroom->load('course');
+        return view('class-details', compact('classroom'));
     }
     
 }

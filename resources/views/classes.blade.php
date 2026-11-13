@@ -22,13 +22,13 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($classes as $course)
+                    @foreach ($classes as $classroom)
                         <tr>
                             <td>{{ $course->courseNumber }}</td>
                             <td>{{ $course->name }}</td>
                             <td>{{ $course->credits }}</td>
                             <td>
-                                <a href="{{ route('class-details', $course->id) }}">
+                                <a href="{{ route('class-details', ['classroom' => $classroom->id]) }}">
                                     View Details
                                 </a>
                             </td>

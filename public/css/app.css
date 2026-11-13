@@ -215,9 +215,10 @@ nav button a {
 ========================================= */
 
 table {
-    width: 90%;
+    width: 70%;
     max-width: 100%;
     border-collapse: collapse;
+    table-layout: auto;
     margin: 20px auto;
 }
 
@@ -226,7 +227,6 @@ td {
     padding: 12px;
     border: 1px solid var(--border-soft);
     text-align: left;
-    overflow-wrap: break-word;
 }
 
 th {
@@ -237,22 +237,24 @@ td {
     background: var(--surface);
 }
 
+td:last-child {
+    width: 20%;
+}
+
 td a {
     color: var(--link);
     text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 td a:hover {
     text-decoration: underline;
 }
 
-/* Admin tables */
-.admin-content table {
-    width: 100%;
-    margin: 20px 0;
-    table-layout: fixed;
+div table {
+    width: 70%;
 }
-
 
 /* =========================================
    PAGINATION
@@ -260,7 +262,7 @@ td a:hover {
 
 .pagination {
     display: flex;
-    margin-left: 80px;
+    margin-left: 280px;
     margin-top: 20px;
 }
 

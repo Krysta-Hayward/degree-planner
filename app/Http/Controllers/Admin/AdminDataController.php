@@ -20,6 +20,7 @@ class AdminDataController extends Controller
             'students',
             'terms',
             'users',
+            'classrooms'
         ];
 
         $data = [];

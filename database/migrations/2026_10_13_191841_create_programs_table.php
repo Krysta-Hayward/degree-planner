@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->integer('course');
+            $table->string('requirement_group')->default('Core');
 
             $table->foreign('course')
                 ->references('id')

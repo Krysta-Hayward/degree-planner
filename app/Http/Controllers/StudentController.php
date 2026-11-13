@@ -7,6 +7,7 @@ use App\Models\Program;
 use App\Models\Term;
 use App\Models\Course;
 use App\Models\Enroll;
+use App\Models\Classroom;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -139,7 +140,7 @@ class StudentController extends Controller
             ->whereIn('course', Program::query()->where('name', $user->program)->select('course'))
             ->exists();
 
-        if (! $inProgram) {
+        if (!$inProgram) {
             return $this->toTop()
                 ->withErrors(['term' => 'That class is not part of your degree program.']);
         }
@@ -150,7 +151,7 @@ class StudentController extends Controller
 
         if ($missing->isNotEmpty()) {
             return $this->toTop()
-                ->withErrors(['term' => 'Add '.$missing->join(', ').' to your program map first.']);
+                ->withErrors(['term' => 'Add ' . $missing->join(', ') . ' to your program map first.']);
         }
 
         Plan::firstOrCreate([
@@ -181,7 +182,7 @@ class StudentController extends Controller
 
         if ($dependents->isNotEmpty()) {
             return $this->toTop()
-                ->withErrors(['plan' => 'Remove '.$dependents->unique()->join(', ').' first, it needs this class.']);
+                ->withErrors(['plan' => 'Remove ' . $dependents->unique()->join(', ') . ' first, it needs this class.']);
         }
 
         $plan->delete();
@@ -212,27 +213,34 @@ class StudentController extends Controller
      */
     private function toTop(): RedirectResponse
     {
-        return redirect(route('student.dashboard').'#student-top');
+        return redirect(route('student.dashboard') . '#student-top');
     }
 
     /**
      * Enroll the logged-in student in a course.
      */
-    public function enroll(Request $request, Course $course): RedirectResponse
+    public function enroll(Request $request, Classroom $classroom): RedirectResponse
     {
+        // Get the course associated with this classroom.
+        $course = $classroom->courseDetails;
+
+        abort_if(!$course, 404);
+
+        // Create enrollment if the student is not already enrolled.
         $enrollment = Enroll::firstOrCreate([
             'student' => $request->user()->id,
             'course' => $course->id,
         ]);
 
+        // Prevent duplicate enrollment.
         if (!$enrollment->wasRecentlyCreated) {
             return redirect()
-                ->route('class-details', ['course' => $course->id])
+                ->route('class-details', ['classroom' => $classroom->id])
                 ->with('error', 'You are already enrolled in this course.');
         }
 
         return redirect()
-            ->route('class-details', ['course' => $course->id])
+            ->route('class-details', ['classroom' => $classroom->id])
             ->with('success', 'Successfully enrolled in ' . $course->courseNumber . '.');
     }
 }

@@ -21,4 +21,9 @@ class Classroom extends Model
         'timeStart',
         'timeEnd',
     ];
+
+    public function courseDetails()
+    {
+        return $this->belongsTo(Course::class, 'course');
+    }
 }

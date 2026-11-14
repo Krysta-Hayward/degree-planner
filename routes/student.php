@@ -19,4 +19,3 @@ Route::middleware(['auth', StudentMiddleware::class])
         Route::post('/enroll/{classroom}', [StudentController::class, 'enroll'])
             ->name('enroll');
     });
-    

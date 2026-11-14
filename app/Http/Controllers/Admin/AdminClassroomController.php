@@ -105,7 +105,7 @@ class AdminClassroomController extends Controller
             'spring' => ['required', 'boolean'],
             'summer' => ['required', 'boolean'],
             'timeStart' => ['required', 'date_format:H:i'],
-            'timeEnd' => ['required', 'date_format:H:i', 'after:timeStart']
+            'timeEnd' => ['required', 'date_format:H:i', 'after:timeStart'],
         ]);
     }
 }

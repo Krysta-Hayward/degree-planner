@@ -56,7 +56,7 @@ class AdminProgramController extends Controller
         $courses = Program::with('courseDetails')
             ->where('name', $programName)
             ->get()
-            ->sortBy(fn($program) => $program->courseDetails?->courseNumber ?? '')
+            ->sortBy(fn ($program) => $program->courseDetails?->courseNumber ?? '')
             ->values();
 
         abort_if($courses->isEmpty(), 404);
@@ -64,7 +64,7 @@ class AdminProgramController extends Controller
         $groups = $courses->groupBy('requirement_group')->sortKeys();
 
         $totalCredits = $courses->sum(
-            fn($program) => $program->courseDetails?->credits ?? 0
+            fn ($program) => $program->courseDetails?->credits ?? 0
         );
 
         $description = ProgramDetail::where('name', $programName)

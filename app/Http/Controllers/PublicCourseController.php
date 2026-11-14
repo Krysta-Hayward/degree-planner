@@ -17,7 +17,7 @@ class PublicCourseController extends Controller
     public function show(Course $course)
     {
         $course->load('prerequisiteCourses');
-        
+
         return view('public.course-details', compact('course'));
     }
 }

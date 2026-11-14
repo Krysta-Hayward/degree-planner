@@ -11,6 +11,7 @@ class AdminDataController extends Controller
     public function index(?string $table = null)
     {
         $tables = [
+            'classrooms',
             'course_prerequisites',
             'course_program',
             'courses',
@@ -20,7 +21,6 @@ class AdminDataController extends Controller
             'students',
             'terms',
             'users',
-            'classrooms'
         ];
 
         $data = [];

@@ -28,7 +28,13 @@ class AdminClassroomController extends Controller
     {
         $courses = Course::orderBy('courseNumber')->get();
 
-        return view('admin.classrooms.classrooms-create', compact('courses'));
+        $teachers = Classroom::whereNotNull('teacher')
+            ->where('teacher', '!=', '')
+            ->distinct()
+            ->orderBy('teacher')
+            ->pluck('teacher');
+
+        return view('admin.classrooms.classrooms-create', compact('courses', 'teachers'));
     }
 
     /**
@@ -52,7 +58,13 @@ class AdminClassroomController extends Controller
     {
         $courses = Course::orderBy('courseNumber')->get();
 
-        return view('admin.classrooms.classrooms-edit', compact('classroom', 'courses'));
+        $teachers = Classroom::whereNotNull('teacher')
+            ->where('teacher', '!=', '')
+            ->distinct()
+            ->orderBy('teacher')
+            ->pluck('teacher');
+
+        return view('admin.classrooms.classrooms-edit', compact('classroom', 'courses', 'teachers'));
     }
 
     /**
@@ -92,8 +104,8 @@ class AdminClassroomController extends Controller
             'winter' => ['required', 'boolean'],
             'spring' => ['required', 'boolean'],
             'summer' => ['required', 'boolean'],
-            'timeStart' => ['nullable', 'date_format:H:i'],
-            'timeEnd' => ['nullable', 'date_format:H:i', 'after:timeStart']
+            'timeStart' => ['required', 'date_format:H:i'],
+            'timeEnd' => ['required', 'date_format:H:i', 'after:timeStart']
         ]);
     }
 }

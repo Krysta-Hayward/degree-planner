@@ -21,8 +21,15 @@
     <div class="form-group">
         <label for="teacher">Teacher</label>
 
-        <input type="text" name="teacher" id="teacher" value="{{ old('teacher', $classroom->teacher ?? '') }}"
-            placeholder="Enter teacher name">
+        <select name="teacher" id="teacher" class="searchable-select">
+            <option value="">Select a teacher</option>
+
+            @foreach ($teachers as $teacherOption)
+                <option value="{{ $teacherOption }}" {{ old('teacher', $classroom->teacher ?? '') == $teacherOption ? 'selected' : '' }}>
+                    {{ $teacherOption }}
+                </option>
+            @endforeach
+        </select>
 
         @error('teacher')
             <div class="alert-error">{{ $message }}</div>

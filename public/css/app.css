@@ -636,7 +636,6 @@ div table {
     outline-offset: 1px;
 }
 
-.form-actions {
 /*
 * Approved & Request change buttons
 */
@@ -648,9 +647,7 @@ div table {
 
 /* =========================================
    ADMIN CLASSROOM FORM
-
-.classroom-options {
-
+========================================= */
 /* Admin program form */
 .program-form {
     display: flex;

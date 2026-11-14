@@ -12,9 +12,11 @@ Advisor can view course requirements and prerequisites within a program map
 Changes to student's program map are saved to the database
 */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Advisor;
 
+use App\Http\Controllers\Controller;
 use App\Models\ProgramMap;
+use App\Services\NeedsAttention;
 use Illuminate\Support\Facades\DB;
 
 class AdvisorDashboardController extends Controller
@@ -26,20 +28,11 @@ class AdvisorDashboardController extends Controller
             ->where('advisor', auth()->id())
             ->pluck('student');
 
-        $studentCount = $studentIds->count();
-
-        // Program maps submitted by this advisor's students
-        $awaitingReview = ProgramMap::where('status', 'submitted')
-            ->whereIn('student', $studentIds)
-            ->count();
-
-        // TODO: Students with problems (no plan, failed prerequisite)
-        $flaggedStudents = 0;
 
         return view('advisor.dashboard', [
-            'studentCount' => $studentCount,
-            'awaitingReview' => $awaitingReview,
-            'flaggedStudents' => $flaggedStudents,
+            'studentCount' => $studentIds->count(),
+            'awaitingReview' => ProgramMap::where('status', 'submitted')->whereIn('student', $studentIds)->count(),
+            'flaggedCount' => NeedsAttention::forAdvisor(auth()->id())->count(),
         ]);
     }
 }

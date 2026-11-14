@@ -16,13 +16,15 @@
                 </div>
             @endif
 
-            <a href="{{ route('admin.terms.create') }}" class="button-links">
-                Add Term
-            </a>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <p>
+                    <strong>Total terms:</strong> {{ $terms->total() }}
+                </p>
 
-            <p>
-                <strong>Total terms:</strong> {{ $terms->total() }}
-            </p>
+                <a href="{{ route('admin.terms.create') }}" class="button-links">
+                    Add Term
+                </a>
+            </div>
 
             @if ($terms->isEmpty())
                 <p>No terms found.</p>

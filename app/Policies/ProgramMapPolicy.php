@@ -45,6 +45,7 @@ class ProgramMapPolicy
 
     /**
      * Determine whether the user can update the model.
+     * Advisor can only update status of map
      */
     public function update(User $user, ProgramMap $map): bool
     {
@@ -55,14 +56,13 @@ class ProgramMapPolicy
 
     /**
      * Who can comment on a map
+     * Should only be the Advisor who can comment on program map
      */
     public function comment(User $user, ProgramMap $map): bool
     {
-        return match ($user->role) {
-            'student' => (int) $map->student === $user->id,
-            'advisor' => $this->isAdvisorOf($user, (int) $map->student),
-            default => false,
-        };
+        return $user->role === 'advisor'
+        && $this->isAdvisorOf($user, (int) $map->student);
+        
     }
 
     // Who can approve or request changes

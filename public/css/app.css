@@ -580,19 +580,29 @@ div table {
 
 /* =========================================
    FORMS
-========================================= */
+/*
+* Advisor plan comments form
+*/
+/* TODO: Configure to match dark mode better for comment box when */
+.plan-comment {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid rgba(127, 127, 127, 0.4);
+    background: rgba(127, 127, 127, 0.08);
+}
 
-.form-group {
+.plan-comment p {
+    margin: 0 0 4px;
+}
+
+/*
+* Advisor Attention reason list
+*/
+.reason-list {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.form-group label {
-    font-weight: 600;
+    gap: 4px;
 }
 
 .form-group input,
@@ -627,17 +637,22 @@ div table {
 }
 
 .form-actions {
+/*
+* Approved & Request change buttons
+*/
+.review-actions {
     display: flex;
-    align-items: center;
     gap: 12px;
-    margin-top: 20px;
+    margin: 16px 0;
 }
 
 /* =========================================
    ADMIN CLASSROOM FORM
-========================================= */
 
 .classroom-options {
+
+/* Admin program form */
+.program-form {
     display: flex;
     gap: 20px;
     align-items: stretch;

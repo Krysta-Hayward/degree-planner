@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="{{ asset('css/student.css') }}">
 
     <div class="student-page" id="student-top">
+        @php
+            $status = $programMap?->status ?? 'draft';
+            $locked = in_array($status, ['submitted', 'approved']);
+        @endphp
+
         <h1>My Degree Plan</h1>
         <p>Welcome, {{ $user->name }}.</p>
 
@@ -148,6 +153,7 @@
             </table>
         </section>
 
+        <!--My Program Map-->
         <section>
             <h2>My Program Map</h2>
 
@@ -158,7 +164,9 @@
                         <th>Course</th>
                         <th>Title</th>
                         <th>Credits</th>
-                        <th></th>
+                        @unless ($locked)
+                            <th></th>
+                        @endunless
                     </tr>
                 </thead>
                 <tbody>
@@ -168,13 +176,15 @@
                             <td data-label="Course">{{ $item->courseNumber }}</td>
                             <td data-label="Title">{{ $item->name }}</td>
                             <td data-label="Credits">{{ $item->credits }}</td>
-                            <td data-label="Action">
-                                <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}" class="inline-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="button-links">Remove</button>
-                                </form>
-                            </td>
+                            @unless ($locked)
+                                <td data-label="Action">
+                                    <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}" class="inline-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-links">Remove</button>
+                                    </form>
+                                </td>
+                            @endunless
                         </tr>
                     @empty
                         <tr>
@@ -185,6 +195,49 @@
             </table>
 
             <p>Total planned credits: <strong>{{ $planned->sum('credits') }}</strong></p>
+
+            <!-- Advisor review {Marquis}-->
+            <div class="plan-review-box">
+                <h3>Advisor review</h3>
+                
+                <!-- Status submitted -->
+                @if ($status === 'submitted')
+                    <p><span class="plan-status">Submitted</span> Waiting for your advisor to review.</p>
+                @elseif ($status === 'approved')
+                    <p>
+                        <span class="plan-status plan-status--ok">Approved</span>
+                        by {{ $programMap->reviewer?->name ?? 'your advisor' }}
+                        on {{ $programMap->reviewed_at?->format('M j, Y') }}
+                    </p>
+                <!-- Status request changes -->
+                @elseif ($status === 'changes_requested')
+                    <p><span class="plan-status plan-status--missing">Changes requested</span> Update your plan, then submit it again.</p>
+                @else
+                <!-- Status drafted (never submitted)-->
+                    <p>Draft. Submit your program map when you're ready for your advisor to review it.</p>
+                @endif
+                <!-- Submit when plan is not locked  -->
+                @if (! $locked && $planned->isNotEmpty())
+                    <form method="POST" action="{{ route('student.plan.submit') }}">
+                        @csrf
+                        <button type="submit" class="button-links">Submit for review</button>
+                    </form>
+                @endif
+
+                <!--Advisor Comments-->
+                @if ($programMap && $programMap->comments->isNotEmpty())
+                    <details class="comments-panel" open>
+                        <summary>Advisor comments ({{ $programMap->comments->count() }})</summary>
+
+                        @foreach ($programMap->comments as $comment)
+                            <div class="plan-comment">
+                                <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                                <p>{{ $comment->body }}</p>
+                            </div>
+                        @endforeach
+                    </details>
+                @endif
+            </div>
         </section>
 
         <script>

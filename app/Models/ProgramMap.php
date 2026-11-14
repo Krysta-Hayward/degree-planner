@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 #[Fillable(['student', 'status', 'reviewed_by', 'reviewed_at'])]
 class ProgramMap extends Model
 {
+    // New maps start as drafts, matching the database default
+    protected $attributes = [
+        'status' => 'draft',
+    ];
+
     protected function casts(): array
     {
         return ['reviewed_at' => 'datetime'];
@@ -35,5 +40,11 @@ class ProgramMap extends Model
     public function isEditable(): bool
     {
         return in_array($this->status, ['draft', 'changes_requested']);
+    }
+
+    // Advisors who can comment on thier student map
+    public function comments()
+    {
+        return $this->hasMany(PlanComment::class, 'program_map')->oldest();
     }
 }

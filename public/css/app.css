@@ -512,60 +512,6 @@ nav button a {
     margin-top: 20px;
 }
 
-
-/* =========================================
-   PROGRAM FORMS
-========================================= */
-
-.program-form {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-width: 900px;
-}
-
-.program-form input[type="text"],
-.program-form input[type="search"],
-.program-form textarea {
-    width: 100%;
-    max-width: 600px !important;
-    padding: 8px;
-    font: inherit;
-    color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.program-form-desc-label {
-    margin-top: 10px;
-}
-
-.program-form-desc-text textarea {
-    resize: vertical;
-}
-
-.program-form h2 {
-    margin-bottom: 0;
-}
-
-.program-form table {
-    width: 100%;
-    margin: 10px 0 20px;
-}
-
-.program-form .button-links {
-    display: inline-block;
-    width: fit-content;
-    margin: 10px 5px;
-    padding: 8px 14px;
-}
-
-.program-form button[type="submit"] {
-    align-self: flex-start;
-}
-
 /* =========================================
     ADMIN CLASSROOM FORM
 ========================================= */

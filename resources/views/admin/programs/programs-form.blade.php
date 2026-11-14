@@ -7,10 +7,10 @@
 @endif
 
 @php
-    $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
+$oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
 @endphp
 
-<form method="POST" action="{{ $action }}" class="program-form">
+<form method="POST" action="{{ $action }}" class="form-group">
     @csrf
     @if ($method === 'PUT')
         @method('PUT')
@@ -26,17 +26,13 @@
         </a>
     </div>
 
-    <div>
+    <div class="form-group">
         <label for="name">Program Name</label>
-    </div>
-    <div>
         <input id="name" type="text" name="name" value="{{ old('name', $programName ?? '') }}" maxlength="255" required>
     </div>
 
-    <div class="program-form-desc-label">
+    <div class="form-group">
         <label for="description">Description</label>
-    </div>
-    <div class="program-form-desc-text">
         <textarea id="description" name="description" rows="4"
             maxlength="2000">{{ old('description', $description ?? '') }}</textarea>
     </div>

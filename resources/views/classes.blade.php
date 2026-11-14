@@ -17,18 +17,33 @@
                         <th>Course Number</th>
                         <th>Course Name</th>
                         <th>Credits</th>
+                        <th>Terms Available</th>
                         <th>Details</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($classes as $course)
+                    @foreach ($classes as $classroom)
                         <tr>
-                            <td>{{ $course->courseNumber }}</td>
-                            <td>{{ $course->name }}</td>
-                            <td>{{ $course->credits }}</td>
+                            <td>{{ $classroom->courseDetails->courseNumber }}</td>
+                            <td>{{ $classroom->courseDetails->name }}</td>
+                            <td>{{ $classroom->courseDetails->credits }}</td>
+                            <td>@php $terms = [];
+                                if ($classroom->fall)
+                                    $terms[] = 'Fall';
+                                if ($classroom->winter)
+                                    $terms[] = 'Winter';
+                                if ($classroom->spring)
+                                    $terms[] = 'Spring';
+                                if ($classroom->summer)
+                                    $terms[] = 'Summer';
+                            @endphp
+
+                                {{ count($terms) ? implode(', ', $terms) : 'Not Available' }}
+
+                            </td>
                             <td>
-                                <a href="{{ route('class-details', $course->id) }}">
+                                <a href="{{ route('class-details', ['classroom' => $classroom->id]) }}">
                                     View Details
                                 </a>
                             </td>

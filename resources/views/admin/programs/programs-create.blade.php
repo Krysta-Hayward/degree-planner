@@ -3,22 +3,18 @@
 @section('title', 'Add Program - Degree Planner')
 
 @section('content')
-        <div class="admin-layout">
-            @include('partials.sidebar')
+    <div class="admin-layout">
+        @include('partials.sidebar')
 
-            <main class="admin-content">
-                <h1>Add Program</h1>
+        <main class="admin-content">
+            <h1>Add Program</h1>
 
-                @include('admin.programs.programs-form', [
-        'action' => route('admin.programs.store'),
-        'method' => 'POST',
-        'programName' => '',
-        'description' => '',
-        'current' => collect(),
-        'submitLabel' => 'Create Program',
-    ])
+            <form method="POST" action="{{ route('admin.programs.store') }}" class="program-form">
+                @csrf
 
-                    <a href="{{ route('admin.programs.index') }}" class="button-links-danger">Cancel</a>
-            </main>
-        </div>
+                @include('admin.programs.programs-form')
+            </form>
+
+        </main>
+    </div>
 @endsection

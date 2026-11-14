@@ -17,8 +17,8 @@
                 @include('admin.terms.terms-form')
 
                 <div class="form-buttons">
-                    <button type="submit" class="button-links">
-                        Save Changes
+                    <button type="submit" class="button-links-primary">
+                        Update Term
                     </button>
 
                     <a href="{{ route('admin.terms.index') }}" class="button-links-danger">

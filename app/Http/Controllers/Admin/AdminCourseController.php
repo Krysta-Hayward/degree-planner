@@ -44,6 +44,7 @@ class AdminCourseController extends Controller
                 ],
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],
+                'description' => ['nullable', 'string', 'max:2000'],
             ],
             [
                 'courseNumber.regex' => 'Course number must be in the format AAA 123 or AAA&123 (e.g., CIS 272 or CMST&210).',
@@ -78,6 +79,7 @@ class AdminCourseController extends Controller
                 ],
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],
+                'description' => ['nullable', 'string', 'max:2000'],
             ],
             [
                 'courseNumber.regex' => 'Course number must be in the format AAA 123 or AAA&123 (e.g., CIS 272 or CMST&210.',

@@ -1,11 +1,12 @@
-
 /* =========================================
    THEME COLORS
 ========================================= */
 
 :root {
     color-scheme: light;
+
     --bg: #ffffff;
+    --header-bg: #58825e;
     --text: #222222;
     --surface: #ffffff;
     --surface-alt: #f4f6f9;
@@ -15,11 +16,26 @@
     --border-soft: #eeeeee;
     --link: #356ac3;
     --muted-link: #333333;
+
+    /* Buttons */
+    --button-bg: #586082;
+    --button-text: #ffffff;
+    --button-hover: #454e70;
+
+    --secondary-bg: #f4f6f9;
+    --secondary-text: #333333;
+    --secondary-hover: #dddddd;
+
+    --danger-bg: #b94141;
+    --danger-hover: #963333;
+    --danger-text: #ffffff;
 }
 
 :root[data-theme="dark"] {
     color-scheme: dark;
+
     --bg: #121417;
+    --header-bg: #2a3830;
     --text: #e6e6e6;
     --surface: #1b1e22;
     --surface-alt: #23272d;
@@ -29,12 +45,27 @@
     --border-soft: #2e333a;
     --link: #7fa8ee;
     --muted-link: #d0d0d0;
+
+    /* Buttons */
+    --button-bg: #343f60;
+    --button-text: #ffffff;
+    --button-hover: #46577f;
+
+    --secondary-bg: #23272d;
+    --secondary-text: #e6e6e6;
+    --secondary-hover: #343a42;
+
+    --danger-bg: #8f3838;
+    --danger-hover: #aa4545;
+    --danger-text: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
         color-scheme: dark;
+
         --bg: #121417;
+        --header-bg: #2a3830;
         --text: #e6e6e6;
         --surface: #1b1e22;
         --surface-alt: #23272d;
@@ -44,13 +75,29 @@
         --border-soft: #2e333a;
         --link: #7fa8ee;
         --muted-link: #d0d0d0;
+        
+        /* Buttons */
+        --button-bg: #343f60;
+        --button-text: #ffffff;
+        --button-hover: #46577f;
+
+        --secondary-bg: #23272d;
+        --secondary-text: #e6e6e6;
+        --secondary-hover: #343a42;
+
+        --danger-bg: #8f3838;
+        --danger-hover: #aa4545;
+        --danger-text: #ffffff;
     }
 }
-
 
 /* =========================================
    GENERAL STYLING
 ========================================= */
+
+* {
+    box-sizing: border-box;
+}
 
 body {
     min-height: 100%;
@@ -66,7 +113,7 @@ body {
 
 main {
     width: 100%;
-    padding: 40px 20px;
+    padding: 20px 60px;
     text-align: center;
 }
 
@@ -81,26 +128,49 @@ section {
 .site-header {
     padding: 20px;
     text-align: center;
+    background-color: var(--header-bg);
+    color: #ffffff;
+    width: 100%;
+    transition: background-color 0.2s ease;
 }
 
 .logo-text {
-    font-size: 24px;
+    font-size: 40px;
     font-weight: bold;
     margin-bottom: 10px;
     margin-top: 50px;
 }
 
 .logo-img img {
-  height: 100px;
-  width: auto;
-  display: block;
-  justify-content: left;
+    height: 100px;
+    width: auto;
+    display: block;
 }
 
 .logo-img {
     position: absolute;
-    left: 750px;
+    left: 700px;
     top: 10px;
+}
+
+.site-header-logged-in {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.site-header-logged-in .user-role {
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: var(--hover-bg);
+    color: var(--muted-link);
+    font-size: 12px;
+    font-weight: 600;
 }
 
 @media screen and (max-width: 1883px) {
@@ -122,102 +192,157 @@ section {
 
     .site-header .logo-text {
         text-align: center;
+        margin-top: auto;
     }
 }
-
 
 /* =========================================
    BUTTONS AND LINKS
 ========================================= */
 
-.dark-light-mode-toggle {
+/* Shared button styling */
+
+button,
+.button-links,
+.button-links-primary,
+.button-links-danger {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    background: transparent;
-    color: inherit;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 9px 16px;
+    margin: 5px 0;
+
+    border: 1px solid var(--button-border);
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+
     cursor: pointer;
-    font: inherit;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
+
+/* Primary buttons */
+
+button,
+.button-links-primary {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+button:hover,
+.button-links-primary:hover {
+    background-color: var(--button-hover);
+    color: #ffffff;
+    border-color: var(--button-hover);
+    transform: translateY(-1px);
+}
+
+/* Secondary buttons */
 
 .button-links,
 a.button-links,
 a.button-links:visited,
 div.button-links {
-    display: inline-block;
-    text-decoration: none;
-    color: inherit;
-    padding: 8px 12px;
-    margin: 10px 0px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    cursor: pointer;
-    font: inherit;
+    background-color: var(--secondary-bg);
+    color: var(--secondary-text);
+    border-color: var(--border);
 }
 
-.button-links-primary,
-a.button-links-primary,
-a.button-links-primary:visited,
-div.button-links-primary {
-    display: inline-block;
-    text-decoration: none;
-    color: inherit;
-    padding: 8px 12px;
-    margin: 10px 0px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    cursor: pointer;
-    font: inherit;
-    background-color: rgb(64, 99, 255);
-    border-color: rgb(14, 0, 139);
+.button-links:hover,
+a.button-links:hover {
+    background-color: var(--secondary-hover);
+    color: var(--text);
+    border-color: var(--border);
+    transform: translateY(-1px);
 }
+
+/* Primary button links */
+
+a.button-links-primary,
+a.button-links-primary:visited {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+/* Danger buttons */
 
 .button-links-danger,
 a.button-links-danger,
 a.button-links-danger:visited {
-    display: inline-block;
-    text-decoration: none;
-    color: inherit;
-    padding: 8px 12px;
-    margin: 10px 0px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    cursor: pointer;
-    font: inherit;
-    background-color: red;
-    border-color: darkred;
+    background-color: var(--danger-bg);
+    color: var(--danger-text);
+    border-color: var(--danger-bg);
 }
 
-nav button {
-    margin: 5px;
-    padding: 10px 15px;
+.button-links-danger:hover,
+a.button-links-danger:hover {
+    background-color: var(--danger-hover);
+    color: #ffffff;
+    border-color: var(--danger-hover);
+    transform: translateY(-1px);
 }
 
-section button {
-    margin: 5px;
-    padding: 10px 15px;
+/* Focus accessibility */
+
+button:focus-visible,
+.button-links:focus-visible,
+.button-links-primary:focus-visible,
+.button-links-danger:focus-visible,
+a.button-links:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
 }
 
+/* Disabled buttons */
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Nav buttons */
 nav button a {
     color: inherit;
+    text-decoration: none;
 }
 
-.theme-toggle {
+/* Dark/Light Mode Toggle */
+.dark-light-mode-toggle {
+    background-color: var(--header-bg);
+    color: #ffffff;
+    border: 1px solid var(--header-bg);
+    border-radius: 7px;
+    padding: 8px 12px;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
+.dark-light-mode-toggle:hover {
+    background-color: #426b49;
+    border-color: #426b49;
+}
 
 /* =========================================
    TABLES
 ========================================= */
 
 table {
-    width: 90%;
+    width: 70%;
     max-width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     margin: 20px auto;
 }
 
@@ -240,19 +365,17 @@ td {
 td a {
     color: var(--link);
     text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 td a:hover {
     text-decoration: underline;
 }
 
-/* Admin tables */
-.admin-content table {
-    width: 100%;
-    margin: 20px 0;
-    table-layout: fixed;
+div table {
+    width: 70%;
 }
-
 
 /* =========================================
    PAGINATION
@@ -260,7 +383,7 @@ td a:hover {
 
 .pagination {
     display: flex;
-    margin-left: 80px;
+    margin-left: 270px;
     margin-top: 20px;
 }
 
@@ -307,16 +430,17 @@ td a:hover {
     opacity: 0.6;
 }
 
-
 /* =========================================
    ADMIN DASHBOARD
 ========================================= */
 
 .admin-layout {
     display: flex;
-    align-items: stretch;
     min-height: 100vh;
     width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .admin-sidebar {
@@ -324,6 +448,7 @@ td a:hover {
     padding: 25px 20px;
     background: var(--sidebar-bg);
     text-align: left;
+    box-sizing: border-box;
 }
 
 .admin-sidebar h2 {
@@ -337,11 +462,44 @@ td a:hover {
     margin-top: 30px;
 }
 
+/* Hide dropdown toggle on desktop */
+
+.admin-nav-menu input,
+.admin-nav-toggle {
+    display: none;
+}
+
+/* Mobile navigation */
+
+@media (max-width: 698px) {
+    .admin-nav-toggle {
+        display: block;
+        padding: 10px;
+        background: var(--hover-bg);
+        color: var(--muted-link);
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .admin-nav-menu nav {
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .admin-nav-menu input:checked ~ nav {
+        display: flex;
+    }
+}
+
 .admin-sidebar a {
     display: block;
     padding: 10px;
     color: var(--muted-link);
     text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
 }
 
 .admin-sidebar a:hover,
@@ -352,9 +510,17 @@ td a:hover {
 .admin-content {
     flex: 1;
     min-width: 0;
-    padding: 35px;
+    padding: 20px;
     text-align: left;
     overflow-x: auto;
+}
+
+.admin-content .pagination {
+    margin-left: 0;
+}
+
+.admin-content table {
+    margin-left: 0;
 }
 
 .dashboard-cards {
@@ -386,19 +552,13 @@ td a:hover {
     color: var(--muted-link);
 }
 
+/* Smaller screens */
 
-/* =========================================
-   DARK MODE TOGGLE
-========================================= */
-
-.theme-toggle {
-    cursor: pointer;
+@media (max-width: 768px) {
+    .admin-content table {
+        width: 100%;
+    }
 }
-
-nav button a {
-    color: inherit;
-}
-
 
 /* =========================================
    ADVISOR NAVIGATION
@@ -418,6 +578,8 @@ nav button a {
     display: block;
 }
 
+/* =========================================
+   FORMS
 /*
 * Advisor plan comments form
 */
@@ -443,6 +605,37 @@ nav button a {
     gap: 4px;
 }
 
+.form-group input,
+.form-group select {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.form-group textarea {
+    width: 100%;
+    max-width: 600px;
+    padding: 8px;
+    font: inherit;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: 2px solid var(--link);
+    outline-offset: 1px;
+}
+
 /*
 * Approved & Request change buttons
 */
@@ -452,45 +645,40 @@ nav button a {
     margin: 16px 0;
 }
 
-
+/* =========================================
+   ADMIN CLASSROOM FORM
+========================================= */
 /* Admin program form */
 .program-form {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-width: 900px;
-}
-
-.program-form input[type="text"],
-.program-form input[type="search"],
-.program-form textarea {
-    padding: 8px;
-    font: inherit;
-    color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-}
-
-.program-form h2 {
-    margin-bottom: 0;
-}
-
-.program-form table {
+    gap: 20px;
+    align-items: stretch;
     width: 100%;
-    margin: 10px 0 20px;
 }
 
-.program-form .button-links {
+.classroom-options fieldset {
+    flex: 1;
+    min-width: 0;
+}
+
+.classroom-options input[type="checkbox"] {
     display: inline-block;
-    width: fit-content;
-    margin: 10px 5px;
-    padding: 8px 14px;
+    width: auto;
+    margin: 0 6px 0 0;
+    vertical-align: middle;
 }
 
-.program-form button[type="submit"] {
-    align-self: flex-start;
+.classroom-options .form-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
+@media (max-width: 600px) {
+    .classroom-options {
+        flex-direction: column;
+    }
+}
 
 /* =========================================
    PREREQUISITE MANAGEMENT
@@ -522,18 +710,6 @@ nav button a {
     border-radius: 6px;
     background: var(--surface);
     color: var(--text);
-}
-
-.prereq-arrows {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.prereq-arrows button {
-    min-width: 40px;
-    padding: 10px;
-    cursor: pointer;
 }
 
 /* =========================================
@@ -596,12 +772,15 @@ nav button a {
     color: #c0392b;
 }
 
-
 /* =========================================
    RESPONSIVE STYLING
 ========================================= */
 
 @media (max-width: 650px) {
+    main {
+        padding: 20px;
+    }
+
     .prereq-selector {
         grid-template-columns: 1fr;
     }

@@ -17,18 +17,21 @@ class AdminProgramController extends Controller
 {
     use AuthorizesRequests;
 
-    // Requirement groups offered in the form. Admins can also type their own.
-    private const SUGGESTED_GROUPS = ['Core', 'Electives', 'General Education'];
+    private const SUGGESTED_GROUPS = [
+        'Core',
+        'Electives',
+        'General Education',
+    ];
 
-    // Display all programs
+    /**
+     * Display all programs.
+     */
     public function index(): View
     {
         $this->authorize('viewAny', Program::class);
 
         $descriptions = ProgramDetail::pluck('description', 'name');
 
-        // Get each program name only once. groupBy (not distinct) so the
-        // pagination total counts programs instead of course rows.
         $programs = Program::select('name')
             ->groupBy('name')
             ->orderBy('name')
@@ -43,12 +46,13 @@ class AdminProgramController extends Controller
         return view('admin.programs.programs', compact('programs'));
     }
 
-    // Show one program and its required courses, grouped by requirement group
+    /**
+     * Display a program and its required courses.
+     */
     public function show(string $programName): View
     {
         $this->authorize('viewAny', Program::class);
 
-        // Get every course associated with this program.
         $courses = Program::with('courseDetails')
             ->where('name', $programName)
             ->get()
@@ -57,13 +61,14 @@ class AdminProgramController extends Controller
 
         abort_if($courses->isEmpty(), 404);
 
+        $groups = $courses->groupBy('requirement_group')->sortKeys();
+
         $totalCredits = $courses->sum(
             fn ($program) => $program->courseDetails?->credits ?? 0
         );
 
-        $groups = $courses->groupBy('requirement_group')->sortKeys();
-
-        $description = ProgramDetail::where('name', $programName)->value('description');
+        $description = ProgramDetail::where('name', $programName)
+            ->value('description');
 
         return view('admin.programs.program-details', compact(
             'programName',
@@ -74,31 +79,40 @@ class AdminProgramController extends Controller
         ));
     }
 
-    // Show the create program form
+    /**
+     * Show the create form.
+     */
     public function create(): View
     {
         $this->authorize('create', Program::class);
 
         return view('admin.programs.programs-create', [
-            'courses' => Course::orderBy('courseNumber')->get(),
+            'courses' => $this->availableCourses(),
             'groupOptions' => $this->groupOptions(),
+            'action' => route('admin.programs.store'),
+            'method' => 'POST',
+            'submitLabel' => 'Create Program',
+            'current' => collect(),
         ]);
     }
 
-    // Save a new program and its required courses
+    /**
+     * Store a new program.
+     */
     public function store(Request $request): RedirectResponse
     {
         $this->authorize('create', Program::class);
 
         $validated = $this->validateProgram($request);
+        $selectedCourses = $this->selectedCourses($validated);
 
-        DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($validated, $selectedCourses) {
             ProgramDetail::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
             ]);
 
-            foreach ($this->selectedCourses($validated) as $courseId => $group) {
+            foreach ($selectedCourses as $courseId => $group) {
                 Program::create([
                     'name' => $validated['name'],
                     'course' => $courseId,
@@ -108,107 +122,153 @@ class AdminProgramController extends Controller
         });
 
         return redirect()
-            ->route('admin.programs.details', ['programName' => $validated['name']])
+            ->route('admin.programs.details', [
+                'programName' => $validated['name'],
+            ])
             ->with('success', 'Program created successfully.');
     }
 
-    // Show the edit program form
+    /**
+     * Show the edit form.
+     */
     public function edit(string $programName): View
     {
         $this->authorize('update', Program::class);
 
-        $current = Program::where('name', $programName)->pluck('requirement_group', 'course');
+        $current = Program::where('name', $programName)
+            ->pluck('requirement_group', 'course');
 
         abort_if($current->isEmpty(), 404);
 
         return view('admin.programs.programs-edit', [
             'programName' => $programName,
-            'description' => ProgramDetail::where('name', $programName)->value('description'),
+            'description' => ProgramDetail::where('name', $programName)
+                ->value('description'),
             'current' => $current,
-            'courses' => Course::orderBy('courseNumber')->get(),
+            'courses' => $this->availableCourses(),
             'groupOptions' => $this->groupOptions(),
+            'action' => route('admin.programs.update', [
+                'programName' => $programName,
+            ]),
+            'method' => 'PUT',
+            'submitLabel' => 'Update Program',
         ]);
     }
 
-    // Save changes to a program and its required courses
+    /**
+     * Update an existing program.
+     */
     public function update(Request $request, string $programName): RedirectResponse
     {
         $this->authorize('update', Program::class);
 
-        abort_unless(Program::where('name', $programName)->exists(), 404);
+        abort_unless(
+            Program::where('name', $programName)->exists(),
+            404
+        );
 
         $validated = $this->validateProgram($request, $programName);
         $newName = $validated['name'];
-        $selected = $this->selectedCourses($validated);
+        $selectedCourses = $this->selectedCourses($validated);
 
-        DB::transaction(function () use ($programName, $newName, $validated, $selected) {
-            // Programs created before descriptions existed may not have a details row yet.
-            $detail = ProgramDetail::firstOrNew(['name' => $programName]);
+        DB::transaction(function () use ($programName, $newName, $validated, $selectedCourses) {
+            $detail = ProgramDetail::firstOrNew([
+                'name' => $programName,
+            ]);
+
             $detail->name = $newName;
             $detail->description = $validated['description'] ?? null;
             $detail->save();
 
             if ($newName !== $programName) {
-                Program::where('name', $programName)->update(['name' => $newName]);
+                Program::where('name', $programName)
+                    ->update(['name' => $newName]);
 
-                // Students who chose this program keep it under its new name.
-                DB::table('users')->where('program', $programName)->update(['program' => $newName]);
+                DB::table('users')
+                    ->where('program', $programName)
+                    ->update(['program' => $newName]);
             }
 
-            // Courses that were unchecked are no longer required.
             Program::where('name', $newName)
-                ->whereNotIn('course', array_keys($selected))
+                ->whereNotIn('course', array_keys($selectedCourses))
                 ->delete();
 
-            foreach ($selected as $courseId => $group) {
+            foreach ($selectedCourses as $courseId => $group) {
                 Program::updateOrCreate(
-                    ['name' => $newName, 'course' => $courseId],
-                    ['requirement_group' => $group],
+                    [
+                        'name' => $newName,
+                        'course' => $courseId,
+                    ],
+                    [
+                        'requirement_group' => $group,
+                    ]
                 );
             }
         });
 
         return redirect()
-            ->route('admin.programs.details', ['programName' => $newName])
+            ->route('admin.programs.details', [
+                'programName' => $newName,
+            ])
             ->with('success', 'Program updated successfully.');
     }
 
-    // Validation shared by create and update
-    private function validateProgram(Request $request, ?string $currentName = null): array
-    {
-        $nameRules = ['required', 'string', 'max:255'];
-
-        // The name has to be free in both tables, except for the program being edited.
-        $nameRules[] = Rule::unique('program_details', 'name')->ignore($currentName, 'name');
-        $nameRules[] = Rule::unique('programs', 'name')->ignore($currentName, 'name');
+    /**
+     * Validate program information.
+     */
+    private function validateProgram(
+        Request $request,
+        ?string $currentName = null
+    ): array {
+        $nameRules = [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('program_details', 'name')->ignore($currentName, 'name'),
+            Rule::unique('programs', 'name')->ignore($currentName, 'name'),
+        ];
 
         return $request->validate([
             'name' => $nameRules,
             'description' => ['nullable', 'string', 'max:2000'],
             'courses' => ['required', 'array', 'min:1'],
-            'courses.*' => ['integer', 'distinct', 'exists:courses,id'],
+            'courses.*' => ['required', 'integer', 'distinct', 'exists:courses,id'],
             'groups' => ['nullable', 'array'],
             'groups.*' => ['nullable', 'string', 'max:100'],
         ], [
             'courses.required' => 'Choose at least one required course.',
+            'courses.min' => 'Choose at least one required course.',
             'name.unique' => 'A program with that name already exists.',
         ]);
     }
 
-    // Selected course ids mapped to their requirement group (blank means Core)
+    /**
+     * Get selected course IDs and their requirement groups.
+     */
     private function selectedCourses(array $validated): array
     {
         $selected = [];
 
         foreach ($validated['courses'] as $courseId) {
             $group = trim($validated['groups'][$courseId] ?? '');
-            $selected[(int) $courseId] = $group === '' ? 'Core' : $group;
+
+            $selected[(int) $courseId] = $group ?: 'Core';
         }
 
         return $selected;
     }
 
-    // Suggested groups plus any groups already in use
+    /**
+     * Get available courses.
+     */
+    private function availableCourses()
+    {
+        return Course::orderBy('courseNumber')->get();
+    }
+
+    /**
+     * Get suggested and previously used requirement groups.
+     */
     private function groupOptions(): array
     {
         return collect(self::SUGGESTED_GROUPS)

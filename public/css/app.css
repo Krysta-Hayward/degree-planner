@@ -81,10 +81,12 @@ section {
 .site-header {
     padding: 20px;
     text-align: center;
+    background-color: #58825e;
+    width: 100%;
 }
 
 .logo-text {
-    font-size: 24px;
+    font-size: 40px;
     font-weight: bold;
     margin-bottom: 10px;
     margin-top: 50px;
@@ -99,7 +101,7 @@ section {
 
 .logo-img {
     position: absolute;
-    left: 750px;
+    left: 700px;
     top: 10px;
 }
 
@@ -122,6 +124,7 @@ section {
 
     .site-header .logo-text {
         text-align: center;
+        margin-top: auto;
     }
 }
 

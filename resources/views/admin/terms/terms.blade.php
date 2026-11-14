@@ -22,7 +22,7 @@
                 </p>
 
                 <a href="{{ route('admin.terms.create') }}" class="button-links">
-                    Add Term
+                    Create Term
                 </a>
             </div>
 

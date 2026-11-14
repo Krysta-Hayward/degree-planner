@@ -32,7 +32,7 @@ $selectedPrereqs = array_map('strval', $selectedPrereqs);
         <select id="available-prereqs" multiple size="12"></select>
     </div>
 
-    <div class="prereq-arrows">
+    <div>
         <button type="button" id="add-prereq" title="Add selected prerequisites">
             &gt;
         </button>

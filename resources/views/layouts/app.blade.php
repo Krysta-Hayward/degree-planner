@@ -50,9 +50,11 @@
                     <button class="button-links" type="submit">Log Out</button>
                 </form>
 
-                <span>
+                <span class="site-header-logged-in">
                     {{ Auth::user()->name }}
+                    <span class="user-role">
                     ({{ ucfirst(Auth::user()->role) }})
+                    </span>
                 </span>
 
             @else
@@ -71,24 +73,32 @@
     <main>
         @yield('content')
     </main>
-    <script>
-        document.addEventListener('click', function (event) {
-            const link = event.target.closest('.pagination a');
+<script>
+    // Save scroll position before submitting forms
+    document.addEventListener('submit', function (event) {
+        sessionStorage.setItem('pageScroll', window.scrollY);
+    });
 
-            if (link) {
-                sessionStorage.setItem('tableScroll', window.scrollY);
-            }
-        });
+    document.addEventListener('click', function (event) {
+        const link = event.target.closest(
+            '.pagination a, .button-links, .button-links-primary, .button-links-danger'
+        );
 
-        window.addEventListener('load', function () {
-            const savedPosition = sessionStorage.getItem('tableScroll');
+        if (link && link.tagName === 'A') {
+            sessionStorage.setItem('pageScroll', window.scrollY);
+        }
+    });
 
-            if (savedPosition !== null) {
-                window.scrollTo(0, parseInt(savedPosition, 10));
-                sessionStorage.removeItem('tableScroll');
-            }
-        });
-    </script>
+    window.addEventListener('load', function () {
+        const savedPosition = sessionStorage.getItem('pageScroll');
+
+        if (savedPosition !== null) {
+            window.scrollTo(0, parseInt(savedPosition, 10));
+            sessionStorage.removeItem('pageScroll');
+        }
+    });
+</script>
+
 </body>
 
 </html>

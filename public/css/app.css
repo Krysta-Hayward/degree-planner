@@ -342,6 +342,35 @@ div table {
     margin-top: 30px;
 }
 
+/* Hide dropdown toggle on desktop */
+.admin-nav-menu input,
+.admin-nav-toggle {
+    display: none;
+}
+
+/* Mobile navigation */
+@media (max-width: 698px) {
+    .admin-nav-toggle {
+        display: block;
+        padding: 10px;
+        background: var(--hover-bg);
+        color: var(--muted-link);
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .admin-nav-menu nav {
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .admin-nav-menu input:checked ~ nav {
+        display: flex;
+    }
+}
+
 .admin-sidebar a {
     display: block;
     padding: 10px;

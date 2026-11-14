@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
-use App\Models\Course;
+use App\Models\ProgramMap;
 use App\Models\Enroll;
 use App\Models\Plan;
 use App\Models\Program;

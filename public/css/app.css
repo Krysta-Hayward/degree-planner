@@ -218,7 +218,7 @@ table {
     width: 70%;
     max-width: 100%;
     border-collapse: collapse;
-    table-layout: auto;
+    table-layout: fixed;
     margin: 20px auto;
 }
 
@@ -227,6 +227,7 @@ td {
     padding: 12px;
     border: 1px solid var(--border-soft);
     text-align: left;
+    overflow-wrap: break-word;
 }
 
 th {
@@ -235,10 +236,6 @@ th {
 
 td {
     background: var(--surface);
-}
-
-td:last-child {
-    width: 20%;
 }
 
 td a {
@@ -494,6 +491,18 @@ nav button a {
     border-radius: 6px;
     background: var(--surface);
     color: var(--text);
+}
+
+.form-group textarea{
+    width: 100%;
+    max-width: 600px !important;
+    padding: 8px;
+    font: inherit;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .form-actions {

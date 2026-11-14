@@ -19,6 +19,10 @@
                 Create User
             </a>
 
+            <div class="pagination">
+                {{ $users->links() }}
+            </div>
+
             @if (session('success'))
                 <div class="alert-success">
                     {{ session('success') }}

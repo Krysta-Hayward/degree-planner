@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAdvisorController;
+use App\Http\Controllers\Admin\AdminClassroomController;
 use App\Http\Controllers\Admin\AdminCourseController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDataController;
@@ -59,6 +60,20 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         ->name('admin.courses.update');
     Route::delete('/admin/courses/{course}', [AdminCourseController::class, 'destroy'])
         ->name('admin.courses.destroy');
+
+    // Classrooms routes
+    Route::get('/admin/classrooms', [AdminClassroomController::class, 'index'])
+        ->name('admin.classrooms.index');
+    Route::get('/admin/classrooms/create', [AdminClassroomController::class, 'create'])
+        ->name('admin.classrooms.create');
+    Route::post('/admin/classrooms', [AdminClassroomController::class, 'store'])
+        ->name('admin.classrooms.store');
+    Route::get('/admin/classrooms/{classroom}/edit', [AdminClassroomController::class, 'edit'])
+        ->name('admin.classrooms.edit');
+    Route::put('/admin/classrooms/{classroom}', [AdminClassroomController::class, 'update'])
+        ->name('admin.classrooms.update');
+    Route::delete('/admin/classrooms/{classroom}', [AdminClassroomController::class, 'destroy'])
+        ->name('admin.classrooms.destroy');
 
     // Programs routes
     Route::get('/admin/programs', [AdminProgramController::class, 'index'])

@@ -22,6 +22,18 @@ class Classroom extends Model
         'timeEnd',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'seats' => 'integer',
+            'seatsOpen' => 'integer',
+            'fall' => 'boolean',
+            'winter' => 'boolean',
+            'spring' => 'boolean',
+            'summer' => 'boolean',
+        ];
+    }
+
     public function courseDetails()
     {
         return $this->belongsTo(Course::class, 'course');

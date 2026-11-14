@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Advisor\AdvisorDashboardController;
-use App\Http\Controllers\Advisor\AdvisorStudentController;
-use App\Http\Controllers\Advisor\AdvisorPlanReviewController;
 use App\Http\Controllers\Advisor\AdvisorAttentionController;
+use App\Http\Controllers\Advisor\AdvisorDashboardController;
+use App\Http\Controllers\Advisor\AdvisorPlanReviewController;
+use App\Http\Controllers\Advisor\AdvisorStudentController;
 use App\Http\Middleware\AdvisorMiddleware;
 use Illuminate\Support\Facades\Route;
 

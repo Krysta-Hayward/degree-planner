@@ -56,12 +56,14 @@ class NeedsAttention
             // 1. No program: nothing else can be checked
             if (! $student->program) {
                 $flagged[$id] = ['No program selected'];
+
                 continue;
             }
 
             // 2. No courses yet: nothing else can be checked
             if ($planned->isEmpty()) {
                 $flagged[$id] = ['No plan yet'];
+
                 continue;
             }
 
@@ -93,6 +95,7 @@ class NeedsAttention
             ->map(function ($student) use ($flagged, $mapIds) {
                 $student->reasons = $flagged[$student->id];
                 $student->mapId = $mapIds[$student->id] ?? null;
+
                 return $student;
             });
     }

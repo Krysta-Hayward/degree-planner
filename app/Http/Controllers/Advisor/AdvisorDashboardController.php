@@ -28,7 +28,6 @@ class AdvisorDashboardController extends Controller
             ->where('advisor', auth()->id())
             ->pluck('student');
 
-
         return view('advisor.dashboard', [
             'studentCount' => $studentIds->count(),
             'awaitingReview' => ProgramMap::where('status', 'submitted')->whereIn('student', $studentIds)->count(),

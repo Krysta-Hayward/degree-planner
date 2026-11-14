@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
-
 class AdvisorPlanReviewController extends Controller
 {
     // Maps waiting for this advisor's review
@@ -100,19 +99,19 @@ class AdvisorPlanReviewController extends Controller
             ->where('plans.student', $programMap->student)
             ->pluck('terms.quarterYear', 'terms.course');
 
-       $requirements = DB::table('programs')
+        $requirements = DB::table('programs')
             ->join('courses', 'programs.course', '=', 'courses.id')
             ->where('programs.name', $student->program)
             ->orderBy('courses.courseNumber')
             ->select('courses.id', 'courses.courseNumber', 'courses.name', 'courses.credits')
             ->get()
-            ->map(function ($course) use ($planned) 
-        {
-            $course->plannedIn = $planned[$course->id] ?? null;
-            return $course;
-        });
+            ->map(function ($course) use ($planned) {
+                $course->plannedIn = $planned[$course->id] ?? null;
 
-       // Prerequisites of planned courses, marked planned or missing
+                return $course;
+            });
+
+        // Prerequisites of planned courses, marked planned or missing
         $prerequisites = DB::table('course_prerequisites')
             ->join('courses as main', 'course_prerequisites.course', '=', 'main.id')
             ->join('courses as pre', 'course_prerequisites.prereq', '=', 'pre.id')
@@ -122,9 +121,10 @@ class AdvisorPlanReviewController extends Controller
             ->get()
             ->map(function ($row) use ($planned) {
                 $row->prereqPlannedIn = $planned[$row->prereq_id] ?? null;
+
                 return $row;
             });
-        
+
         // Add 'comments.author' after testing students
         return view('advisor.plans.show', [
             'programMap' => $programMap->load('owner', 'comments.author'),
@@ -149,7 +149,7 @@ class AdvisorPlanReviewController extends Controller
         return redirect()->route('advisor.plans.index')->with('success', 'Program map approved.');
     }
 
-    // Advisor status: request changes to student map (button) 
+    // Advisor status: request changes to student map (button)
     public function requestChanges(ProgramMap $programMap)
     {
         Gate::authorize('review', $programMap);
@@ -174,13 +174,11 @@ class AdvisorPlanReviewController extends Controller
 
         $programMap->comments()->create([
             'user_id' => auth()->id(),
-            'body' => $validated['body']
+            'body' => $validated['body'],
         ]);
 
         return redirect()
             ->route('advisor.plans.show', $programMap)
             ->with('success', 'Comment added.');
     }
-
-
 }

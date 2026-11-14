@@ -17,7 +17,7 @@
     @endif
 
     <div class="form-buttons">
-        <button type="submit" class="button-links">
+        <button type="submit" class="button-links-primary">
             {{ $submitLabel }}
         </button>
 
@@ -26,12 +26,20 @@
         </a>
     </div>
 
-    <label for="name">Program Name</label>
-    <input id="name" type="text" name="name" value="{{ old('name', $programName) }}" maxlength="255" required>
+    <div>
+        <label for="name">Program Name</label>
+    </div>
+    <div>
+        <input id="name" type="text" name="name" value="{{ old('name', $programName ?? '') }}" maxlength="255" required>
+    </div>
 
-    <label for="description">Description</label>
-    <textarea id="description" name="description" rows="4"
-        maxlength="2000">{{ old('description', $description) }}</textarea>
+    <div class="program-form-desc-label">
+        <label for="description">Description</label>
+    </div>
+    <div class="program-form-desc-text">
+        <textarea id="description" name="description" rows="4"
+            maxlength="2000">{{ old('description', $description ?? '') }}</textarea>
+    </div>
 
     <h2>Required Courses</h2>
     <p>
@@ -83,8 +91,8 @@
     </div>
 
     <div class="form-buttons">
-        <button type="submit" class="button-links">{{ $submitLabel }}</button>
-        <a href="{{ route('admin.programs.index', ['programName' => $programName]) }}"
+        <button type="submit" class="button-links-primary">{{ $submitLabel }}</button>
+        <a href="{{ route('admin.programs.index') }}"
             class="button-links-danger">Cancel</a>
     </div>
 </form>

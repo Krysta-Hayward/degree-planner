@@ -19,7 +19,7 @@
                     Create Classroom
                 </button>
 
-                <a href="{{ route('admin.classrooms.index') }}" class="button-links">
+                <a href="{{ route('admin.classrooms.index') }}" class="button-links-danger">
                     Cancel
                 </a>
             </form>

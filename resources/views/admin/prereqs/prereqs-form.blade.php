@@ -54,7 +54,7 @@ $selectedPrereqs = array_map('strval', $selectedPrereqs);
 @enderror
 
 <div class="form-actions">
-    <button type="submit" class="button-links">
+    <button type="submit" class="button-links-primary">
         {{ isset($prereq) ? 'Update Prerequisites' : 'Create Prerequisites' }}
     </button>
 

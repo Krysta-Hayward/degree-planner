@@ -17,10 +17,10 @@
                 @include('admin.classrooms.classrooms-form')
 
                 <button type="submit" class="button-links-primary">
-                    Save Changes
+                    Update Classroom
                 </button>
 
-                <a href="{{ route('admin.classrooms.index') }}" class="button-links">
+                <a href="{{ route('admin.classrooms.index') }}" class="button-links-danger">
                     Cancel
                 </a>
             </form>

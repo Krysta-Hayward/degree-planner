@@ -25,26 +25,30 @@
         <section>
             <h2>My Degree Program</h2>
 
-            <form method="POST" action="{{ route('student.program.select') }}">
-                @csrf
-                <label for="program">Choose your program</label>
-                <select id="program" name="program" required>
-                    <option value="">Select a program</option>
-                    @foreach ($programs as $name)
-                        <option value="{{ $name }}">{{ $name }}</option>
-                    @endforeach
-                </select>
-                <button type="submit" class="button-links">Save Program</button>
-            </form>
+            @unless ($locked)
+                <form method="POST" action="{{ route('student.program.select') }}">
+                    @csrf
+                    <label for="program">Choose your program</label>
+                    <select id="program" name="program" required>
+                        <option value="">Select a program</option>
+                        @foreach ($programs as $name)
+                            <option value="{{ $name }}">{{ $name }}</option>
+                        @endforeach
+                    </select>
+                    <button type="submit" class="button-links">Save Program</button>
+                </form>
+            @endunless
 
             @if ($user->program)
                 <p>Selected program: <strong>{{ $user->program }}</strong></p>
 
-                <form method="POST" action="{{ route('student.program.clear') }}" class="inline-form">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Clear Program</button>
-                </form>
+                @unless ($locked)
+                    <form method="POST" action="{{ route('student.program.clear') }}" class="inline-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Clear Program</button>
+                    </form>
+                @endunless
             @else
                 <p>You have not picked a program yet.</p>
             @endif

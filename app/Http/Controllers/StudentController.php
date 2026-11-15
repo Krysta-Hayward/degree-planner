@@ -96,6 +96,14 @@ class StudentController extends Controller
      */
     public function selectProgram(Request $request): RedirectResponse
     {
+        // Submitted or approved plan cannot be cleared
+        $map = ProgramMap::where('student', $request->user()->id)->first();
+
+        if($map && ! $map->isEditable()){
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+        }
+
         $data = $request->validate([
             'program' => ['required', 'string', 'exists:programs,name'],
         ]);
@@ -105,6 +113,13 @@ class StudentController extends Controller
         // a different program means the old plan no longer applies
         if ($user->program !== null && $user->program !== $data['program']) {
             DB::table('plans')->where('student', $user->id)->delete();
+
+            // The plan was cleared
+           ProgramMap::where('student', $user->id)->update([
+                'status' => 'draft',
+                'reviewed_by' => null,
+                'reviewed_at' => null,
+            ]);
         }
 
         $user->program = $data['program'];
@@ -118,12 +133,27 @@ class StudentController extends Controller
      */
     public function clearProgram(Request $request): RedirectResponse
     {
+        // Submitted or approved plan cannot be cleared
+        $map = ProgramMap::where('student', $request->user()->id)->first();
+
+         if ($map && ! $map->isEditable()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+    }
+
         $user = $request->user();
         $user->program = null;
         $user->save();
 
         // the old plan belongs to the old program, so start it over too
         DB::table('plans')->where('student', $user->id)->delete();
+
+        // The plan was cleared
+        ProgramMap::where('student', $user->id)->update([
+            'status' => 'draft',
+            'reviewed_by' => null,
+            'reviewed_at' => null,
+        ]);
 
         return $this->toTop()->with('status', 'Degree program and program map cleared.');
     }

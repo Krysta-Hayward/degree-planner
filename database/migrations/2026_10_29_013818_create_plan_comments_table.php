@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('program_map')->constrained('program_maps')->cascadeOnDelete(); 
             $table->foreignId('user_id')->constrained()->cascadeOnDelete(); 
+            $table->foreignId('quarter')->nullable();
             $table->text('body'); 
             $table->timestamps();
         });

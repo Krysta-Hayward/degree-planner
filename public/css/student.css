@@ -36,6 +36,15 @@
     border: 1px solid var(--error-border, #f5c2bd);
 }
 
+/*Term Column*/
+.quarter-block {
+    margin-bottom: 20px;
+}
+
+.quarter-block h3 {
+    margin: 0 0 8px;
+}
+
 /* {{ Add && Move Dropdowns }}*/
 /* Dropdown and button side by side (used by Add and Move) */
 .plan-actions__move {

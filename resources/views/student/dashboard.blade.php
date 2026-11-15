@@ -26,23 +26,18 @@
             <h2>My Degree Program</h2>
 
             @if ($user->program)
-                <p>Selected Program: <strong>{{ $user->program }}</strong></p>
+                {{-- Program chosen: show it, with a way to change it --}}
+                <p>Selected program: <strong>{{ $user->program }}</strong></p>
 
                 @unless ($locked)
-                    <form method="POST" action="{{ route('student.program.select') }}">
+                    <form method="POST" action="{{ route('student.program.clear') }}" class="inline-form">
                         @csrf
-                        <label for="program">Choose your program</label>
-                        <select id="program" name="program" required>
-                            <option value="">Select a program</option>
-                            @foreach ($programs as $name)
-                                <option value="{{ $name }}">{{ $name }}</option>
-                            @endforeach
-                        </select>
-                        <button type="submit" class="button-links">Save Program</button>
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Changing your program will remove every course from your program map. Continue?')">Change Program</button>
                     </form>
                 @endunless
             @else
-                <!-- No program (Student must select) -->
+                {{-- No program yet: let the student choose one --}}
                 <form method="POST" action="{{ route('student.program.select') }}">
                     @csrf
                     <label for="program">Choose your program</label>
@@ -55,22 +50,7 @@
                     <button type="submit" class="button-links">Save Program</button>
                 </form>
             @endif
-
-            <!-- Clear program (with confirmation)-->
-            @if ($user->program)
-                <p>Selected program: <strong>{{ $user->program }}</strong></p>
-
-                @unless ($locked)
-                    <form method="POST" action="{{ route('student.program.clear') }}" class="inline-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Changing your program will remove every course from your program map. Continue?')">Change Program</button>
-                    </form>
-                @endunless
-            @else
-                <p>You have not picked a program yet.</p>
-            @endif
-        </section>
+        </section> 
         
         <!-- Required Courses -->
         @if ($user->program)
@@ -200,64 +180,89 @@
 
         <!--My Program Map-->
         <section>
-            <h2>My Program Map</h2>
+           <h2>My Program Map</h2>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Term</th>
-                        <th>Course</th>
-                        <th>Title</th>
-                        <th>Credits</th>
-                        @unless ($locked)
-                            <th></th>
-                        @endunless
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($planned as $item)
-                        <tr>
-                            <td data-label="Term">{{ $item->quarterYear }}</td>
-                            <td data-label="Course">{{ $item->courseNumber }}</td>
-                            <td data-label="Title">{{ $item->name }}</td>
-                            <td data-label="Credits">{{ $item->credits }}</td>
-                            @unless ($locked)
-                                <td data-label="Action">
-                                    @php
-                                        $otherTerms = $terms->get($item->course_id, collect())
-                                            ->where('id', '!=', $item->term_id);
-                                    @endphp
-                                    
-                                    <!-- Move to another quarter (When course is offered) -->
-                                    @if ($otherTerms->isNotEmpty())
-                                        <form method="POST" action="{{ route('student.plan.move', $item->plan_id) }}" class="inline-form">
-                                            @csrf
-                                            @method('PATCH')
-                                            <select name="term" aria-label="Move to quarter">
-                                                @foreach ($otherTerms as $term)
-                                                    <option value="{{ $term->id }}">{{ $term->quarterYear }}</option>
-                                                @endforeach
-                                            </select>
-                                            <button type="submit" class="button-links">Move</button>
-                                        </form>
-                                    @endif
-                                    
-                                    <!-- Remove course from plan -->
-                                    <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}" class="inline-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="button-links">Remove</button>
-                                    </form>
-                                </td>
-                            @endunless
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5">Your program map is empty. Add courses from the list above.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <!-- Sort quarters in the order they happen: fall2026 before winter2027 -->
+            @php
+                $quarterOrder = function ($quarter) {
+                    $seasons = ['winter' => 1, 'spring' => 2, 'summer' => 3, 'fall' => 4];
+                    preg_match('/^([a-z]+)(\d{4})$/i', $quarter, $parts);
+
+                    return $parts ? ((int) $parts[2]) * 10 + ($seasons[strtolower($parts[1])] ?? 0) : 0;
+                };
+
+                $plannedByQuarter = $planned
+                    ->groupBy('quarterYear')
+                    ->sortBy(fn ($courses, $quarter) => $quarterOrder($quarter));
+            @endphp
+
+            @forelse ($plannedByQuarter as $quarter => $courses)
+                <div class="quarter-block">
+                    <h3>{{ $quarter }} · {{ $courses->sum('credits') }} credits</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Title</th>
+                                <th>Credits</th>
+                                @unless ($locked)
+                                    <th></th>
+                                @endunless
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($courses as $item)
+                                <tr>
+                                    <td data-label="Course">{{ $item->courseNumber }}</td>
+                                    <td data-label="Title">{{ $item->name }}</td>
+                                    <td data-label="Credits">{{ $item->credits }}</td>
+                                    @unless ($locked)
+                                        <td data-label="Action">
+                                            @php
+                                                $otherTerms = $terms->get($item->course_id, collect())
+                                                    ->where('id', '!=', $item->term_id);
+                                            @endphp
+
+                                            <div class="plan-actions">
+                                                @if ($otherTerms->isNotEmpty())
+                                                    <form method="POST" action="{{ route('student.plan.move', $item->plan_id) }}" class="plan-actions__move">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <select name="term" aria-label="Move {{ $item->courseNumber }} to quarter">
+                                                            @foreach ($otherTerms as $term)
+                                                                <option value="{{ $term->id }}">{{ $term->quarterYear }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="submit" class="button-links">Move</button>
+                                                    </form>
+                                                @endif
+
+                                                <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="button-links">Remove</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endunless
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <!-- Advisor Comments -->
+                    @if ($programMap)
+                        @foreach ($programMap->comments->where('quarter', $quarter) as $comment)
+                            <div class="plan-comment">
+                                <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                                <p>{{ $comment->body }}</p>
+                            </div>
+                        @endforeach 
+                @endif
+                </div>
+            @empty
+                <p>Your program map is empty. Add courses from the list above.</p>
+            @endforelse
 
             <p>Total planned credits: <strong>{{ $planned->sum('credits') }}</strong></p>
 

@@ -25,7 +25,24 @@
         <section>
             <h2>My Degree Program</h2>
 
-            @unless ($locked)
+            @if ($user->program)
+                <p>Selected Program: <strong>{{ $user->program }}</strong></p>
+
+                @unless ($locked)
+                    <form method="POST" action="{{ route('student.program.select') }}">
+                        @csrf
+                        <label for="program">Choose your program</label>
+                        <select id="program" name="program" required>
+                            <option value="">Select a program</option>
+                            @foreach ($programs as $name)
+                                <option value="{{ $name }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="button-links">Save Program</button>
+                    </form>
+                @endunless
+            @else
+                <!-- No program (Student must select) -->
                 <form method="POST" action="{{ route('student.program.select') }}">
                     @csrf
                     <label for="program">Choose your program</label>
@@ -37,8 +54,9 @@
                     </select>
                     <button type="submit" class="button-links">Save Program</button>
                 </form>
-            @endunless
+            @endif
 
+            <!-- Clear program (with confirmation)-->
             @if ($user->program)
                 <p>Selected program: <strong>{{ $user->program }}</strong></p>
 
@@ -46,14 +64,15 @@
                     <form method="POST" action="{{ route('student.program.clear') }}" class="inline-form">
                         @csrf
                         @method('DELETE')
-                        <button type="submit">Clear Program</button>
+                        <button type="submit" onclick="return confirm('Changing your program will remove every course from your program map. Continue?')">Change Program</button>
                     </form>
                 @endunless
             @else
                 <p>You have not picked a program yet.</p>
             @endif
         </section>
-
+        
+        <!-- Required Courses -->
         @if ($user->program)
             <section>
                 <h2>Required Courses</h2>
@@ -81,27 +100,46 @@
                                         None
                                     @endforelse
                                 </td>
+                                <!-- When courses are offered -->
                                 <td data-label="Offered">
-                                    @forelse ($terms->get($course->id, collect()) as $term)
-                                                                    @php
-            $missing = $prerequisites->get($course->id, collect())
-                ->reject(fn($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
-                ->pluck('courseNumber');
-                                                                    @endphp
-                                                                    @if (in_array($term->id, $plannedTermIds))
-                                                                        {{ $term->quarterYear }} (planned)
-                                                                    @elseif ($missing->isNotEmpty())
-                                                                        {{ $term->quarterYear }}: add {{ $missing->join(', ') }} first
-                                                                    @else
-                                                                        <form method="POST" action="{{ route('student.plan.add') }}" class="inline-form">
-                                                                            @csrf
-                                                                            <input type="hidden" name="term" value="{{ $term->id }}">
-                                                                            <button type="submit" class="button-links">Add {{ $term->quarterYear }}</button>
-                                                                        </form>
-                                                                    @endif
-                                    @empty
+                                    @php
+                                        $courseTerms = $terms->get($course->id, collect());
+
+                                        $missing = $prerequisites->get($course->id, collect())
+                                            ->reject(fn ($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
+                                            ->pluck('courseNumber');
+
+                                        $plannedTerm = $courseTerms->first(fn ($term) => in_array($term->id, $plannedTermIds));
+                                    @endphp
+
+                                    <!-- Not offered in any quarter -->
+                                    @if ($courseTerms->isEmpty())
                                         Not scheduled yet
-                                    @endforelse
+
+                                    <!-- Already on the plan: show which quarter -->
+                                    @elseif ($plannedTerm)
+                                        <span class="plan-status plan-status--ok">Planned: {{ $plannedTerm->quarterYear }}</span>
+
+                                    <!-- Plan locked: just list the quarters -->
+                                    @elseif ($locked)
+                                        {{ $courseTerms->pluck('quarterYear')->join(', ') }}
+
+                                    <!-- Missing prerequisites: say what to add first -->
+                                    @elseif ($missing->isNotEmpty())
+                                        <span class="plan-status plan-status--missing">Add {{ $missing->join(', ') }} first</span>
+
+                                    <!-- Can be added: pick a quarter -->
+                                    @else
+                                        <form method="POST" action="{{ route('student.plan.add') }}" class="plan-actions__move">
+                                            @csrf
+                                            <select name="term" aria-label="Quarter for {{ $course->courseNumber }}">
+                                                @foreach ($courseTerms as $term)
+                                                    <option value="{{ $term->id }}">{{ $term->quarterYear }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="button-links">Add</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -113,49 +151,52 @@
                 </table>
             </section>
         @endif
+        
+        <!-- Program Courses -->
+        @unless ($user->program)
+            <section>
+                <h2>All Courses</h2>
 
-        <section>
-            <h2>All Courses</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Course</th>
-                        <th>Title</th>
-                        <th>Credits</th>
-                        <th>Prerequisites</th>
-                        <th>Terms Offered</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($catalog as $course)
+                <table>
+                    <thead>
                         <tr>
-                            <td data-label="Course">{{ $course->courseNumber }}</td>
-                            <td data-label="Title">{{ $course->name }}</td>
-                            <td data-label="Credits">{{ $course->credits }}</td>
-                            <td data-label="Prerequisites">
-                                @forelse ($prerequisites->get($course->id, collect()) as $prereq)
-                                    {{ $prereq->courseNumber }}@if (!$loop->last), @endif
-                                @empty
-                                    None
-                                @endforelse
-                            </td>
-                            <td data-label="Terms Offered">
-                                @forelse ($terms->get($course->id, collect()) as $term)
-                                    {{ $term->quarterYear }}@if (!$loop->last), @endif
-                                @empty
-                                    Not scheduled yet
-                                @endforelse
-                            </td>
+                            <th>Course</th>
+                            <th>Title</th>
+                            <th>Credits</th>
+                            <th>Prerequisites</th>
+                            <th>Terms Offered</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5">No courses have been added yet.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </section>
+                    </thead>
+                    <tbody>
+                        @forelse ($catalog as $course)
+                            <tr>
+                                <td data-label="Course">{{ $course->courseNumber }}</td>
+                                <td data-label="Title">{{ $course->name }}</td>
+                                <td data-label="Credits">{{ $course->credits }}</td>
+                                <td data-label="Prerequisites">
+                                    @forelse ($prerequisites->get($course->id, collect()) as $prereq)
+                                        {{ $prereq->courseNumber }}@if (!$loop->last), @endif
+                                    @empty
+                                        None
+                                    @endforelse
+                                </td>
+                                <td data-label="Terms Offered">
+                                    @forelse ($terms->get($course->id, collect()) as $term)
+                                        {{ $term->quarterYear }}@if (!$loop->last), @endif
+                                    @empty
+                                        Not scheduled yet
+                                    @endforelse
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No courses have been added yet.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </section>
+        @endunless
 
         <!--My Program Map-->
         <section>
@@ -182,6 +223,26 @@
                             <td data-label="Credits">{{ $item->credits }}</td>
                             @unless ($locked)
                                 <td data-label="Action">
+                                    @php
+                                        $otherTerms = $terms->get($item->course_id, collect())
+                                            ->where('id', '!=', $item->term_id);
+                                    @endphp
+                                    
+                                    <!-- Move to another quarter (When course is offered) -->
+                                    @if ($otherTerms->isNotEmpty())
+                                        <form method="POST" action="{{ route('student.plan.move', $item->plan_id) }}" class="inline-form">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="term" aria-label="Move to quarter">
+                                                @foreach ($otherTerms as $term)
+                                                    <option value="{{ $term->id }}">{{ $term->quarterYear }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="button-links">Move</button>
+                                        </form>
+                                    @endif
+                                    
+                                    <!-- Remove course from plan -->
                                     <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}" class="inline-form">
                                         @csrf
                                         @method('DELETE')

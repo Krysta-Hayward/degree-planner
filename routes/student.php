@@ -19,7 +19,10 @@ Route::middleware(['auth', StudentMiddleware::class])
         Route::post('/plan', [StudentController::class, 'addToPlan'])->name('plan.add');
         // Removes course from program map
         Route::delete('/plan/{plan}', [StudentController::class, 'removeFromPlan'])->name('plan.remove');
+
+        // Student enrollment
+        Route::post('/enroll/{classroom}', [StudentController::class, 'enroll'])
+            ->name('enroll');
         // Submits to program map
         Route::post('/plan/submit', [StudentController::class, 'submitPlan'])->name('plan.submit');
     });
-    

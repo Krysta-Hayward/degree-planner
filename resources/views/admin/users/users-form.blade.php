@@ -59,7 +59,7 @@
 </div>
 
 <div class="form-actions">
-    <button type="submit" class="button-links">
+    <button type="submit" class="button-links-primary">
         {{ isset($user) ? 'Update User' : 'Create User' }}
     </button>
 

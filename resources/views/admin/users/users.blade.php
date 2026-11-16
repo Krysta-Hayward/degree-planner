@@ -11,13 +11,19 @@
 
             <p>View and manage user accounts in the Degree Planner.</p>
 
-            <p>
-                <strong>Total users:</strong> {{ $users->total() }}
-            </p>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <p>
+                    <strong>Total users:</strong> {{ $users->total() }}
+                </p>
 
-            <a href="{{ route('admin.users.create') }}" class="button-links">
-                Create User
-            </a>
+                <a href="{{ route('admin.users.create') }}" class="button-links">
+                    Create User
+                </a>
+            </div>
+
+            <div class="pagination">
+                {{ $users->links() }}
+            </div>
 
             @if (session('success'))
                 <div class="alert-success">

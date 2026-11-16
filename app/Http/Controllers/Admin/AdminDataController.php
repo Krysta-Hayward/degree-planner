@@ -11,6 +11,7 @@ class AdminDataController extends Controller
     public function index(?string $table = null)
     {
         $tables = [
+            'classrooms',
             'course_prerequisites',
             'course_program',
             'courses',
@@ -20,7 +21,7 @@ class AdminDataController extends Controller
             'students',
             'terms',
             'users',
-            'classrooms'
+            'classrooms',
         ];
 
         $data = [];
@@ -36,7 +37,18 @@ class AdminDataController extends Controller
 
         if ($table !== null && array_key_exists($table, $data)) {
             $columns = Schema::getColumnListing($table);
-            $records = DB::table($table)->paginate(25);
+
+            // Exclude sensitive columns from the admin data viewer.
+            if ($table === 'users') {
+                $columns = array_diff($columns, [
+                    'password',
+                    'remember_token',
+                ]);
+            }
+
+            $records = DB::table($table)
+                ->select($columns)
+                ->paginate(25);
 
             // Display student and advisor names alongside their IDs.
             if ($table === 'students') {

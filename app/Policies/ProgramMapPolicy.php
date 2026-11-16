@@ -62,7 +62,7 @@ class ProgramMapPolicy
     {
         return $user->role === 'advisor'
         && $this->isAdvisorOf($user, (int) $map->student);
-        
+
     }
 
     // Who can approve or request changes

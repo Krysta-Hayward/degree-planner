@@ -9,11 +9,12 @@
         <main class="admin-content">
             <h1>Edit {{ $programName }}</h1>
 
-            @include('admin.programs.programs-form', [
-                'action' => route('admin.programs.update', ['programName' => $programName]),
-                'method' => 'PUT',
-                'submitLabel' => 'Save Changes',
-            ])
+            <form method="POST" action="{{ route('admin.programs.update', $programName) }}" class="program-form">
+                @csrf
+                @method('PUT')
+
+                @include('admin.programs.programs-form')
+            </form>
 
         </main>
     </div>

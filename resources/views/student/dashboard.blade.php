@@ -26,7 +26,7 @@
             <h2>My Degree Program</h2>
 
             @if ($user->program)
-                {{-- Program chosen: show it, with a way to change it --}}
+                <!-- Program chosen: show it, with a way to change it -->
                 <p>Selected program: <strong>{{ $user->program }}</strong></p>
 
                 @unless ($locked)
@@ -37,7 +37,12 @@
                     </form>
                 @endunless
             @else
-                {{-- No program yet: let the student choose one --}}
+                <!-- Missing prerequisites: say what to add first -->
+                <p>You have not picked a program yet.</p>
+
+                <form method="POST" action="{{ route('student.program.select') }}">
+
+                <!-- No program: let the student choose one -->
                 <form method="POST" action="{{ route('student.program.select') }}">
                     @csrf
                     <label for="program">Choose your program</label>
@@ -104,10 +109,6 @@
                                     <!-- Plan locked: just list the quarters -->
                                     @elseif ($locked)
                                         {{ $courseTerms->pluck('quarterYear')->join(', ') }}
-
-                                    <!-- Missing prerequisites: say what to add first -->
-                                    @elseif ($missing->isNotEmpty())
-                                        <span class="plan-status plan-status--missing">Add {{ $missing->join(', ') }} first</span>
 
                                     <!-- Can be added: pick a quarter -->
                                     @else

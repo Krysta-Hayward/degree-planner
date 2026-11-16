@@ -46,6 +46,27 @@
 }
 
 /* {{ Add && Move Dropdowns }}*/
+
+/* Move and Remove side by side, on one line (My Program Map) */
+.plan-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.plan-actions form {
+    margin: 0;
+}
+
+/* Action column only as wide as its buttons */
+td[data-label="Action"] {
+    width: 1%;
+    white-space: nowrap;
+}
+
 /* Dropdown and button side by side (used by Add and Move) */
 .plan-actions__move {
     display: flex;
@@ -63,18 +84,29 @@
     color: inherit;
 }
 
-/* Move and Remove side by side, on the right (My Program Map) */
-.plan-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    flex-wrap: wrap;
+.plan-status {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 1px 2px;
+    border-radius: 6px;
+    font-size: 13px;
 }
 
-.plan-actions form {
-    margin: 0;
+.plan-status--ok {
+    background: rgba(30, 107, 58, 0.15);
+    color: #2e9e5b;
 }
+
+.plan-status--missing {
+    background: rgba(155, 34, 34, 0.15);
+    color: #e05a5a;
+}
+
+
+
+
+
+
 
 /* Dark mode versions of the notice/error boxes */
 :root[data-theme="dark"] .student-page {

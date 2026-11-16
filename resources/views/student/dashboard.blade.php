@@ -87,9 +87,13 @@
                                 <td data-label="Credits">{{ $course->credits }}</td>
                                 <td data-label="Prerequisites">
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
-                                        {{ $prereq->courseNumber }}@if (!$loop->last), @endif
+                                        @if (in_array($prereq->prereq_id, $plannedCourseIds))
+                                            <span class="plan-status plan-status--ok">{{ $prereq->courseNumber }}</span>
+                                        @else
+                                            <span class="plan-status plan-status--missing">{{ $prereq->courseNumber }}</span>
+                                        @endif
                                     @empty
-                                        None 
+                                        None
                                     @endforelse
                                 </td>
                                 <!-- When courses are offered -->

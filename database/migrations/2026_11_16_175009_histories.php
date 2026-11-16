@@ -11,7 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+
+        // >>> Scheduling Table! <<<
+        Schema::create('histories', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->integer('course'); // The course taken
+            $table->string('student'); // Student who took the course
+            $table->string('letterGrade'); // Letter grade, needed in case of Z or W etc.
+            $table->float('gpa'); // Grade as number
+
+            $table->foreign('course')->references('id')->on('courses')->onUpdate('cascade');
+            $table->foreign('student')->references('id')->on('users')->onUpdate('cascade');
+        });
     }
 
     /**
@@ -19,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('histories');
     }
 };

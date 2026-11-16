@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('student'); // Student who took the course
             $table->string('letterGrade'); // Letter grade, needed in case of Z or W etc.
             $table->float('gpa'); // Grade as number
+            $table->string('completed'); // QuarterYear format plz
 
             $table->foreign('course')->references('id')->on('courses')->onUpdate('cascade');
             $table->foreign('student')->references('id')->on('users')->onUpdate('cascade');

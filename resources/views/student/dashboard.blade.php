@@ -57,6 +57,13 @@
             <section>
                 <h2>Required Courses</h2>
 
+                 <!-- Required courses that arnt planned  -->
+                @php
+                    $remaining = $requirements->reject(fn ($course) => in_array($course->id, $plannedCourseIds));
+                @endphp
+
+                <p>{{ $requirements->count() - $remaining->count() }} of {{ $requirements->count() }} required courses planned</p>
+
                 <table>
                     <thead>
                         <tr>
@@ -68,7 +75,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($requirements as $course)
+                        @forelse ($remaining as $course)
                             <tr>
                                 <td data-label="Course">{{ $course->courseNumber }}</td>
                                 <td data-label="Title">{{ $course->name }}</td>
@@ -77,7 +84,7 @@
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
                                         {{ $prereq->courseNumber }}@if (!$loop->last), @endif
                                     @empty
-                                        None
+                                        None 
                                     @endforelse
                                 </td>
                                 <!-- When courses are offered -->
@@ -88,17 +95,11 @@
                                         $missing = $prerequisites->get($course->id, collect())
                                             ->reject(fn ($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
                                             ->pluck('courseNumber');
-
-                                        $plannedTerm = $courseTerms->first(fn ($term) => in_array($term->id, $plannedTermIds));
                                     @endphp
 
                                     <!-- Not offered in any quarter -->
                                     @if ($courseTerms->isEmpty())
                                         Not scheduled yet
-
-                                    <!-- Already on the plan: show which quarter -->
-                                    @elseif ($plannedTerm)
-                                        <span class="plan-status plan-status--ok">Planned: {{ $plannedTerm->quarterYear }}</span>
 
                                     <!-- Plan locked: just list the quarters -->
                                     @elseif ($locked)
@@ -124,7 +125,13 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5">No courses are listed for this program yet.</td>
+                               <td colspan="5">
+                                    @if ($requirements->isEmpty())
+                                        No courses are listed for this program yet.
+                                    @else
+                                        All required courses are on your program map.
+                                    @endif
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -258,7 +265,7 @@
                                 <p>{{ $comment->body }}</p>
                             </div>
                         @endforeach 
-                @endif
+                    @endif
                 </div>
             @empty
                 <p>Your program map is empty. Add courses from the list above.</p>
@@ -295,11 +302,12 @@
                 @endif
 
                 <!--Advisor Comments-->
-                @if ($programMap && $programMap->comments->isNotEmpty())
+               @if ($programMap && $programMap->comments->whereNull('quarter')->isNotEmpty())
                     <details class="comments-panel" open>
-                        <summary>Advisor comments ({{ $programMap->comments->count() }})</summary>
+                        <summary>Advisor comments ({{ $programMap->comments->whereNull('quarter')->count() }})</summary>
 
-                        @foreach ($programMap->comments as $comment)
+
+                       @foreach ($programMap->comments->whereNull('quarter') as $comment)
                             <div class="plan-comment">
                                 <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
                                 <p>{{ $comment->body }}</p>

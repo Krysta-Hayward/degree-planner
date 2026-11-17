@@ -48,6 +48,7 @@
                                     <th>Course Number</th>
                                     <th>Course Name</th>
                                     <th>Credits</th>
+                                    <th>Requirement Group</th>
                                 </tr>
                             </thead>
 
@@ -57,6 +58,7 @@
                                         <td>{{ $program->courseDetails?->courseNumber ?? 'Unknown course' }}</td>
                                         <td>{{ $program->courseDetails?->name ?? 'Unknown course' }}</td>
                                         <td>{{ $program->courseDetails?->credits ?? 0 }}</td>
+                                        <td>{{ $program->courseDetails?->requirement_group ?: 'Core' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

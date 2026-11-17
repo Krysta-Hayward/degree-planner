@@ -17,15 +17,11 @@
                     <a href="{{ route('student.dashboard') }}" class="button-links">
                         My Degree Plan
                     </a>
-                @else
-                    <a href="{{ route('public.programs') }}" class="button-links">
-                        My Degree Plan
-                    </a>
-                @endif
             @else
                 <a href="{{ route('login') }}" class="button-links">
                     My Degree Plan
                 </a>
+                @endif
             @endauth
             <a href="/programs" class="button-links">View Programs</a>
         </div>

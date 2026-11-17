@@ -21,10 +21,12 @@
     --button-bg: #586082;
     --button-text: #ffffff;
     --button-hover: #454e70;
+    --button-border:  #353a4f;
 
     --secondary-bg: #f4f6f9;
     --secondary-text: #333333;
     --secondary-hover: #dddddd;
+    --button-border:  #353a4f;
 
     --danger-bg: #b94141;
     --danger-hover: #963333;
@@ -50,10 +52,12 @@
     --button-bg: #343f60;
     --button-text: #ffffff;
     --button-hover: #46577f;
+    --button-border:  #353a4f;
 
     --secondary-bg: #23272d;
     --secondary-text: #e6e6e6;
     --secondary-hover: #343a42;
+    --button-border:  #353a4f;
 
     --danger-bg: #8f3838;
     --danger-hover: #aa4545;

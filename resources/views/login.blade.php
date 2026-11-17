@@ -18,7 +18,7 @@
         <p>{{  $errors->first() }}</p>
     @endif
 
-    <form method="POST" action="{{  route('login') }}">
+    <form method="POST" action="{{  route('login') }}" class="form-group">
         @csrf
 
         <div>

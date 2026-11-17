@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="{{ asset('js/theme.js') }}"></script>
 </head>
-
+<header class="site-header">
+    @include('partials.app-logo')
+</header>
 <body>
     <h1>Account Login</h1>
 

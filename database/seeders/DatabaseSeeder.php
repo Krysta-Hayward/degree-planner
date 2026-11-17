@@ -56,14 +56,14 @@ class DatabaseSeeder extends Seeder
         // A bunch of fake courses as test data
         Course::factory(75)->create();
 
+        // three random terms are created with three random courses each
+        $this->call(TermSeeder::class);
+
         // Three random students with default advisor each make a plan with three random courses
         $this->call(PlanSeeder::class);
 
         // five random classes gain a random prerequisite.
         $this->call(PrereqSeeder::class);
-
-        // three random terms are created with three random courses each
-        $this->call(TermSeeder::class);
 
         // three random students enroll in three random courses each
         $this->call(EnrollSeeder::class);

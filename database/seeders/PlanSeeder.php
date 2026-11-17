@@ -15,21 +15,21 @@ class PlanSeeder extends Seeder
         $students = Student::inRandomOrder()->take(3)->get();
 
         // Students assigned to logged in advisor
-        $courses = Course::inRandomOrder()->take(9)->get();
+        $terms = Term::inRandomOrder()->take(9)->get();
 
         // for use in forEach
-        $classCounter = 0;
+        $termCounter = 0;
 
         foreach ($students as $studier) {
             for ($i = 0; $i < 3; $i++) {
                 DB::table('plans')->insert([
                     'student' => $studier->student,
-                    'class' => $courses[$classCounter + $i]->id,
+                    'class' => $terms[$termCounter + $i]->id,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
             }
-            $classCounter = $classCounter + 3;
+            $termCounter = $termCounter + 3;
         }
     }
 }

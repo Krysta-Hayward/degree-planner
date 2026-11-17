@@ -3,53 +3,54 @@
 @section('title', 'Degree Planner')
 
 @section('content')
-    <section>
-        <h1>Plan Your Degree</h1>
+<section>
+    <h1>Plan Your Degree</h1>
 
-        <p>
-            Organize your courses, track your progress, and plan
-            future terms.
-        </p>
+    <p>
+        Organize your courses, track your progress, and plan
+        future terms.
+    </p>
 
-        <div>
-            @auth
-                @if (auth()->user()->role === 'student')
-                    <a href="{{ route('student.dashboard') }}" class="button-links">
-                        My Degree Plan
-                    </a>
-            @else
-                <a href="{{ route('login') }}" class="button-links">
-                    My Degree Plan
-                </a>
-                @endif
+    <div>
+        @auth
+        @if (auth()->user()->role === 'student')
+            <a href="{{ route('student.dashboard') }}" class="button-links">
+                My Degree Plan
+            </a>
             @endauth
-            <a href="/programs" class="button-links">View Programs</a>
-        </div>
-    </section>
+        @else
+            <a href="{{ route('login') }}" class="button-links">
+                My Degree Plan
+            </a>
+        @endif
 
-    <section>
-        <div>
-            <h2>Plan Your Courses</h2>
-            <p>
-                Build a course plan for upcoming terms and keep
-                track of the classes you need to complete.
-            </p>
-        </div>
+        <a href="/programs" class="button-links">View Programs</a>
+    </div>
+</section>
 
-        <div>
-            <h2>Track Prerequisites</h2>
-            <p>
-                See which courses are required before you can
-                enroll in future classes.
-            </p>
-        </div>
+<section>
+    <div>
+        <h2>Plan Your Courses</h2>
+        <p>
+            Build a course plan for upcoming terms and keep
+            track of the classes you need to complete.
+        </p>
+    </div>
 
-        <div>
-            <h2>Stay on Track</h2>
-            <p>
-                Keep your degree progress organized and make
-                planning your education easier.
-            </p>
-        </div>
-    </section>
+    <div>
+        <h2>Track Prerequisites</h2>
+        <p>
+            See which courses are required before you can
+            enroll in future classes.
+        </p>
+    </div>
+
+    <div>
+        <h2>Stay on Track</h2>
+        <p>
+            Keep your degree progress organized and make
+            planning your education easier.
+        </p>
+    </div>
+</section>
 @endsection

@@ -21,12 +21,12 @@
     --button-bg: #586082;
     --button-text: #ffffff;
     --button-hover: #454e70;
-    --button-border:  #353a4f;
+    --button-border: #353a4f;
 
     --secondary-bg: #f4f6f9;
     --secondary-text: #333333;
     --secondary-hover: #dddddd;
-    --button-border:  #353a4f;
+    --button-border: #353a4f;
 
     --danger-bg: #b94141;
     --danger-hover: #963333;
@@ -52,12 +52,12 @@
     --button-bg: #343f60;
     --button-text: #ffffff;
     --button-hover: #46577f;
-    --button-border:  #353a4f;
+    --button-border: #353a4f;
 
     --secondary-bg: #23272d;
     --secondary-text: #e6e6e6;
     --secondary-hover: #343a42;
-    --button-border:  #353a4f;
+    --button-border: #353a4f;
 
     --danger-bg: #8f3838;
     --danger-hover: #aa4545;
@@ -79,7 +79,7 @@
         --border-soft: #2e333a;
         --link: #7fa8ee;
         --muted-link: #d0d0d0;
-        
+
         /* Buttons */
         --button-bg: #343f60;
         --button-text: #ffffff;
@@ -144,6 +144,8 @@ section {
     font-weight: bold;
     margin-bottom: 10px;
     margin-top: 50px;
+    -webkit-text-stroke: 1px #000000;
+    text-shadow: 0px 1px 4px #23430c;
 }
 
 .logo-img img {

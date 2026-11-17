@@ -7,10 +7,10 @@
 @endif
 
 @php
-$oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
+    $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
 @endphp
 
-<form method="POST" action="{{ $action }}" class="form-group">
+<form method="POST" action="{{ $action }}" class="program-form">
     @csrf
     @if ($method === 'PUT')
         @method('PUT')
@@ -44,7 +44,7 @@ $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (
     </p>
 
     <label for="course-filter">Filter courses</label>
-    <input id="course-filter" type="search" placeholder="Course number or name">
+    <input id="course-filter" type="search" class="course-filter " placeholder="Course number or name">
 
     <datalist id="requirement-groups">
         @foreach ($groupOptions as $option)
@@ -76,9 +76,15 @@ $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (
                         <td>{{ $course->name }}</td>
                         <td>{{ $course->credits }}</td>
                         <td>
-                            <input type="text" name="groups[{{ $course->id }}]" list="requirement-groups" maxlength="100"
-                                placeholder="Core" aria-label="Requirement group for {{ $course->courseNumber }}"
-                                value="{{ old('groups.' . $course->id, $current[$course->id] ?? '') }}">
+                            <select name="groups[{{ $course->id }}]"
+                                aria-label="Requirement group for {{ $course->courseNumber }}">
+
+                                @foreach ($groupOptions as $option)
+                                    <option value="{{ $option }}" @selected(old('groups.' . $course->id, $current[$course->id] ?? '') === $option)>
+                                        {{ $option }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </td>
                     </tr>
                 @endforeach
@@ -88,8 +94,7 @@ $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (
 
     <div class="form-buttons">
         <button type="submit" class="button-links-primary">{{ $submitLabel }}</button>
-        <a href="{{ route('admin.programs.index') }}"
-            class="button-links-danger">Cancel</a>
+        <a href="{{ route('admin.programs.index') }}" class="button-links-danger">Cancel</a>
     </div>
 </form>
 

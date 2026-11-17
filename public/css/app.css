@@ -623,28 +623,27 @@ div table {
     gap: 4px;
 }
 
-.form-group input,
-.form-group select {
-    box-sizing: border-box;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 16px;
     width: 100%;
     max-width: 500px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    box-sizing: border-box;
+    width: 100%;
     padding: 10px 12px;
+    margin: 0;
     border: 1px solid var(--border);
     border-radius: 6px;
     background: var(--surface);
     color: var(--text);
-}
-
-.form-group textarea {
-    width: 100%;
-    max-width: 600px;
-    padding: 8px;
-    font: inherit;
-    color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    box-sizing: border-box;
 }
 
 .form-group input:focus,
@@ -669,9 +668,14 @@ div table {
 /* Admin program form */
 .program-form {
     display: flex;
+    flex-direction: column;
     gap: 20px;
     align-items: stretch;
     width: 100%;
+}
+
+.course-filter {
+    max-width: fit-content;
 }
 
 .classroom-options fieldset {

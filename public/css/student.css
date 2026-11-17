@@ -36,6 +36,46 @@
     border: 1px solid var(--error-border, #f5c2bd);
 }
 
+/*Term Column*/
+.quarter-block {
+    margin-bottom: 20px;
+}
+
+.quarter-block h3 {
+    margin: 0 0 8px;
+}
+
+/* {{ Add && Move Dropdowns }}*/
+/* Dropdown and button side by side (used by Add and Move) */
+.plan-actions__move {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+/* The quarter dropdown */
+.plan-actions__move select {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(127, 127, 127, 0.4);
+    background: transparent;
+    color: inherit;
+}
+
+/* Move and Remove side by side, on the right (My Program Map) */
+.plan-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.plan-actions form {
+    margin: 0;
+}
+
 /* Dark mode versions of the notice/error boxes */
 :root[data-theme="dark"] .student-page {
     --notice-bg: #1d3325;

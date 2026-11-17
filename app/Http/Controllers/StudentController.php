@@ -98,6 +98,14 @@ class StudentController extends Controller
      */
     public function selectProgram(Request $request): RedirectResponse
     {
+        // Submitted or approved plan cannot be cleared
+        $map = ProgramMap::where('student', $request->user()->id)->first();
+
+        if($map && ! $map->isEditable()){
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+        }
+
         $data = $request->validate([
             'program' => ['required', 'string', 'exists:programs,name'],
         ]);
@@ -107,6 +115,13 @@ class StudentController extends Controller
         // a different program means the old plan no longer applies
         if ($user->program !== null && $user->program !== $data['program']) {
             DB::table('plans')->where('student', $user->id)->delete();
+
+            // The plan was cleared
+           ProgramMap::where('student', $user->id)->update([
+                'status' => 'draft',
+                'reviewed_by' => null,
+                'reviewed_at' => null,
+            ]);
         }
 
         $user->program = $data['program'];
@@ -120,12 +135,27 @@ class StudentController extends Controller
      */
     public function clearProgram(Request $request): RedirectResponse
     {
+        // Submitted or approved plan cannot be cleared
+        $map = ProgramMap::where('student', $request->user()->id)->first();
+
+         if ($map && ! $map->isEditable()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+    }
+
         $user = $request->user();
         $user->program = null;
         $user->save();
 
         // the old plan belongs to the old program, so start it over too
         DB::table('plans')->where('student', $user->id)->delete();
+
+        // The plan was cleared
+        ProgramMap::where('student', $user->id)->update([
+            'status' => 'draft',
+            'reviewed_by' => null,
+            'reviewed_at' => null,
+        ]);
 
         return $this->toTop()->with('status', 'Degree program and program map cleared.');
     }
@@ -207,31 +237,65 @@ class StudentController extends Controller
         return $this->toTop()->with('status', 'Removed from your program map.');
     }
 
-    /* {{ Marquis }} */
-    // Submit program map to advisor
-    public function submitPlan(Request $request): RedirectResponse
-    {
-        $user = $request->user();
+        /**
+         * Move a course in the student's program map to a different quarter.
+         */
+        public function movePlan(Request $request, Plan $plan): RedirectResponse
+        {
+            // A submitted or approved program map can't be changed
+            $map = ProgramMap::where('student', $request->user()->id)->first();
 
-        // Can't submit an empty plan
-        if (! DB::table('plans')->where('student', $user->id)->exists()) {
-            return $this->toTop()
-                ->withErrors(['plan' => 'Add courses to your program map before submitting.']);
+            if ($map && ! $map->isEditable()) {
+                return $this->toTop()
+                    ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+            }
+
+            // A student can only move courses in their own program map
+            abort_if((int) $plan->student !== $request->user()->id, 403);
+
+            $data = $request->validate([
+                'term' => ['required', 'integer', 'exists:terms,id'],
+            ]);
+
+            // The new quarter must be an offering of the same course
+            $currentCourse = Term::whereKey($plan->class)->value('course');
+            $newCourse = Term::whereKey($data['term'])->value('course');
+
+            if ($currentCourse !== $newCourse) {
+                return $this->toTop()
+                    ->withErrors(['term' => 'You can only move a course to another quarter it is offered.']);
+            }
+
+            $plan->update(['class' => $data['term']]);
+
+            return $this->toTop()->with('status', 'Course moved.');
         }
 
-        // The student's map, created as a draft the first time
-        $map = ProgramMap::firstOrCreate(['student' => $user->id]);
+        /* {{ Marquis }} */
+        // Submit program map to advisor
+        public function submitPlan(Request $request): RedirectResponse
+        {
+            $user = $request->user();
 
-        // Only drafts, or plans sent back, can be submitted
-        if (! $map->isEditable()) {
-            return $this->toTop()
-                ->withErrors(['plan' => 'Your program map is already submitted or approved.']);
+            // Can't submit an empty plan
+            if (! DB::table('plans')->where('student', $user->id)->exists()) {
+                return $this->toTop()
+                    ->withErrors(['plan' => 'Add courses to your program map before submitting.']);
+            }
+
+            // The student's map, created as a draft the first time
+            $map = ProgramMap::firstOrCreate(['student' => $user->id]);
+
+            // Only drafts, or plans sent back, can be submitted
+            if (! $map->isEditable()) {
+                return $this->toTop()
+                    ->withErrors(['plan' => 'Your program map is already submitted or approved.']);
+            }
+
+            $map->update(['status' => 'submitted']);
+
+            return $this->toTop()->with('status', 'Program map submitted to your advisor.');
         }
-
-        $map->update(['status' => 'submitted']);
-
-        return $this->toTop()->with('status', 'Program map submitted to your advisor.');
-    }
 
     /**
      * Course numbers of prerequisites the student has not put on their program map yet.

@@ -170,11 +170,13 @@ class AdvisorPlanReviewController extends Controller
 
         $validated = $request->validate([
             'body' => ['required', 'string', 'max:2000'],
+            'quarter' => ['nullable', 'string', 'max:20']
         ]);
 
         $programMap->comments()->create([
             'user_id' => auth()->id(),
-            'body' => $validated['body'],
+            'quarter' => $validated['quarter'] ?? null,
+            'body' => $validated['body']
         ]);
 
         return redirect()

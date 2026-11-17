@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['program_map', 'user_id', 'body'])]
+#[Fillable(['program_map', 'user_id', 'quarter', 'body'])]
 class PlanComment extends Model
 {
     //

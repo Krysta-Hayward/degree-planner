@@ -68,6 +68,9 @@ class DatabaseSeeder extends Seeder
         // three random students enroll in three random courses each
         $this->call(EnrollSeeder::class);
 
+        // six random courses each get two dummy classrooms
+        $this->call(ClassroomSeeder::class);
+
         // random program with the terms from TermSeeder
         $this->call(ProgramSeeder::class);
 
@@ -79,6 +82,9 @@ class DatabaseSeeder extends Seeder
 
         // AAS-SoftDev Prereq
         $this->call(SoftDevPrereqSeeder::class);
+
+        // SoftDev Classroom 
+        $this->call(SoftDevClassroomSeeder::class);
         
         // Program maps for students with plans, until the Submit button exists
         $this->call(ProgramMapSeeder::class);

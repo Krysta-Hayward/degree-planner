@@ -2,6 +2,7 @@
     $courseNumber = old('courseNumber', $course->courseNumber ?? '');
     $courseName = old('name', $course->name ?? '');
     $credits = old('credits', $course->credits ?? '');
+    $description = old('description', $course->description ?? '');
 @endphp
 
 @if ($errors->any())
@@ -30,8 +31,14 @@
     <input type="number" id="credits" name="credits" value="{{ $credits }}" min="0" step="any" required>
 </div>
 
+<div class="form-group">
+    <label for="description">Description</label>
+    
+    <textarea id="description" name="description" rows="4" maxlength="2000">{{ $description }}</textarea>
+</div>
+
 <div class="form-actions">
-    <button type="submit" class="button-links">
+    <button type="submit" class="button-links-primary">
         {{ isset($course) ? 'Update Course' : 'Create Course' }}
     </button>
 

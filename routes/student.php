@@ -21,7 +21,10 @@ Route::middleware(['auth', StudentMiddleware::class])
         Route::delete('/plan/{plan}', [StudentController::class, 'removeFromPlan'])->name('plan.remove');
         // Move a course in the student's program map to a different quarter
         Route::patch('/plan/{plan}', [StudentController::class, 'movePlan'])->name('plan.move');
+
+        // Student enrollment
+        Route::post('/enroll/{classroom}', [StudentController::class, 'enroll'])
+            ->name('enroll');
         // Submits to program map
         Route::post('/plan/submit', [StudentController::class, 'submitPlan'])->name('plan.submit');
     });
-    

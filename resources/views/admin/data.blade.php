@@ -38,7 +38,7 @@
     @if ($selectedTable)
         <section>
             <h2>{{ ucwords(str_replace('_', ' ', $selectedTable)) }}</h2>
-            <p><a href="{{ route('admin.data') }}">Back to overview</a></p>
+            <p><a href="{{ route('admin.data') }}" class="button-links">Collapse table view</a></p>
             @if ($selectedTable && $records instanceof \Illuminate\Pagination\LengthAwarePaginator)
                 <div class="pagination pagination-bottom">
                     {{ $records->links() }}

@@ -47,15 +47,15 @@
 
                                         @foreach ($advisors as $advisor)
                                             <option value="{{ $advisor->id }}" @selected(
-            old('advisor_id', $student->advisor->first()?->id)
-            == $advisor->id
-        )>
+                                                old('advisor_id', $student->advisor->first()?->id)
+                                                == $advisor->id
+                                            )>
                                                 {{ $advisor->name }}
                                             </option>
                                         @endforeach
                                     </select>
 
-                                    <button type="submit" class="button-links">
+                                    <button type="submit" class="button-links-primary">
                                         Save Assignment
                                     </button>
                                 </form>

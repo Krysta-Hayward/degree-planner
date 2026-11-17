@@ -75,6 +75,7 @@
                             <th>Course</th>
                             <th>Title</th>
                             <th>Credits</th>
+                           <!-- <th>Time</th> -->
                             <th>Prerequisites</th>
                             <th>Offered</th>
                         </tr>
@@ -85,6 +86,13 @@
                                 <td data-label="Course">{{ $course->courseNumber }}</td>
                                 <td data-label="Title">{{ $course->name }}</td>
                                 <td data-label="Credits">{{ $course->credits }}</td>
+                             <!--   <td data-label="Time">
+                                    @forelse ($sections[$course->id] ?? [] as $section)
+                                         {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
+                                    @empty
+                                        TBA
+                                    @endforelse
+                                </td> -->
                                 <td data-label="Prerequisites">
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
                                         @if (in_array($prereq->prereq_id, $plannedCourseIds))
@@ -212,12 +220,21 @@
                 <div class="quarter-block">
                     <h3>{{ $quarter }} · {{ $courses->sum('credits') }} credits</h3>
 
+                    <!-- Schedule conflicts in this quarter -->
+                    @foreach ($conflicts[$quarter] ?? [] as $conflict)
+                        <p class="plan-status plan-status--missing">
+                            ⚠ {{ $conflict['first'] }} and {{ $conflict['second'] }} may meet at the same time
+                            ({{ \App\Support\ClassTime::range($conflict['start'], $conflict['end']) }}). Check the days when you register.
+                        </p>
+                    @endforeach
+
                     <table>
                         <thead>
                             <tr>
                                 <th>Course</th>
                                 <th>Title</th>
                                 <th>Credits</th>
+                              <!--  <th>Time</th> -->
                                 @unless ($locked)
                                     <th></th>
                                 @endunless
@@ -229,6 +246,21 @@
                                     <td data-label="Course">{{ $item->courseNumber }}</td>
                                     <td data-label="Title">{{ $item->name }}</td>
                                     <td data-label="Credits">{{ $item->credits }}</td>
+                                <!--    <td data-label="Time">
+                                        @php
+                                            preg_match('/^([a-z]+)/i', $quarter, $seasonMatch);
+                                            $season = strtolower($seasonMatch[1] ?? '');
+
+                                            $quarterSections = ($sections[$item->course_id] ?? collect())
+                                                ->filter(fn ($s) => $s->$season ?? false);
+                                        @endphp
+
+                                        @forelse ($quarterSections as $section)
+                                           {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
+                                        @empty
+                                            TBA
+                                        @endforelse
+                                    </td> -->
                                     @unless ($locked)
                                         <td data-label="Action">
                                             @php

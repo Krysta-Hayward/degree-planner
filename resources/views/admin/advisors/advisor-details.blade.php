@@ -7,6 +7,10 @@
         @include('partials.sidebar')
 
         <main class="admin-content">
+            <a href="{{ route('admin.advisors') }}" class="button-links">
+                Back to Advisors
+            </a>
+
             <h1>{{ $advisor->name }}</h1>
 
             <p><strong>Email:</strong> {{ $advisor->email }}</p>
@@ -15,10 +19,6 @@
                 <strong>Assigned Students:</strong>
                 {{ $students->total() }}
             </p>
-
-            <a href="{{ route('admin.advisors') }}" class="button-links">
-                Back to Advisors
-            </a>
 
             <h2>Assigned Students</h2>
 

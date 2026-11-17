@@ -52,7 +52,7 @@ Route::get('/prerequisites/{course}', [PublicPrereqController::class, 'show'])
 // Class Routes
 Route::get('/classes', [ClassesController::class, 'index'])
     ->name('classes');
-Route::get('/classes/{course}', [ClassesController::class, 'show'])
+Route::get('/classes/{classroom}', [ClassesController::class, 'show'])
     ->name('class-details');
 
 // Admin routes

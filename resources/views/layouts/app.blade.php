@@ -18,31 +18,21 @@
         <div class="logo-text">Degree Planner</div>
 
         <nav>
-            <button class="button-links"><a href="/">Home</a></button>
-            <button class="button-links"><a href="/programs">Programs</a></button>
-            <button class="button-links"><a href="/courses">Courses</a></button>
-            <button class="button-links"><a href="/terms">Terms</a></button>
-            <button class="button-links"><a href="/prerequisites">Prerequisites</a></button>
+            <a href="/" class="button-links">Home</a>
+            <a href="/programs" class="button-links">Programs</a>
+            <a href="/courses" class="button-links">Courses</a>
+            <a href="/terms" class="button-links">Terms</a>
+            <a href="/prerequisites" class="button-links">Prerequisites</a>
 
             @auth
-                <button class="button-links">
-                    <a href="{{ route('classes') }}">Classes</a>
-                </button>
+                    <a href="{{ route('classes') }}" class="button-links">Classes</a>
                 @if (auth()->user()->role === 'admin')
-                    <button class="button-links">
-                        <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
-                    </button>
-                    <button class="button-links">
-                        <a href="{{ route('admin.data') }}">Database Overview</a>
-                    </button>
+                        <a href="{{ route('admin.dashboard') }}" class="button-links">Admin Dashboard</a>
+                        <a href="{{ route('admin.data') }}"  class="button-links">Database Overview</a>
                 @elseif (auth()->user()->role === 'advisor')
-                    <button class="button-links">
-                        <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
-                    </button>
+                        <a href="{{ route('advisor.dashboard') }}" class="button-links">Advisor Dashboard</a>
                 @elseif (auth()->user()->role === 'student')
-                    <button class="button-links">
-                        <a href="{{ route('student.dashboard') }}">My Degree Plan</a>
-                    </button>
+                        <a href="{{ route('student.dashboard') }}" class="button-links">My Degree Plan</a>
                 @endif
 
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
@@ -58,9 +48,7 @@
                 </span>
 
             @else
-                <button class="button-links">
-                    <a href="{{ route('login') }}">Log In</a>
-                </button>
+                    <a href="{{ route('login') }}" class="button-links">Log In</a>
             @endauth
         </nav>
         <div>

@@ -692,9 +692,16 @@ div table {
     max-width: fit-content;
 }
 
+.classroom-options {
+    display: flex;
+    flex-direction: row;
+}
+
 .classroom-options fieldset {
     flex: 1;
     min-width: 0;
+    margin: 10px;
+    width: fit-content;
 }
 
 .classroom-options input[type="checkbox"] {

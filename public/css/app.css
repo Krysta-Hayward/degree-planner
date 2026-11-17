@@ -357,10 +357,10 @@ nav button a {
 ========================================= */
 
 table {
-    width: 70%;
+    width: 80%;
     max-width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto;
     margin: 20px auto;
 }
 
@@ -392,7 +392,7 @@ td a:hover {
 }
 
 div table {
-    width: 70%;
+    width: 80%;
 }
 
 /* =========================================

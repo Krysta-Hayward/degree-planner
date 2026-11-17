@@ -688,6 +688,23 @@ div table {
     margin: 0;
 }
 
+table.programs-form-top-table,
+table.programs-form-bottom-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+
+table.programs-form-top-table,
+table.programs-form-top-table tr,
+table.programs-form-top-table td {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
 .course-filter {
     max-width: fit-content;
 }

@@ -7,7 +7,7 @@
 @endif
 
 @php
-    $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
+$oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
 @endphp
 
 <form method="POST" action="{{ $action }}" class="program-form">
@@ -43,17 +43,14 @@
         such as Core or Electives. Leaving the group blank makes it Core.
     </p>
 
-    <label for="course-filter">Filter courses</label>
-    <input id="course-filter" type="search" class="course-filter " placeholder="Course number or name">
+    <table class="programs-form-top-table">
+        <td><label for="course-filter">Filter courses</label>
+    <input id="course-filter" type="search" class="course-filter " placeholder="Course number or name"></td>
+        <td>{{ $courses->links() }}</td>
+    </table>
 
-    <datalist id="requirement-groups">
-        @foreach ($groupOptions as $option)
-            <option value="{{ $option }}"></option>
-        @endforeach
-    </datalist>
-
-    <div style="overflow-x: auto;">
-        <table class="program-courses">
+    <div>
+        <table class="programs-form-bottom-table">
             <thead>
                 <tr>
                     <th>Required</th>
@@ -97,7 +94,6 @@
         <a href="{{ route('admin.programs.index') }}" class="button-links-danger">Cancel</a>
     </div>
 </form>
-
 <script>
     document.getElementById('course-filter').addEventListener('input', function () {
         const term = this.value.trim().toLowerCase();

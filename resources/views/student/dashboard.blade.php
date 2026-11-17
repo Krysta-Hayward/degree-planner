@@ -232,8 +232,29 @@
                                     @unless ($locked)
                                         <td data-label="Action">
                                             @php
+                                                // Latest quarter of this course's prerequisites
+                                                $afterOrder = $prerequisites->get($item->course_id, collect())
+                                                    ->map(fn ($prereq) => $plannedQuarterOf[$prereq->prereq_id] ?? null)
+                                                    ->filter()
+                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
+                                                    ->max() ?? 0;
+
+                                                // Earliest quarter of planned courses that need this one
+                                                $beforeOrder = $prerequisites
+                                                    ->flatten(1)
+                                                    ->where('prereq_id', $item->course_id)
+                                                    ->map(fn ($row) => $plannedQuarterOf[$row->course_id] ?? null)
+                                                    ->filter()
+                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
+                                                    ->min() ?? PHP_INT_MAX;
+
+                                                // Other quarters this course is offered, between those two
                                                 $otherTerms = $terms->get($item->course_id, collect())
-                                                    ->where('id', '!=', $item->term_id);
+                                                    ->where('id', '!=', $item->term_id)
+                                                    ->filter(function ($term) use ($afterOrder, $beforeOrder) {
+                                                        $order = \App\Support\Quarter::order($term->quarterYear);
+                                                        return $order > $afterOrder && $order < $beforeOrder;
+                                                    });
                                             @endphp
 
                                             <div class="plan-actions">

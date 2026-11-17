@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Advisor;
 use App\Http\Controllers\Controller;
 use App\Models\ProgramMap;
 use App\Models\User;
+use App\Support\Quarter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -93,7 +94,8 @@ class AdvisorPlanReviewController extends Controller
             ->orderBy('courses.courseNumber')
             ->select('terms.quarterYear', 'courses.courseNumber', 'courses.name', 'courses.credits')
             ->get()
-            ->groupBy('quarterYear');
+            ->groupBy('quarterYear')
+            ->sortBy(fn ($courses, $quarter) => Quarter::order($quarter));
 
         $planned = DB::table('plans')
             ->join('terms', 'plans.class', '=', 'terms.id')

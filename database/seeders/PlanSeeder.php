@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Course;
+use App\Models\Term;
 use App\Models\Student;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;

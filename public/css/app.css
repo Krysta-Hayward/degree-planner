@@ -663,9 +663,8 @@ div table {
 }
 
 /* =========================================
-   ADMIN CLASSROOM FORM
+   ADMIN FORMS
 ========================================= */
-/* Admin program form */
 .program-form {
     display: flex;
     flex-direction: column;

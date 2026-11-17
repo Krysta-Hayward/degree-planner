@@ -16,7 +16,7 @@
                 @include('admin.terms.terms-form')
 
                 <div class="form-buttons">
-                    <button type="submit" class="button-links">
+                    <button type="submit" class="button-links-primary">
                         Create Term
                     </button>
 

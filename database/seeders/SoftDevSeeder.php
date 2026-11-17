@@ -50,7 +50,7 @@ class SoftDevSeeder extends Seeder
                     'courseNumber' => $course[0],
                     'name' => $course[1],
                     'credits' => $course[2],
-                    'description' =>$course[3],
+                    'description' => $course[3],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]

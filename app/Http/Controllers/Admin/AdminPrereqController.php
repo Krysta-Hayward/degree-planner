@@ -20,7 +20,7 @@ class AdminPrereqController extends Controller
             'prerequisiteDetails',
         ])
             ->orderBy('course')
-            ->paginate(50);
+            ->paginate(25);
 
         return view('admin.prereqs.prereqs', compact('prereqs'));
     }

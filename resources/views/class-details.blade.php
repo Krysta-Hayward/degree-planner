@@ -23,7 +23,6 @@
         <h1>{{ $course->courseNumber }}</h1>
         <h2>{{ $course->name }}</h2>
 
-        {{-- Course Information --}}
         <h3>Course Information</h3>
 
         <table>
@@ -52,7 +51,6 @@
             </tbody>
         </table>
 
-        {{-- Class Availability --}}
         <h3>Class Availability</h3>
 
         <table>
@@ -81,7 +79,6 @@
             </tbody>
         </table>
 
-        {{-- Class Schedule --}}
         <h3>Class Schedule</h3>
 
         <table>
@@ -98,7 +95,6 @@
             </tbody>
         </table>
 
-        {{-- Student Enrollment --}}
         @auth
             @if (auth()->user()->role === 'student')
                 <div class="enroll-container">
@@ -127,7 +123,6 @@
             @endif
         @endauth
 
-        {{-- Navigation --}}
         <a href="{{ route('classes') }}" class="button-links">
             Back to Classes
         </a>

@@ -34,14 +34,14 @@
             </section>
 
             @foreach ($groups as $group => $groupCourses)
-                <section>
+                <section class="program-group">
                     <h2>{{ $group }}</h2>
                     <p>
                         {{ $groupCourses->count() }} {{ \Illuminate\Support\Str::plural('course', $groupCourses->count()) }},
                         {{ $groupCourses->sum(fn($program) => $program->courseDetails?->credits ?? 0) }} credits
                     </p>
 
-                    <div style="overflow-x: auto;">
+                    <div class="program-group-table">
                         <table>
                             <thead>
                                 <tr>

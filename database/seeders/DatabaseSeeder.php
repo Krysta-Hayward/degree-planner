@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
         // AAS-SoftDev data hand-pulled from SCC website
         $this->call(SoftDevSeeder::class);
 
-        // AAS-SoftDev Term 
+        // AAS-SoftDev Term
         $this->call(SoftDevTermSeeder::class);
 
         // AAS-SoftDev Prereq

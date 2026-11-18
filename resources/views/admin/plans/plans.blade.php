@@ -20,36 +20,34 @@
                     <div class="pagination">
                         {{ $students->links() }}
                     </div>
-                        <div style="overflow-x: auto;">
-                            <table>
-                                <thead>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Planned Courses</th>
+                                    <th>Planned Credits</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($students as $student)
                                     <tr>
-                                        <th>Student</th>
-                                        <th>Planned Courses</th>
-                                        <th>Planned Credits</th>
-                                        <th>Actions</th>
+                                        <td>
+                                            {{ $student->name }}
+                                        </td>
+                                        <td>{{ $student->planned_courses }}</td>
+                                        <td>{{ $student->planned_credits }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.plans.show', $student) }}" class="button-links">
+                                                View Full Plan
+                                            </a>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($students as $student)
-                                        <tr>
-                                            <td>
-                                                <a href="{{ route('admin.plans.show', $student) }}">
-                                                    {{ $student->name }}
-                                                </a>
-                                            </td>
-                                            <td>{{ $student->planned_courses }}</td>
-                                            <td>{{ $student->planned_credits }}</td>
-                                            <td>
-                                                <a href="{{ route('admin.plans.show', $student) }}" class="button-links">
-                                                    View Full Plan
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @endif
             </section>
             <div class="pagination">

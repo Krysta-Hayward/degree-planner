@@ -33,15 +33,15 @@ class SoftDevTermSeeder extends Seeder
             'CIS 259' => $springEvenFallWinterOdd,
 
             // No pattern listed: offered every quarter for now
-            'CIS 107'  => $allQuarters,
-            'CIS 108'  => $allQuarters,
-            'CIS 111'  => $allQuarters,
-            'CIS 146'  => $allQuarters,
-            'CIS 126'  => $allQuarters,
-            'CIS 130'  => $allQuarters,
+            'CIS 107' => $allQuarters,
+            'CIS 108' => $allQuarters,
+            'CIS 111' => $allQuarters,
+            'CIS 146' => $allQuarters,
+            'CIS 126' => $allQuarters,
+            'CIS 130' => $allQuarters,
             'CMST&210' => $allQuarters,
             'ENGL&101' => $allQuarters,
-            'CIS 272'  => $allQuarters,
+            'CIS 272' => $allQuarters,
         ];
 
         foreach ($schedule as $courseNumber => $quarters) {

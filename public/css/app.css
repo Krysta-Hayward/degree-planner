@@ -21,10 +21,12 @@
     --button-bg: #586082;
     --button-text: #ffffff;
     --button-hover: #454e70;
+    --button-border: #353a4f;
 
     --secondary-bg: #f4f6f9;
     --secondary-text: #333333;
     --secondary-hover: #dddddd;
+    --button-border: #353a4f;
 
     --danger-bg: #b94141;
     --danger-hover: #963333;
@@ -50,10 +52,12 @@
     --button-bg: #343f60;
     --button-text: #ffffff;
     --button-hover: #46577f;
+    --button-border: #353a4f;
 
     --secondary-bg: #23272d;
     --secondary-text: #e6e6e6;
     --secondary-hover: #343a42;
+    --button-border: #353a4f;
 
     --danger-bg: #8f3838;
     --danger-hover: #aa4545;
@@ -75,7 +79,7 @@
         --border-soft: #2e333a;
         --link: #7fa8ee;
         --muted-link: #d0d0d0;
-        
+
         /* Buttons */
         --button-bg: #343f60;
         --button-text: #ffffff;
@@ -132,6 +136,7 @@ section {
     color: #ffffff;
     width: 100%;
     transition: background-color 0.2s ease;
+    border-bottom: 2px solid #3d5842;
 }
 
 .logo-text {
@@ -139,12 +144,15 @@ section {
     font-weight: bold;
     margin-bottom: 10px;
     margin-top: 50px;
+    -webkit-text-stroke: 1px #000000;
+    text-shadow: 0px 1px 4px #23430c;
 }
 
 .logo-img img {
     height: 100px;
     width: auto;
     display: block;
+    margin: auto;
 }
 
 .logo-img {
@@ -162,6 +170,11 @@ section {
     border-radius: 8px;
     background: var(--surface);
     color: var(--text);
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .site-header-logged-in .user-role {
@@ -171,6 +184,11 @@ section {
     color: var(--muted-link);
     font-size: 12px;
     font-weight: 600;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 @media screen and (max-width: 1883px) {
@@ -194,6 +212,25 @@ section {
         text-align: center;
         margin-top: auto;
     }
+}
+
+/* =========================================
+   LOGIN
+========================================= */
+.login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: fit-content;
+    text-align: left;
+}
+
+.login-page label {
+    display: inline-block;
+    width: 80px;
+    margin: 10px 0;
 }
 
 /* =========================================
@@ -339,10 +376,10 @@ nav button a {
 ========================================= */
 
 table {
-    width: 70%;
+    width: 80%;
     max-width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto;
     margin: 20px auto;
 }
 
@@ -374,7 +411,7 @@ td a:hover {
 }
 
 div table {
-    width: 70%;
+    width: 80%;
 }
 
 /* =========================================
@@ -605,28 +642,27 @@ div table {
     gap: 4px;
 }
 
-.form-group input,
-.form-group select {
-    box-sizing: border-box;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 16px;
     width: 100%;
     max-width: 500px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    box-sizing: border-box;
+    width: 100%;
     padding: 10px 12px;
+    margin: 0;
     border: 1px solid var(--border);
     border-radius: 6px;
     background: var(--surface);
     color: var(--text);
-}
-
-.form-group textarea {
-    width: 100%;
-    max-width: 600px;
-    padding: 8px;
-    font: inherit;
-    color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    box-sizing: border-box;
 }
 
 .form-group input:focus,
@@ -646,19 +682,62 @@ div table {
 }
 
 /* =========================================
-   ADMIN CLASSROOM FORM
+   ADMIN FORMS
 ========================================= */
-/* Admin program form */
 .program-form {
     display: flex;
+    flex-direction: column;
     gap: 20px;
     align-items: stretch;
     width: 100%;
 }
 
+.program-group {
+    display: table;
+    width: 70%;
+    box-sizing: border-box;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 5px;
+    margin: 20px 0;
+}
+
+.program-group table {
+    width: 100%;
+    margin: 0;
+}
+
+table.programs-form-top-table,
+table.programs-form-bottom-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+
+table.programs-form-top-table,
+table.programs-form-top-table tr,
+table.programs-form-top-table td {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.course-filter {
+    max-width: fit-content;
+}
+
+.classroom-options {
+    display: flex;
+    flex-direction: row;
+}
+
 .classroom-options fieldset {
     flex: 1;
     min-width: 0;
+    margin: 10px;
+    width: fit-content;
 }
 
 .classroom-options input[type="checkbox"] {

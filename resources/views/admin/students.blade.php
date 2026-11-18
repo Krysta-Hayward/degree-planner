@@ -26,6 +26,7 @@
                         <th>Email</th>
                         <th>Current Advisor</th>
                         <th>Assign Advisor</th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -38,7 +39,8 @@
                                 {{ $student->advisor->first()?->name ?? 'Not assigned' }}
                             </td>
                             <td>
-                                <form action="{{ route('admin.students.advisor.update', $student) }}" method="POST">
+                                <form action="{{ route('admin.students.advisor.update', $student) }}" method="POST"
+                                    >
                                     @csrf
                                     @method('PUT')
 
@@ -54,10 +56,11 @@
                                             </option>
                                         @endforeach
                                     </select>
-
-                                    <button type="submit" class="button-links-primary">
-                                        Save Assignment
-                                    </button>
+                            </td>
+                            <td>
+                                <button type="submit" class="button-links-primary">
+                                    Save Assignment
+                                </button>
                                 </form>
                             </td>
                         </tr>

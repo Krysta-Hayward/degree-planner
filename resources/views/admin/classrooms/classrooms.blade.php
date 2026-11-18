@@ -91,7 +91,7 @@
 
                                     <form method="POST" action="{{ route('admin.classrooms.destroy', $classroom) }}"
                                         onsubmit="return confirm('Are you sure you want to delete this classroom?');"
-                                        style="display: inline;">
+                                        >
                                         @csrf
                                         @method('DELETE')
 

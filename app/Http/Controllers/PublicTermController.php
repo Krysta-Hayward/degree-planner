@@ -10,7 +10,7 @@ class PublicTermController extends Controller
     {
         $terms = Term::with('courseDetails')
             ->orderBy('quarterYear')
-            ->paginate(50);
+            ->paginate(15);
 
         return view('public.terms', compact('terms'));
     }

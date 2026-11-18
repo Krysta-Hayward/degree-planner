@@ -12,7 +12,7 @@ class EnrollSeeder extends Seeder
     public function run(): void
     {
         // The advisor created in DatabaseSeeder
-        $students = User::inRandomOrder()->take(3)->get();
+        $students = User::where('role', 'student')->inRandomOrder()->take(3)->get();
 
         // Students assigned to logged in advisor
         $courses = Course::inRandomOrder()->take(9)->get();

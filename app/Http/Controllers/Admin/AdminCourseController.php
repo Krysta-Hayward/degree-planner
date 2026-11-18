@@ -97,8 +97,9 @@ class AdminCourseController extends Controller
     {
         $this->authorize('delete', $course);
 
+        // Plans store a term, so check every term of this course
         $isPlanned = DB::table('plans')
-            ->where('class', $course->id)
+            ->whereIn('class', DB::table('terms')->where('course', $course->id)->pluck('id'))
             ->exists();
 
         $isEnrolled = DB::table('enrolls')

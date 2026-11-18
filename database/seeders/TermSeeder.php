@@ -16,7 +16,6 @@ class TermSeeder extends Seeder
         // Students assigned to logged in advisor
         $courses = Course::inRandomOrder()->take(9)->get();
 
-        // for use in for loop
         $counter = 0;
 
         foreach ($quarters as $quarter) {

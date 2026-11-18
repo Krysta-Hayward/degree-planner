@@ -7,58 +7,82 @@ use Illuminate\Support\Facades\DB;
 
 class SoftDevTermSeeder extends Seeder
 {
-    // Schedules the Software Development courses using the offering patterns in their descriptions
+    // Plan from fall of the first year through spring of the last year
+    private int $firstYear = 2027;
+    private int $lastYear = 2032;
+
+    // Schedules the Software Development courses using the offering rules in their descriptions
     public function run(): void
     {
-        // The quarters students can plan
-        $allQuarters = ['fall2026', 'winter2027', 'spring2027', 'fall2027', 'winter2028', 'spring2028'];
+        // Course number => its offering rule
+        $rules = [
+            'CIS 114' => 'springOddFallWinterEven',
+            'CIS 230' => 'springOddFallWinterEven',
+            'CIS 258' => 'springOddFallWinterEven',
+            'CIS 282' => 'springOddFallWinterEven',
+            'CIS 225' => 'springOddFallWinterEven',
+            'CIS 218' => 'springOddFallWinterEven',
 
-        // "Offered in spring odd years and fall and winter in even years"
-        $springOddFallWinterEven = ['fall2026', 'spring2027', 'winter2028'];
+            'CIS 117' => 'springEvenFallWinterOdd',
+            'CIS 217' => 'springEvenFallWinterOdd',
+            'CIS 233' => 'springEvenFallWinterOdd',
+            'CIS 259' => 'springEvenFallWinterOdd',
 
-        // "Offered in spring even years and fall and winter in odd years"
-        $springEvenFallWinterOdd = ['winter2027', 'fall2027', 'spring2028'];
-
-        $schedule = [
-            'CIS 114' => $springOddFallWinterEven,
-            'CIS 230' => $springOddFallWinterEven,
-            'CIS 258' => $springOddFallWinterEven,
-            'CIS 282' => $springOddFallWinterEven,
-            'CIS 225' => $springOddFallWinterEven,
-            'CIS 218' => $springOddFallWinterEven,
-
-            'CIS 117' => $springEvenFallWinterOdd,
-            'CIS 217' => $springEvenFallWinterOdd,
-            'CIS 233' => $springEvenFallWinterOdd,
-            'CIS 259' => $springEvenFallWinterOdd,
-
-            // No pattern listed: offered every quarter for now
-            'CIS 107'  => $allQuarters,
-            'CIS 108'  => $allQuarters,
-            'CIS 111'  => $allQuarters,
-            'CIS 146'  => $allQuarters,
-            'CIS 126'  => $allQuarters,
-            'CIS 130'  => $allQuarters,
-            'CMST&210' => $allQuarters,
-            'ENGL&101' => $allQuarters,
-            'CIS 272'  => $allQuarters,
+            'CIS 107'  => 'every',
+            'CIS 108'  => 'every',
+            'CIS 111'  => 'every',
+            'CIS 146'  => 'every',
+            'CIS 126'  => 'every',
+            'CIS 130'  => 'every',
+            'CMST&210' => 'every',
+            'ENGL&101' => 'every',
+            'CIS 272'  => 'every',
         ];
 
-        foreach ($schedule as $courseNumber => $quarters) {
+        foreach ($rules as $courseNumber => $rule) {
             $courseId = DB::table('courses')->where('courseNumber', $courseNumber)->value('id');
 
             if (! $courseId) {
                 continue;
             }
 
-            foreach ($quarters as $quarter) {
-                DB::table('terms')->insert([
-                    'quarterYear' => $quarter,
-                    'course' => $courseId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+            foreach ($this->quarters() as [$season, $year]) {
+                if ($this->isOffered($rule, $season, $year)) {
+                    DB::table('terms')->insert([
+                        // Same format as the admin Terms form, e.g. "Fall 2026"
+                        'quarterYear' => ucfirst($season).' '.$year,
+                        'course' => $courseId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
             }
         }
+    }
+
+    // Every quarter from fall of the first year to spring of the last year, in order
+    private function quarters(): array
+    {
+        $quarters = [];
+
+        for ($year = $this->firstYear; $year < $this->lastYear; $year++) {
+            $quarters[] = ['fall', $year];
+            $quarters[] = ['winter', $year + 1];
+            $quarters[] = ['spring', $year + 1];
+        }
+
+        return $quarters;
+    }
+
+    // Whether a course with this rule is offered in this quarter
+    private function isOffered(string $rule, string $season, int $year): bool
+    {
+        $even = $year % 2 === 0;
+
+        return match ($rule) {
+            'springOddFallWinterEven' => $season === 'spring' ? ! $even : $even,
+            'springEvenFallWinterOdd' => $season === 'spring' ? $even : ! $even,
+            default => true,
+        };
     }
 }

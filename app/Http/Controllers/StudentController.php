@@ -79,6 +79,59 @@ class StudentController extends Controller
             ->with('reviewer', 'comments.author')
             ->first();
 
+        // Class times for every course, grouped by course (used for display and conflicts)
+        $sections = DB::table('classrooms')
+            ->whereIn('course', $courseIds)
+            ->orderBy('timeStart')
+            ->get()
+            ->groupBy('course');
+
+        $conflicts = [];
+
+        foreach ($planned->groupBy('quarterYear') as $quarter => $courses) {
+            // The season of this quarter "fall" from "fall2026"
+            preg_match('/^([a-z]+)/i', $quarter, $match);
+            $season = strtolower($match[1] ?? '');
+
+            $courses = $courses->values();
+
+            // Compare every pair of courses in this quarter
+            for ($i = 0; $i < $courses->count(); $i++) {
+                for ($j = $i + 1; $j < $courses->count(); $j++) {
+                    $a = $courses[$i];
+                    $b = $courses[$j];
+
+                    // Sections of each course that run in this season
+                    $aSections = ($sections[$a->course_id] ?? collect())->filter(fn ($s) => $s->$season ?? false);
+                    $bSections = ($sections[$b->course_id] ?? collect())->filter(fn ($s) => $s->$season ?? false);
+
+                    // No class time for one of them: nothing to compare
+                    if ($aSections->isEmpty() || $bSections->isEmpty()) {
+                        continue;
+                    }
+
+                    // A conflict only if every section of one overlaps every section of the other
+                    $alwaysOverlap = $aSections->every(
+                        fn ($sa) => $bSections->every(
+                            fn ($sb) => $sa->timeStart < $sb->timeEnd && $sb->timeStart < $sa->timeEnd
+                        )
+                    );
+
+                    if ($alwaysOverlap) {
+                        $sa = $aSections->first();
+                        $sb = $bSections->first();
+
+                        $conflicts[$quarter][] = [
+                            'first' => $a->courseNumber,
+                            'second' => $b->courseNumber,
+                            'start' => max($sa->timeStart, $sb->timeStart),
+                            'end' => min($sa->timeEnd, $sb->timeEnd),
+                        ];
+                    }
+                }
+            }
+        }
+
         return view('student.dashboard', [
             'user' => $user,
             'programs' => $programs,
@@ -90,6 +143,8 @@ class StudentController extends Controller
             'plannedTermIds' => $planned->pluck('term_id')->all(),
             'plannedCourseIds' => $planned->pluck('course_id')->all(),
             'programMap' => $programMap,
+            'sections' => $sections,
+            'conflicts' => $conflicts,
         ]);
     }
 

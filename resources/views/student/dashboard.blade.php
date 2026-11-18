@@ -75,6 +75,7 @@
                             <th>Course</th>
                             <th>Title</th>
                             <th>Credits</th>
+                           <!-- <th>Time</th> -->
                             <th>Prerequisites</th>
                             <th>Offered</th>
                         </tr>
@@ -85,11 +86,22 @@
                                 <td data-label="Course">{{ $course->courseNumber }}</td>
                                 <td data-label="Title">{{ $course->name }}</td>
                                 <td data-label="Credits">{{ $course->credits }}</td>
+                             <!--   <td data-label="Time">
+                                    @forelse ($sections[$course->id] ?? [] as $section)
+                                         {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
+                                    @empty
+                                        TBA
+                                    @endforelse
+                                </td> -->
                                 <td data-label="Prerequisites">
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
-                                        {{ $prereq->courseNumber }}@if (!$loop->last), @endif
+                                        @if (in_array($prereq->prereq_id, $plannedCourseIds))
+                                            <span class="plan-status plan-status--ok">{{ $prereq->courseNumber }}</span>
+                                        @else
+                                            <span class="plan-status plan-status--missing">{{ $prereq->courseNumber }}</span>
+                                        @endif
                                     @empty
-                                        None 
+                                        None
                                     @endforelse
                                 </td>
                                 <!-- When courses are offered -->
@@ -208,12 +220,21 @@
                 <div class="quarter-block">
                     <h3>{{ $quarter }} · {{ $courses->sum('credits') }} credits</h3>
 
+                    <!-- Schedule conflicts in this quarter -->
+                    @foreach ($conflicts[$quarter] ?? [] as $conflict)
+                        <p class="plan-status plan-status--missing">
+                            ⚠ {{ $conflict['first'] }} and {{ $conflict['second'] }} may meet at the same time
+                            ({{ \App\Support\ClassTime::range($conflict['start'], $conflict['end']) }}). Check the days when you register.
+                        </p>
+                    @endforeach
+
                     <table>
                         <thead>
                             <tr>
                                 <th>Course</th>
                                 <th>Title</th>
                                 <th>Credits</th>
+                              <!--  <th>Time</th> -->
                                 @unless ($locked)
                                     <th></th>
                                 @endunless
@@ -225,11 +246,47 @@
                                     <td data-label="Course">{{ $item->courseNumber }}</td>
                                     <td data-label="Title">{{ $item->name }}</td>
                                     <td data-label="Credits">{{ $item->credits }}</td>
+                                <!--    <td data-label="Time">
+                                        @php
+                                            preg_match('/^([a-z]+)/i', $quarter, $seasonMatch);
+                                            $season = strtolower($seasonMatch[1] ?? '');
+
+                                            $quarterSections = ($sections[$item->course_id] ?? collect())
+                                                ->filter(fn ($s) => $s->$season ?? false);
+                                        @endphp
+
+                                        @forelse ($quarterSections as $section)
+                                           {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
+                                        @empty
+                                            TBA
+                                        @endforelse
+                                    </td> -->
                                     @unless ($locked)
                                         <td data-label="Action">
                                             @php
+                                                // Latest quarter of this course's prerequisites
+                                                $afterOrder = $prerequisites->get($item->course_id, collect())
+                                                    ->map(fn ($prereq) => $plannedQuarterOf[$prereq->prereq_id] ?? null)
+                                                    ->filter()
+                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
+                                                    ->max() ?? 0;
+
+                                                // Earliest quarter of planned courses that need this one
+                                                $beforeOrder = $prerequisites
+                                                    ->flatten(1)
+                                                    ->where('prereq_id', $item->course_id)
+                                                    ->map(fn ($row) => $plannedQuarterOf[$row->course_id] ?? null)
+                                                    ->filter()
+                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
+                                                    ->min() ?? PHP_INT_MAX;
+
+                                                // Other quarters this course is offered, between those two
                                                 $otherTerms = $terms->get($item->course_id, collect())
-                                                    ->where('id', '!=', $item->term_id);
+                                                    ->where('id', '!=', $item->term_id)
+                                                    ->filter(function ($term) use ($afterOrder, $beforeOrder) {
+                                                        $order = \App\Support\Quarter::order($term->quarterYear);
+                                                        return $order > $afterOrder && $order < $beforeOrder;
+                                                    });
                                             @endphp
 
                                             <div class="plan-actions">

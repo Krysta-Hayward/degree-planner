@@ -151,6 +151,7 @@
                     @endforeach
                 @endforeach
 
+                {{ $catalog->links() }}
                 <table>
                     <thead>
                         <tr>

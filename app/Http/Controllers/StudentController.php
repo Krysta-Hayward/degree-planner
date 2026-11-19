@@ -29,7 +29,7 @@ class StudentController extends Controller
         $catalog = DB::table('courses')
             ->orderBy('courseNumber')
             ->select('id', 'courseNumber', 'name', 'credits')
-            ->get();
+            ->paginate(10);
 
         $courseIds = $catalog->pluck('id');
 

@@ -84,99 +84,105 @@
 
 
         document.addEventListener('DOMContentLoaded', function () {
-                const modal = document.getElementById('confirm-modal');
-                const title = document.getElementById('confirm-title');
-                const message = document.getElementById('confirm-message');
-                const cancel = document.getElementById('confirm-cancel');
-                const accept = document.getElementById('confirm-accept');
+            const modal = document.getElementById('confirm-modal');
+            const title = document.getElementById('confirm-title');
+            const message = document.getElementById('confirm-message');
+            const cancel = document.getElementById('confirm-cancel');
+            const accept = document.getElementById('confirm-accept');
 
-                let pendingForm = null;
-                let pendingSubmitter = null;
+            let pendingForm = null;
+            let pendingSubmitter = null;
 
-                // Display the confirmation modal.
-                function showConfirmation(form, button = null) {
-                    pendingForm = form;
-                    pendingSubmitter = button;
+            // Display the confirmation modal.
+            function showConfirmation(form, button = null) {
+                pendingForm = form;
+                pendingSubmitter = button;
 
-                    const settings = button || form;
+                const settings = button || form;
 
-                    title.textContent =
-                        settings.dataset.confirmTitle || 'Confirm Action';
+                title.textContent =
+                    settings.dataset.confirmTitle || 'Confirm Action';
 
-                    message.textContent =
-                        settings.dataset.confirm || form.dataset.confirm;
+                message.textContent =
+                    settings.dataset.confirm || form.dataset.confirm;
 
-                    accept.textContent =
-                        settings.dataset.confirmButton || 'Confirm';
+                accept.textContent =
+                    settings.dataset.confirmButton || 'Confirm';
 
-                    accept.classList.toggle(
-                        'confirm-delete',
-                        settings.dataset.confirmDanger !== 'false'
-                    );
+                accept.classList.toggle(
+                    'confirm-delete',
+                    settings.dataset.confirmDanger !== 'false'
+                );
 
-                    modal.showModal();
+                modal.showModal();
+            }
+
+            // Handle form submissions.
+            // Handle form submissions.
+            document.addEventListener('submit', function (event) {
+                const form = event.target;
+                const button = event.submitter;
+
+                // Check whether the form or submit button has confirmation settings.
+                if (!form.matches('[data-confirm]') && !button?.matches('[data-confirm]')) {
+                    return;
                 }
 
-                // Handle form submissions.
-                document.addEventListener('submit', function (event) {
-                    const form = event.target;
+                if (form.dataset.confirmed === 'true') {
+                    delete form.dataset.confirmed;
+                    return;
+                }
 
-                    if (!form.matches('[data-confirm]')) {
-                        return;
-                    }
+                event.preventDefault();
 
-                    if (form.dataset.confirmed === 'true') {
-                        delete form.dataset.confirmed;
-                        return;
-                    }
-
-                    event.preventDefault();
-
-                    showConfirmation(form, event.submitter);
-                });
-
-                // Handle buttons with their own confirmation messages.
-                document.addEventListener('click', function (event) {
-                    const button = event.target.closest('button[data-confirm]');
-
-                    if (!button || button.type === 'submit') {
-                        return;
-                    }
-
-                    event.preventDefault();
-
-                    showConfirmation(button.form, button);
-                });
-
-                // Cancel.
-                cancel.addEventListener('click', function () {
-                    modal.close();
-                    pendingForm = null;
-                    pendingSubmitter = null;
-                });
-
-                // Confirm.
-                accept.addEventListener('click', function () {
-                    if (!pendingForm) return;
-
-                    const form = pendingForm;
-                    const submitter = pendingSubmitter;
-
-                    pendingForm = null;
-                    pendingSubmitter = null;
-
-                    form.dataset.confirmed = 'true';
-                    modal.close();
-
-                    form.requestSubmit(submitter || undefined);
-                });
-
-                // Escape key.
-                modal.addEventListener('close', function () {
-                    pendingForm = null;
-                    pendingSubmitter = null;
-                });
+                showConfirmation(
+                    form,
+                    button?.matches('[data-confirm]') ? button : null
+                );
             });
+
+            // Handle buttons with their own confirmation messages.
+            document.addEventListener('click', function (event) {
+                const button = event.target.closest('button[data-confirm]');
+
+                if (!button || button.type === 'submit') {
+                    return;
+                }
+
+                event.preventDefault();
+
+                showConfirmation(button.form, button);
+            });
+
+            // Cancel.
+            cancel.addEventListener('click', function () {
+                modal.close();
+                pendingForm = null;
+                pendingSubmitter = null;
+            });
+
+            // Confirm.
+            accept.addEventListener('click', function () {
+                if (!pendingForm) return;
+
+                const form = pendingForm;
+                const submitter = pendingSubmitter;
+
+                pendingForm = null;
+                pendingSubmitter = null;
+
+                form.dataset.confirmed = 'true';
+                modal.close();
+
+                form.requestSubmit(submitter || undefined);
+            });
+
+            // Escape key.
+            modal.addEventListener('close', function () {
+                pendingForm = null;
+                pendingSubmitter = null;
+            });
+        });
     </script>
 
     <dialog id="confirm-modal" class="confirm-modal">

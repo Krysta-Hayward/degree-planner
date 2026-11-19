@@ -942,8 +942,8 @@ table.programs-form-top-table td {
 }
 
 .confirm-cancel {
-    background: var(--bg, #eee);
-    color: var(--text, #222);
+    background: var(--bg, #eee) !important;
+    color: var(--text, #222) !important;
 }
 
 .confirm-delete {

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->integer('student');
             $table->integer('course');
+            $table->foreignId('term_id')->nullable();
 
             $table->foreign('student')
                 ->references('id')
@@ -25,6 +26,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('courses')
                 ->onUpdate('cascade');
+            $table->foreign('term_id')
+                ->references('id')
+                ->on('terms')
+                ->onUpdate('cascade')
+                ->nullOnDelete();
+                
         });
     }
 

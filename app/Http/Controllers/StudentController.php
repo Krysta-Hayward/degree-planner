@@ -133,10 +133,24 @@ class StudentController extends Controller
             }
         }
 
-        $enrolled = Course::whereIn(
-            'id',
-            Enroll::where('student', $user->id)->pluck('course')
-        )->orderBy('courseNumber')->get();
+        // Get this student's enrolled courses.
+        $enrolled = Enroll::with('term')
+            ->where('student', $user->id)
+            ->orderBy('id')
+            ->get();
+
+        // Attach available terms and classroom schedules to each enrolled course.
+        foreach ($enrolled as $course) {
+            $course->setAttribute(
+                'availableTerms',
+                $terms->get($course->id, collect())
+            );
+
+            $course->setAttribute(
+                'classroomSchedules',
+                $sections->get($course->id, collect())
+            );
+        }
 
         return view('student.dashboard', [
             'user' => $user,
@@ -385,27 +399,57 @@ class StudentController extends Controller
         return redirect(route('student.dashboard').'#student-top');
     }
 
+
     /**
-     * Enroll the logged-in student in a course.
+     * Enroll the logged-in student in a course for a selected term.
      */
     public function enroll(Request $request, Classroom $classroom): RedirectResponse
     {
-        // Get the course associated with this classroom.
         $course = $classroom->courseDetails;
 
-        abort_if(! $course, 404);
+        abort_if(!$course, 404);
 
-        // Get courses the student is already enrolled in
-        $enrolledCourses = Enroll::where('student', auth()->id())
+        // Validate the selected term.
+        $data = $request->validate([
+            'term' => ['required', 'integer', 'exists:terms,id'],
+        ]);
+
+        // Make sure the selected term belongs to this classroom's course.
+        $term = Term::where('id', $data['term'])
+            ->where('course', $course->id)
+            ->first();
+
+        if (!$term) {
+            return redirect()->back()->with(
+                'error',
+                'The selected term is not available for this course.'
+            );
+        }
+
+        // Prevent duplicate enrollment in the same course.
+        $existingEnrollment = Enroll::where('student', $request->user()->id)
+            ->where('course', $course->id)
+            ->first();
+
+        if ($existingEnrollment) {
+            return redirect()
+                ->route('class-details', ['classroom' => $classroom->id])
+                ->with('error', 'You are already enrolled in this course.');
+        }
+
+        // Check for overlapping classroom schedules.
+        $enrolledCourses = Enroll::where('student', $request->user()->id)
             ->pluck('course');
 
-        // Find classroom schedules for those courses
         $existingClassrooms = Classroom::whereIn('course', $enrolledCourses)
             ->get();
 
-        // Check for overlapping schedules
         foreach ($existingClassrooms as $existingClass) {
             if (
+                $classroom->timeStart &&
+                $classroom->timeEnd &&
+                $existingClass->timeStart &&
+                $existingClass->timeEnd &&
                 $classroom->timeStart < $existingClass->timeEnd &&
                 $classroom->timeEnd > $existingClass->timeStart
             ) {
@@ -416,21 +460,16 @@ class StudentController extends Controller
             }
         }
 
-        // Create enrollment if the student is not already enrolled.
-        $enrollment = Enroll::firstOrCreate([
+        // Save the course and selected term.
+        Enroll::create([
             'student' => $request->user()->id,
             'course' => $course->id,
+            'term_id' => $term->id,
         ]);
-
-        // Prevent duplicate enrollment.
-        if (! $enrollment->wasRecentlyCreated) {
-            return redirect()
-                ->route('class-details', ['classroom' => $classroom->id])
-                ->with('error', 'You are already enrolled in this course.');
-        }
 
         return redirect()
             ->route('class-details', ['classroom' => $classroom->id])
-            ->with('success', 'Successfully enrolled in '.$course->courseNumber.'.');
+            ->with('success', 'Successfully enrolled in ' . $course->courseNumber . ' for ' . $term->quarterYear . '.');
     }
+
 }

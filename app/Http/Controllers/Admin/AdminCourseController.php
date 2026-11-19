@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\Term;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
 
 class AdminCourseController extends Controller
 {
@@ -18,8 +20,10 @@ class AdminCourseController extends Controller
     {
         $this->authorize('viewAny', Course::class);
 
-        $courses = Course::orderBy('courseNumber')->paginate(25);
-
+        $courses = Course::with('terms')
+            ->orderBy('courseNumber')
+            ->paginate(25);
+            
         return view('admin.courses.courses', compact('courses'));
     }
 
@@ -27,7 +31,10 @@ class AdminCourseController extends Controller
     {
         $this->authorize('create', Course::class);
 
-        return view('admin.courses.courses-create');
+        return view('admin.courses.courses-create', [
+            'availableQuarterYears' => $this->availableQuarterYears(),
+            'selectedQuarterYears' => [],
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -45,13 +52,31 @@ class AdminCourseController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],
                 'description' => ['nullable', 'string', 'max:2000'],
+                'quarterYears' => ['nullable', 'array'],
+                'quarterYears.*' => [
+                    'string',
+                    Rule::in($this->availableQuarterYears()),
+                ],
             ],
             [
                 'courseNumber.regex' => 'Course number must be in the format AAA 123 or AAA&123 (e.g., CIS 272 or CMST&210).',
             ]
         );
 
-        Course::create($validated);
+        $selectedTerms = $validated['quarterYears'] ?? [];
+
+        unset($validated['quarterYears']);
+
+        DB::transaction(function () use ($validated, $selectedTerms) {
+            $course = Course::create($validated);
+
+            foreach ($selectedTerms as $quarterYear) {
+                $term = new Term();
+                $term->course = $course->id;
+                $term->quarterYear = $quarterYear;
+                $term->save();
+            }
+        });
 
         return redirect()
             ->route('admin.courses.index')
@@ -62,7 +87,15 @@ class AdminCourseController extends Controller
     {
         $this->authorize('update', $course);
 
-        return view('admin.courses.courses-edit', compact('course'));
+        return view('admin.courses.courses-edit', [
+            'course' => $course,
+            'availableQuarterYears' => $this->availableQuarterYears(),
+            'selectedQuarterYears' => Term::where('course', $course->id)
+                ->pluck('quarterYear')
+                ->unique()
+                ->values()
+                ->all(),
+        ]);
     }
 
     public function update(Request $request, Course $course): RedirectResponse
@@ -75,22 +108,74 @@ class AdminCourseController extends Controller
                     'required',
                     'string',
                     'regex:/^(?:[A-Z]{3} [0-9]{3}|[A-Z]{4}&[0-9]{3})$/',
-                    'unique:courses,courseNumber,'.$course->id,
+                    'unique:courses,courseNumber,' . $course->id,
                 ],
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],
                 'description' => ['nullable', 'string', 'max:2000'],
+                'quarterYears' => ['nullable', 'array'],
+                'quarterYears.*' => [
+                    'string',
+                    Rule::in($this->availableQuarterYears()),
+                ],
             ],
             [
-                'courseNumber.regex' => 'Course number must be in the format AAA 123 or AAA&123 (e.g., CIS 272 or CMST&210.',
+                'courseNumber.regex' => 'Course number must be in the format AAA 123 or AAA&123 (e.g., CIS 272 or CMST&210).',
             ]
         );
 
-        $course->update($validated);
+        $selectedTerms = array_unique($validated['quarterYears'] ?? []);
 
-        return redirect()
+        unset($validated['quarterYears']);
+
+        $preservedTerms = [];
+
+        DB::transaction(function () use ($course, $validated, $selectedTerms, &$preservedTerms) {
+            $course->update($validated);
+
+            $existingTerms = Term::where('course', $course->id)->get();
+
+            // Create newly selected terms that do not already exist.
+            foreach ($selectedTerms as $quarterYear) {
+                if (!$existingTerms->contains('quarterYear', $quarterYear)) {
+                    $term = new Term();
+                    $term->course = $course->id;
+                    $term->quarterYear = $quarterYear;
+                    $term->save();
+                }
+            }
+
+            // Remove terms that were unchecked, unless students have plans using them.
+            foreach ($existingTerms as $term) {
+                if (in_array($term->quarterYear, $selectedTerms)) {
+                    continue;
+                }
+
+                $isUsed = DB::table('plans')
+                    ->where('class', $term->id)
+                    ->exists();
+
+                if ($isUsed) {
+                    $preservedTerms[] = $term->quarterYear;
+                } else {
+                    $term->delete();
+                }
+            }
+        });
+
+        $redirect = redirect()
             ->route('admin.courses.index')
             ->with('success', 'Course updated successfully.');
+
+        if (!empty($preservedTerms)) {
+            $redirect->with(
+                'error',
+                'Some terms could not be removed because students have them in their degree plans: '
+                . implode(', ', array_unique($preservedTerms))
+            );
+        }
+
+        return $redirect;
     }
 
     public function destroy(Course $course): RedirectResponse
@@ -117,5 +202,21 @@ class AdminCourseController extends Controller
         return redirect()
             ->route('admin.courses.index')
             ->with('success', 'Course deleted successfully.');
+    }
+
+    private function availableQuarterYears(): array
+    {
+        $seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
+        $years = range((int) date('Y'), (int) date('Y') + 4);
+
+        $options = [];
+
+        foreach ($years as $year) {
+            foreach ($seasons as $season) {
+                $options[] = "$season $year";
+            }
+        }
+
+        return $options;
     }
 }

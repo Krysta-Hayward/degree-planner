@@ -30,8 +30,8 @@ class Plan extends Model
             Term::class,
             'id',
             'id',
-            'class',  
-            'course'   
+            'class',
+            'course'
         );
     }
 

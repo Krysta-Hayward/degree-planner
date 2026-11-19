@@ -87,7 +87,7 @@
 
                                 <td>
                                     @if ($classroom->timeStart && $classroom->timeEnd)
-                                        {{ \App\Support\ClassTime::range($classroom->timeStart, $classroom->timeEnd) }}
+                                        {{ \App\Support\ClassTime::range((int)$classroom->timeStart, (int)$classroom->timeEnd) }}
                                     @else
                                         Not Scheduled
                                     @endif

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
+use App\Models\Course;
 use App\Models\Enroll;
 use App\Models\Plan;
 use App\Models\Program;
 use App\Models\ProgramMap;
 use App\Models\Term;
-use App\Models\Course;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -399,7 +399,6 @@ class StudentController extends Controller
         return redirect(route('student.dashboard').'#student-top');
     }
 
-
     /**
      * Enroll the logged-in student in a course for a selected term.
      */
@@ -407,7 +406,7 @@ class StudentController extends Controller
     {
         $course = $classroom->courseDetails;
 
-        abort_if(!$course, 404);
+        abort_if(! $course, 404);
 
         // Validate the selected term.
         $data = $request->validate([
@@ -419,7 +418,7 @@ class StudentController extends Controller
             ->where('course', $course->id)
             ->first();
 
-        if (!$term) {
+        if (! $term) {
             return redirect()->back()->with(
                 'error',
                 'The selected term is not available for this course.'
@@ -468,7 +467,7 @@ class StudentController extends Controller
             ) {
                 return redirect()->back()->with(
                     'error',
-                    'You cannot enroll in this class because it overlaps with another class in your schedule for ' . $selectedQuarter . '.'
+                    'You cannot enroll in this class because it overlaps with another class in your schedule for '.$selectedQuarter.'.'
                 );
             }
         }
@@ -486,7 +485,7 @@ class StudentController extends Controller
         $programMap = ProgramMap::where('student', $studentId)->first();
 
         // Only update the program map if it is still editable.
-        if (!$programMap || $programMap->isEditable()) {
+        if (! $programMap || $programMap->isEditable()) {
 
             // Find this course's existing program map entry, if one exists.
             $existingPlan = Plan::where('student', $studentId)
@@ -510,10 +509,8 @@ class StudentController extends Controller
             }
         }
 
-
         return redirect()
             ->route('class-details', ['classroom' => $classroom->id])
-            ->with('success', 'Successfully enrolled in ' . $course->courseNumber . ' for ' . $term->quarterYear . '.');
+            ->with('success', 'Successfully enrolled in '.$course->courseNumber.' for '.$term->quarterYear.'.');
     }
-
 }

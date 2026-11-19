@@ -9,8 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class AdminCourseController extends Controller
 {
@@ -23,7 +23,7 @@ class AdminCourseController extends Controller
         $courses = Course::with('terms')
             ->orderBy('courseNumber')
             ->paginate(25);
-            
+
         return view('admin.courses.courses', compact('courses'));
     }
 
@@ -71,7 +71,7 @@ class AdminCourseController extends Controller
             $course = Course::create($validated);
 
             foreach ($selectedTerms as $quarterYear) {
-                $term = new Term();
+                $term = new Term;
                 $term->course = $course->id;
                 $term->quarterYear = $quarterYear;
                 $term->save();
@@ -108,7 +108,7 @@ class AdminCourseController extends Controller
                     'required',
                     'string',
                     'regex:/^(?:[A-Z]{3} [0-9]{3}|[A-Z]{4}&[0-9]{3})$/',
-                    'unique:courses,courseNumber,' . $course->id,
+                    'unique:courses,courseNumber,'.$course->id,
                 ],
                 'name' => ['required', 'string', 'max:255'],
                 'credits' => ['required', 'numeric', 'min:0', 'max:5'],
@@ -137,8 +137,8 @@ class AdminCourseController extends Controller
 
             // Create newly selected terms that do not already exist.
             foreach ($selectedTerms as $quarterYear) {
-                if (!$existingTerms->contains('quarterYear', $quarterYear)) {
-                    $term = new Term();
+                if (! $existingTerms->contains('quarterYear', $quarterYear)) {
+                    $term = new Term;
                     $term->course = $course->id;
                     $term->quarterYear = $quarterYear;
                     $term->save();
@@ -167,11 +167,11 @@ class AdminCourseController extends Controller
             ->route('admin.courses.index')
             ->with('success', 'Course updated successfully.');
 
-        if (!empty($preservedTerms)) {
+        if (! empty($preservedTerms)) {
             $redirect->with(
                 'error',
                 'Some terms could not be removed because students have them in their degree plans: '
-                . implode(', ', array_unique($preservedTerms))
+                .implode(', ', array_unique($preservedTerms))
             );
         }
 

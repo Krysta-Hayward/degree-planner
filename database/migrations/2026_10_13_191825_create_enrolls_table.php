@@ -31,7 +31,7 @@ return new class extends Migration
                 ->on('terms')
                 ->onUpdate('cascade')
                 ->nullOnDelete();
-                
+
         });
     }
 

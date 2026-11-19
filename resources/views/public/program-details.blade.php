@@ -16,6 +16,7 @@
                     <th>Course Number</th>
                     <th>Course Name</th>
                     <th>Credits</th>
+                    <th>Terms Offered</th>
                 </tr>
             </thead>
 
@@ -24,20 +25,27 @@
                     @if ($row->courseDetails)
                         <tr>
                             <td><a href="{{ route('public.courses.show', $row->courseDetails->id) }}">
-                                {{ $row->courseDetails->courseNumber }}
-                            </a></td>
+                                    {{ $row->courseDetails->courseNumber }}
+                                </a></td>
                             <td>{{ $row->courseDetails->name }}</td>
                             <td>{{ $row->courseDetails->credits }}</td>
+                            <td>
+                                @forelse ($row->courseDetails->terms as $term)
+                                    {{ $term->quarterYear }}@if (!$loop->last), @endif
+                                @empty
+                                    Not scheduled
+                                @endforelse
+                            </td>
                         </tr>
                     @endif
                 @empty
                     <tr>
-                        <td colspan="3">No required courses found.</td>
+                        <td colspan="4">No required courses found.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
 
-            <a href="{{ route('public.programs') }}" class="button-links">Back to Programs</a>
+        <a href="{{ route('public.programs') }}" class="button-links">Back to Programs</a>
     </div>
 @endsection

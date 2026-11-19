@@ -90,7 +90,9 @@
                                     </a>
 
                                     <form method="POST" action="{{ route('admin.classrooms.destroy', $classroom) }}"
-                                        onsubmit="return confirm('Are you sure you want to delete this classroom?');"
+                                        data-confirm="Are you sure you want to delete this classroom?"
+                                        data-confirm-title="Delete Classroom"
+                                        data-confirm-button="Delete"
                                         >
                                         @csrf
                                         @method('DELETE')

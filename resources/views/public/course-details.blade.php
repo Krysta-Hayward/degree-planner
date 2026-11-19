@@ -35,6 +35,16 @@
                         @endforelse
                     </td>
                 </tr>
+                <tr>
+                    <th>Terms Offered</th>
+                    <td>
+                        @forelse ($course->terms as $term)
+                            {{ $term->quarterYear }}@if (!$loop->last), @endif
+                        @empty
+                            Not scheduled
+                        @endforelse
+                    </td>
+                </tr>
             </tbody>
         </table>
         <table>
@@ -43,7 +53,7 @@
                     <th>Course Description</th>
                 </tr>
                 <tr>
-                    <td>{{ $course->description }}</td>
+                    <td>{{ $course->description ?: 'No description available.' }}</td>
                 </tr>
             </tbody>
         </table>

@@ -18,6 +18,7 @@
                     <th>Course Number</th>
                     <th>Course Name</th>
                     <th>Credits</th>
+                    <th>Details</th>
                 </tr>
             </thead>
 
@@ -31,6 +32,11 @@
                         </td>
                         <td>{{ $prereq->prerequisiteDetails->name }}</td>
                         <td>{{ $prereq->prerequisiteDetails->credits }}</td>
+                        <td>
+                            <a href="{{ route('public.courses.show', $course->id) }}">
+                                View Details
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

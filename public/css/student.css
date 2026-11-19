@@ -25,15 +25,22 @@
 }
 
 .student-page .notice {
+    text-align: center;
     padding: 10px;
-    background: var(--notice-bg, #e6f4ea);
-    border: 1px solid var(--notice-border, #b7dfc2);
+    margin: 15px 0;
+    max-width: 80%;
+    background: var(--alert-succes-bg, #e6f4ea);
+    border: 1px solid var(--alert-succes-border, #b7dfc2);
+    border-radius: 5px;
 }
 
 .student-page .error {
+    text-align: center;
     padding: 10px;
-    background: var(--error-bg, #fdecea);
-    border: 1px solid var(--error-border, #f5c2bd);
+    margin: 15px 0;
+    max-width: 80%;
+    background: var(--alert-error-bg, #fdecea);
+    border: 1px solid var(--alert-error-border, #f5c2bd);
 }
 
 /*Term Column*/

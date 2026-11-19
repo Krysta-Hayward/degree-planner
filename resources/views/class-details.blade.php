@@ -85,12 +85,16 @@
             <tbody>
                 <tr>
                     <th>Start Time</th>
-                    <td>{{ $classroom->timeStart ?? 'Not Scheduled' }}</td>
+                    <td>{{ $classroom->timeStart
+                            ? date('g:i A', strtotime($classroom->timeStart))
+                            : 'Not Scheduled' }}</td>
                 </tr>
 
                 <tr>
                     <th>End Time</th>
-                    <td>{{ $classroom->timeEnd ?? 'Not Scheduled' }}</td>
+                    <td>{{ $classroom->timeEnd
+                            ? date('g:i A', strtotime($classroom->timeEnd))
+                            : 'Not Scheduled' }}</td>
                 </tr>
             </tbody>
         </table>

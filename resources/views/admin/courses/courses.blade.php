@@ -53,8 +53,8 @@
                                 <td>{{ $course->credits }}</td>
                                 <td><a href="{{  route('admin.courses.edit', $course) }}" class="button-links">Edit</a>
                                     <form method="POST" action="{{ route('admin.courses.destroy', $course) }}"
-                                        onsubmit="return confirm('Are you sure you want to delete this course?');"
-                                        style="display: inline;">
+                                        data-confirm="Are you sure you want to delete this course?"
+                                        data-confirm-title="Delete Course" data-confirm-button="Delete" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
 

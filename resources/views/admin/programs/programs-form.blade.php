@@ -10,8 +10,6 @@
 $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (int) $id);
 @endphp
 
-<form method="POST" action="{{ $action }}" class="program-form">
-    @csrf
     @if ($method === 'PUT')
         @method('PUT')
     @endif
@@ -93,12 +91,12 @@ $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (
         <button type="submit" class="button-links-primary">{{ $submitLabel }}</button>
         <a href="{{ route('admin.programs.index') }}" class="button-links-danger">Cancel</a>
     </div>
-</form>
+
 <script>
     document.getElementById('course-filter').addEventListener('input', function () {
         const term = this.value.trim().toLowerCase();
 
-        document.querySelectorAll('.program-courses tbody tr').forEach(function (row) {
+        document.querySelectorAll('.programs-form-bottom-table tbody tr').forEach(function (row) {
             row.hidden = term !== '' && !row.dataset.search.includes(term);
         });
     });

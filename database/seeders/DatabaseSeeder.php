@@ -83,9 +83,9 @@ class DatabaseSeeder extends Seeder
         // AAS-SoftDev Prereq
         $this->call(SoftDevPrereqSeeder::class);
 
-        // SoftDev Classroom 
+        // SoftDev Classroom
         $this->call(SoftDevClassroomSeeder::class);
-        
+
         // Program maps for students with plans, until the Submit button exists
         $this->call(ProgramMapSeeder::class);
     }

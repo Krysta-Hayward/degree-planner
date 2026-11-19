@@ -8,8 +8,8 @@ use App\Models\Term;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class AdminTermController extends Controller
 {
@@ -97,11 +97,11 @@ class AdminTermController extends Controller
         $isPlanned = DB::table('plans')
             ->where('class', $term->id)
             ->exists();
-        
+
         if ($isPlanned) {
             return redirect()
-            ->route('admin.terms.index')
-            ->with('error', 'This term cannot be deleted because it is being used in student plans.');
+                ->route('admin.terms.index')
+                ->with('error', 'This term cannot be deleted because it is being used in student plans.');
         }
 
         $term->delete();

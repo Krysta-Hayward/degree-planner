@@ -9,6 +9,7 @@ class SoftDevTermSeeder extends Seeder
 {
     // Plan from fall of the first year through spring of the last year
     private int $firstYear = 2027;
+
     private int $lastYear = 2032;
 
     // Schedules the Software Development courses using the offering rules in their descriptions
@@ -28,15 +29,15 @@ class SoftDevTermSeeder extends Seeder
             'CIS 233' => 'springEvenFallWinterOdd',
             'CIS 259' => 'springEvenFallWinterOdd',
 
-            'CIS 107'  => 'every',
-            'CIS 108'  => 'every',
-            'CIS 111'  => 'every',
-            'CIS 146'  => 'every',
-            'CIS 126'  => 'every',
-            'CIS 130'  => 'every',
+            'CIS 107' => 'every',
+            'CIS 108' => 'every',
+            'CIS 111' => 'every',
+            'CIS 146' => 'every',
+            'CIS 126' => 'every',
+            'CIS 130' => 'every',
             'CMST&210' => 'every',
             'ENGL&101' => 'every',
-            'CIS 272'  => 'every',
+            'CIS 272' => 'every',
         ];
 
         foreach ($rules as $courseNumber => $rule) {
@@ -85,5 +86,4 @@ class SoftDevTermSeeder extends Seeder
             default => true,
         };
     }
-}
 }

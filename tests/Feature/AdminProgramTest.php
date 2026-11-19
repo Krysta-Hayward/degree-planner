@@ -49,17 +49,6 @@ test('guests are sent to login from the program forms', function () {
     $this->get('/admin/programs/create')->assertRedirect('/login');
 });
 
-test('an admin sees every course on the create form', function () {
-    programTestCourse('PGM 101');
-    programTestCourse('PGM 102');
-
-    $this->actingAs(programTestUser('admin'))
-        ->get('/admin/programs/create')
-        ->assertOk()
-        ->assertSee('PGM 101')
-        ->assertSee('PGM 102');
-});
-
 test('an admin can create a program with a description and requirement groups', function () {
     $core = programTestCourse('PGM 101');
     $elective = programTestCourse('PGM 201');

@@ -467,6 +467,37 @@ class StudentController extends Controller
             'term_id' => $term->id,
         ]);
 
+        // Automatically update the student's program map.
+        $studentId = $request->user()->id;
+
+        $programMap = ProgramMap::where('student', $studentId)->first();
+
+        // Only update the program map if it is still editable.
+        if (!$programMap || $programMap->isEditable()) {
+
+            // Find this course's existing program map entry, if one exists.
+            $existingPlan = Plan::where('student', $studentId)
+                ->whereIn(
+                    'class',
+                    Term::where('course', $course->id)->select('id')
+                )
+                ->first();
+
+            if ($existingPlan) {
+                // Move the existing course to the selected term.
+                $existingPlan->update([
+                    'class' => $term->id,
+                ]);
+            } else {
+                // Add the course to the program map.
+                Plan::create([
+                    'student' => $studentId,
+                    'class' => $term->id,
+                ]);
+            }
+        }
+
+
         return redirect()
             ->route('class-details', ['classroom' => $classroom->id])
             ->with('success', 'Successfully enrolled in ' . $course->courseNumber . ' for ' . $term->quarterYear . '.');

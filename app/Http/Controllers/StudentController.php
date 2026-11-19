@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\Program;
 use App\Models\ProgramMap;
 use App\Models\Term;
+use App\Models\Course;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -132,6 +133,11 @@ class StudentController extends Controller
             }
         }
 
+        $enrolled = Course::whereIn(
+            'id',
+            Enroll::where('student', $user->id)->pluck('course')
+        )->orderBy('courseNumber')->get();
+
         return view('student.dashboard', [
             'user' => $user,
             'programs' => $programs,
@@ -145,6 +151,7 @@ class StudentController extends Controller
             'programMap' => $programMap,
             'sections' => $sections,
             'conflicts' => $conflicts,
+            'enrolled' => $enrolled,
         ]);
     }
 
@@ -387,6 +394,27 @@ class StudentController extends Controller
         $course = $classroom->courseDetails;
 
         abort_if(! $course, 404);
+
+        // Get courses the student is already enrolled in
+        $enrolledCourses = Enroll::where('student', auth()->id())
+            ->pluck('course');
+
+        // Find classroom schedules for those courses
+        $existingClassrooms = Classroom::whereIn('course', $enrolledCourses)
+            ->get();
+
+        // Check for overlapping schedules
+        foreach ($existingClassrooms as $existingClass) {
+            if (
+                $classroom->timeStart < $existingClass->timeEnd &&
+                $classroom->timeEnd > $existingClass->timeStart
+            ) {
+                return redirect()->back()->with(
+                    'error',
+                    'You cannot enroll in this class because it overlaps with another class in your schedule.'
+                );
+            }
+        }
 
         // Create enrollment if the student is not already enrolled.
         $enrollment = Enroll::firstOrCreate([

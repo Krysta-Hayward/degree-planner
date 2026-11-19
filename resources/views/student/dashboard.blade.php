@@ -333,6 +333,46 @@
             </div>
         </section>
 
+        <section>
+            <h2>My Enrolled Courses</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Title</th>
+                        <th>Credits</th>
+                        <th>Prerequisites</th>
+                        <th>Term</th>
+                        <th>Times</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($enrolled as $course)
+                        <tr>
+                            <td>{{ $course->courseNumber }}</td>
+                            <td>{{ $course->name }}</td>
+                            <td>{{ $course->credits }}</td>
+                            <td>{{ $prerequisites->get($course->id, collect())->pluck('courseNumber')->join(', ') ?: 'None' }}
+                            </td>
+                            <td>{{ $course->enrolledTerm ?? 'Not specified' }}</td>
+                            <td>@if ($course->timeStart !== null && $course->timeEnd !== null)
+                                {{ \App\Support\ClassTime::range($course->timeStart, $course->timeEnd) }}
+                            @else
+                                    Not scheduled
+                                @endif
+                            </td>
+
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3">You are not enrolled in any courses.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </section>
+
         <script>
             // Start at the top after saving, adding or removing.
             if ('scrollRestoration' in history) {

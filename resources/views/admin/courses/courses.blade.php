@@ -41,6 +41,7 @@
                             <th>Course Number</th>
                             <th>Course Name</th>
                             <th>Credits</th>
+                            <th>Terms</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -51,10 +52,17 @@
                                 <td>{{ $course->courseNumber }}</td>
                                 <td>{{ $course->name }}</td>
                                 <td>{{ $course->credits }}</td>
+                                <td>
+                                    @forelse ($course->terms as $term)
+                                        <span>{{ $term->quarterYear }}</span>@if (!$loop->last), @endif
+                                    @empty
+                                        None
+                                    @endforelse
+                                </td>
                                 <td><a href="{{  route('admin.courses.edit', $course) }}" class="button-links">Edit</a>
                                     <form method="POST" action="{{ route('admin.courses.destroy', $course) }}"
-                                        onsubmit="return confirm('Are you sure you want to delete this course?');"
-                                        style="display: inline;">
+                                        data-confirm="Are you sure you want to delete this course?"
+                                        data-confirm-title="Delete Course" data-confirm-button="Delete" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
 

@@ -26,23 +26,22 @@
             <h2>My Degree Program</h2>
 
             @if ($user->program)
-                <!-- Program chosen: show it, with a way to change it -->
                 <p>Selected program: <strong>{{ $user->program }}</strong></p>
 
                 @unless ($locked)
                     <form method="POST" action="{{ route('student.program.clear') }}" class="inline-form">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" onclick="return confirm('Changing your program will remove every course from your program map. Continue?')">Change Program</button>
+                        <button type="submit"
+                            data-confirm="Changing your program will remove every course from your program map. Continue?"
+                            data-confirm-title="Change Program" data-confirm-button="Change Program">
+                            Change Program
+                        </button>
                     </form>
                 @endunless
             @else
-                <!-- Missing prerequisites: say what to add first -->
                 <p>You have not picked a program yet.</p>
 
-                <form method="POST" action="{{ route('student.program.select') }}">
-
-                <!-- No program: let the student choose one -->
                 <form method="POST" action="{{ route('student.program.select') }}">
                     @csrf
                     <label for="program">Choose your program</label>
@@ -55,19 +54,21 @@
                     <button type="submit" class="button-links">Save Program</button>
                 </form>
             @endif
-        </section> 
-        
+        </section>
+
         <!-- Required Courses -->
         @if ($user->program)
             <section>
                 <h2>Required Courses</h2>
 
-                 <!-- Required courses that arnt planned  -->
                 @php
-                    $remaining = $requirements->reject(fn ($course) => in_array($course->id, $plannedCourseIds));
+                    $remaining = $requirements->reject(fn($course) => in_array($course->id, $plannedCourseIds));
                 @endphp
 
-                <p>{{ $requirements->count() - $remaining->count() }} of {{ $requirements->count() }} required courses planned</p>
+                <p>
+                    {{ $requirements->count() - $remaining->count() }} of
+                    {{ $requirements->count() }} required courses planned
+                </p>
 
                 <table>
                     <thead>
@@ -75,7 +76,6 @@
                             <th>Course</th>
                             <th>Title</th>
                             <th>Credits</th>
-                           <!-- <th>Time</th> -->
                             <th>Prerequisites</th>
                             <th>Offered</th>
                         </tr>
@@ -86,13 +86,6 @@
                                 <td data-label="Course">{{ $course->courseNumber }}</td>
                                 <td data-label="Title">{{ $course->name }}</td>
                                 <td data-label="Credits">{{ $course->credits }}</td>
-                             <!--   <td data-label="Time">
-                                    @forelse ($sections[$course->id] ?? [] as $section)
-                                         {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
-                                    @empty
-                                        TBA
-                                    @endforelse
-                                </td> -->
                                 <td data-label="Prerequisites">
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
                                         @if (in_array($prereq->prereq_id, $plannedCourseIds))
@@ -104,25 +97,15 @@
                                         None
                                     @endforelse
                                 </td>
-                                <!-- When courses are offered -->
                                 <td data-label="Offered">
                                     @php
                                         $courseTerms = $terms->get($course->id, collect());
-
-                                        $missing = $prerequisites->get($course->id, collect())
-                                            ->reject(fn ($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
-                                            ->pluck('courseNumber');
                                     @endphp
 
-                                    <!-- Not offered in any quarter -->
                                     @if ($courseTerms->isEmpty())
                                         Not scheduled yet
-
-                                    <!-- Plan locked: just list the quarters -->
                                     @elseif ($locked)
                                         {{ $courseTerms->pluck('quarterYear')->join(', ') }}
-
-                                    <!-- Can be added: pick a quarter -->
                                     @else
                                         <form method="POST" action="{{ route('student.plan.add') }}" class="plan-actions__move">
                                             @csrf
@@ -138,7 +121,7 @@
                             </tr>
                         @empty
                             <tr>
-                               <td colspan="5">
+                                <td colspan="5">
                                     @if ($requirements->isEmpty())
                                         No courses are listed for this program yet.
                                     @else
@@ -151,12 +134,24 @@
                 </table>
             </section>
         @endif
-        
-        <!-- Program Courses -->
+
+        <!-- All Courses -->
         @unless ($user->program)
             <section>
                 <h2>All Courses</h2>
 
+                <!-- Schedule conflicts -->
+                @foreach (($conflicts ?? []) as $quarterConflicts)
+                    @foreach ($quarterConflicts as $conflict)
+                        <p class="plan-status plan-status--missing">
+                            ⚠ {{ $conflict['first'] }} and {{ $conflict['second'] }} may meet at the same time
+                            ({{ \App\Support\ClassTime::range($conflict['start'], $conflict['end']) }}).
+                            Check the days when you register.
+                        </p>
+                    @endforeach
+                @endforeach
+
+                {{ $catalog->links() }}
                 <table>
                     <thead>
                         <tr>
@@ -164,7 +159,7 @@
                             <th>Title</th>
                             <th>Credits</th>
                             <th>Prerequisites</th>
-                            <th>Terms Offered</th>
+                            <th>Offered</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -198,11 +193,10 @@
             </section>
         @endunless
 
-        <!--My Program Map-->
+        <!-- My Program Map -->
         <section>
-           <h2>My Program Map</h2>
+            <h2>My Program Map</h2>
 
-            <!-- Sort quarters in the order they happen: fall2026 before winter2027 -->
             @php
                 $quarterOrder = function ($quarter) {
                     $seasons = ['winter' => 1, 'spring' => 2, 'summer' => 3, 'fall' => 4];
@@ -213,20 +207,12 @@
 
                 $plannedByQuarter = $planned
                     ->groupBy('quarterYear')
-                    ->sortBy(fn ($courses, $quarter) => $quarterOrder($quarter));
+                    ->sortBy(fn($courses, $quarter) => $quarterOrder($quarter));
             @endphp
 
             @forelse ($plannedByQuarter as $quarter => $courses)
                 <div class="quarter-block">
                     <h3>{{ $quarter }} · {{ $courses->sum('credits') }} credits</h3>
-
-                    <!-- Schedule conflicts in this quarter -->
-                    @foreach ($conflicts[$quarter] ?? [] as $conflict)
-                        <p class="plan-status plan-status--missing">
-                            ⚠ {{ $conflict['first'] }} and {{ $conflict['second'] }} may meet at the same time
-                            ({{ \App\Support\ClassTime::range($conflict['start'], $conflict['end']) }}). Check the days when you register.
-                        </p>
-                    @endforeach
 
                     <table>
                         <thead>
@@ -234,7 +220,7 @@
                                 <th>Course</th>
                                 <th>Title</th>
                                 <th>Credits</th>
-                              <!--  <th>Time</th> -->
+                                <th>Current Selected Term</th>
                                 @unless ($locked)
                                     <th></th>
                                 @endunless
@@ -246,52 +232,18 @@
                                     <td data-label="Course">{{ $item->courseNumber }}</td>
                                     <td data-label="Title">{{ $item->name }}</td>
                                     <td data-label="Credits">{{ $item->credits }}</td>
-                                <!--    <td data-label="Time">
-                                        @php
-                                            preg_match('/^([a-z]+)/i', $quarter, $seasonMatch);
-                                            $season = strtolower($seasonMatch[1] ?? '');
-
-                                            $quarterSections = ($sections[$item->course_id] ?? collect())
-                                                ->filter(fn ($s) => $s->$season ?? false);
-                                        @endphp
-
-                                        @forelse ($quarterSections as $section)
-                                           {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
-                                        @empty
-                                            TBA
-                                        @endforelse
-                                    </td> -->
+                                    <td>{{ $item->quarterYear }}</td>
                                     @unless ($locked)
                                         <td data-label="Action">
                                             @php
-                                                // Latest quarter of this course's prerequisites
-                                                $afterOrder = $prerequisites->get($item->course_id, collect())
-                                                    ->map(fn ($prereq) => $plannedQuarterOf[$prereq->prereq_id] ?? null)
-                                                    ->filter()
-                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
-                                                    ->max() ?? 0;
-
-                                                // Earliest quarter of planned courses that need this one
-                                                $beforeOrder = $prerequisites
-                                                    ->flatten(1)
-                                                    ->where('prereq_id', $item->course_id)
-                                                    ->map(fn ($row) => $plannedQuarterOf[$row->course_id] ?? null)
-                                                    ->filter()
-                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
-                                                    ->min() ?? PHP_INT_MAX;
-
-                                                // Other quarters this course is offered, between those two
                                                 $otherTerms = $terms->get($item->course_id, collect())
-                                                    ->where('id', '!=', $item->term_id)
-                                                    ->filter(function ($term) use ($afterOrder, $beforeOrder) {
-                                                        $order = \App\Support\Quarter::order($term->quarterYear);
-                                                        return $order > $afterOrder && $order < $beforeOrder;
-                                                    });
+                                                    ->where('id', '!=', $item->term_id);
                                             @endphp
 
                                             <div class="plan-actions">
                                                 @if ($otherTerms->isNotEmpty())
-                                                    <form method="POST" action="{{ route('student.plan.move', $item->plan_id) }}" class="plan-actions__move">
+                                                    <form method="POST" action="{{ route('student.plan.move', $item->plan_id) }}"
+                                                        class="plan-actions__move">
                                                         @csrf
                                                         @method('PATCH')
                                                         <select name="term" aria-label="Move {{ $item->courseNumber }} to quarter">
@@ -315,14 +267,18 @@
                             @endforeach
                         </tbody>
                     </table>
+
                     <!-- Advisor Comments -->
                     @if ($programMap)
                         @foreach ($programMap->comments->where('quarter', $quarter) as $comment)
                             <div class="plan-comment">
-                                <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                                <p>
+                                    <strong>{{ $comment->author->name }}</strong> ·
+                                    {{ $comment->created_at->format('M j, Y g:i A') }}
+                                </p>
                                 <p>{{ $comment->body }}</p>
                             </div>
-                        @endforeach 
+                        @endforeach
                     @endif
                 </div>
             @empty
@@ -331,43 +287,47 @@
 
             <p>Total planned credits: <strong>{{ $planned->sum('credits') }}</strong></p>
 
-            <!-- Advisor review {Marquis}-->
+            <!-- Advisor Review -->
             <div class="plan-review-box">
                 <h3>Advisor review</h3>
-                
-                <!-- Status submitted -->
+
                 @if ($status === 'submitted')
-                    <p><span class="plan-status">Submitted</span> Waiting for your advisor to review.</p>
+                    <p><span class="plan-status">Submitted</span> Waiting for your advisor to review it.</p>
                 @elseif ($status === 'approved')
                     <p>
                         <span class="plan-status plan-status--ok">Approved</span>
                         by {{ $programMap->reviewer?->name ?? 'your advisor' }}
                         on {{ $programMap->reviewed_at?->format('M j, Y') }}
                     </p>
-                <!-- Status request changes -->
                 @elseif ($status === 'changes_requested')
-                    <p><span class="plan-status plan-status--missing">Changes requested</span> Update your plan, then submit it again.</p>
+                    <p>
+                        <span class="plan-status plan-status--missing">Changes requested</span>
+                        Update your plan, then submit it again.
+                    </p>
                 @else
-                <!-- Status drafted (never submitted)-->
                     <p>Draft. Submit your program map when you're ready for your advisor to review it.</p>
                 @endif
-                <!-- Submit when plan is not locked  -->
-                @if (! $locked && $planned->isNotEmpty())
+
+                @if (!$locked && $planned->isNotEmpty())
                     <form method="POST" action="{{ route('student.plan.submit') }}">
                         @csrf
                         <button type="submit" class="button-links">Submit for review</button>
                     </form>
                 @endif
 
-                <!--Advisor Comments-->
-               @if ($programMap && $programMap->comments->whereNull('quarter')->isNotEmpty())
+                <!-- Advisor Comments -->
+                @if ($programMap && $programMap->comments->whereNull('quarter')->isNotEmpty())
                     <details class="comments-panel" open>
-                        <summary>Advisor comments ({{ $programMap->comments->whereNull('quarter')->count() }})</summary>
+                        <summary>
+                            Advisor comments ({{ $programMap->comments->whereNull('quarter')->count() }})
+                        </summary>
 
-
-                       @foreach ($programMap->comments->whereNull('quarter') as $comment)
+                        @foreach ($programMap->comments->whereNull('quarter') as $comment)
                             <div class="plan-comment">
-                                <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                                <p>
+                                    <strong>{{ $comment->author->name }}</strong> ·
+                                    {{ $comment->created_at->format('M j, Y g:i A') }}
+                                </p>
                                 <p>{{ $comment->body }}</p>
                             </div>
                         @endforeach
@@ -376,8 +336,67 @@
             </div>
         </section>
 
+        <section>
+            <h2>My Enrolled Courses</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Title</th>
+                        <th>Credits</th>
+                        <th>Prerequisites</th>
+                        <th>Term</th>
+                        <th>Class Times</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($enrolled as $enrollment)
+                        @php
+                            $course = $enrollment->courseDetails;
+                        @endphp
+
+                        @if ($course)
+                            <tr>
+                                <td>{{ $course->courseNumber }}</td>
+                                <td>{{ $course->name }}</td>
+                                <td>{{ $course->credits }}</td>
+
+                                <td>
+                                    {{ $prerequisites->get($course->id, collect())->pluck('courseNumber')->join(', ') ?: 'None' }}
+                                </td>
+
+                                <td>
+                                    {{ $enrollment->term?->quarterYear ?? 'Not specified' }}
+                                </td>
+
+                                <td>
+                                    @forelse ($sections->get($course->id, collect()) as $classroom)
+                                        @if ($classroom->timeStart && $classroom->timeEnd)
+                                            <div>
+                                                {{ \App\Support\ClassTime::range($classroom->timeStart, $classroom->timeEnd) }}
+                                            </div>
+                                        @else
+                                            <div>Not scheduled</div>
+                                        @endif
+                                    @empty
+                                        Not scheduled
+                                    @endforelse
+                                </td>
+                            </tr>
+                        @endif
+                    @empty
+                        <tr>
+                            <td colspan="6">You are not enrolled in any courses.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </section>
+
         <script>
-            // start at the top after saving, adding or removing
+            // Start at the top after saving, adding or removing.
             if ('scrollRestoration' in history) {
                 history.scrollRestoration = 'manual';
             }

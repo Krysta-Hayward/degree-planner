@@ -3,129 +3,142 @@
 @section('title', $classroom->courseDetails->courseNumber . ' | Degree Planner')
 
 @section('content')
-    @php
-        $course = $classroom->courseDetails;
+                @php
+    $course = $classroom->courseDetails;
 
-        $terms = [];
+    $terms = [];
 
-        if ($classroom->fall)
-            $terms[] = 'Fall';
-        if ($classroom->winter)
-            $terms[] = 'Winter';
-        if ($classroom->spring)
-            $terms[] = 'Spring';
-        if ($classroom->summer)
-            $terms[] = 'Summer';
-    @endphp
+    if ($classroom->fall)
+        $terms[] = 'Fall';
+    if ($classroom->winter)
+        $terms[] = 'Winter';
+    if ($classroom->spring)
+        $terms[] = 'Spring';
+    if ($classroom->summer)
+        $terms[] = 'Summer';
+                @endphp
 
-    <div class="class-details-container">
+                <div class="class-details-container">
 
-        <h1>{{ $course->courseNumber }}</h1>
-        <h2>{{ $course->name }}</h2>
+                    <h1>{{ $course->courseNumber }}</h1>
+                    <h2>{{ $course->name }}</h2>
 
-        <h3>Course Information</h3>
+                    <h3>Course Information</h3>
 
-        <table>
-            <tbody>
-                <tr>
-                    <th>Course Number</th>
-                    <td>{{ $course->courseNumber }}</td>
-                </tr>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Course Number</th>
+                                <td>{{ $course->courseNumber }}</td>
+                            </tr>
 
-                <tr>
-                    <th>Course Name</th>
-                    <td>{{ $course->name }}</td>
-                </tr>
+                            <tr>
+                                <th>Course Name</th>
+                                <td>{{ $course->name }}</td>
+                            </tr>
 
-                <tr>
-                    <th>Credits</th>
-                    <td>{{ $course->credits }}</td>
-                </tr>
+                            <tr>
+                                <th>Credits</th>
+                                <td>{{ $course->credits }}</td>
+                            </tr>
 
-                <tr>
-                    <th>Description</th>
-                    <td>
-                        {{ $course->description ?: 'No description available.' }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            <tr>
+                                <th>Description</th>
+                                <td>
+                                    {{ $course->description ?: 'No description available.' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-        <h3>Class Availability</h3>
+                    <h3>Class Availability</h3>
 
-        <table>
-            <tbody>
-                <tr>
-                    <th>Terms Available</th>
-                    <td>
-                        {{ count($terms) ? implode(', ', $terms) : 'Not Available' }}
-                    </td>
-                </tr>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Terms Available</th>
+                                <td>
+                                    {{ count($terms) ? implode(', ', $terms) : 'Not Available' }}
+                                </td>
+                            </tr>
 
-                <tr>
-                    <th>Total Seats</th>
-                    <td>{{ $classroom->seats }}</td>
-                </tr>
+                            <tr>
+                                <th>Total Seats</th>
+                                <td>{{ $classroom->seats }}</td>
+                            </tr>
 
-                <tr>
-                    <th>Open Seats</th>
-                    <td>{{ $classroom->seatsOpen }}</td>
-                </tr>
+                            <tr>
+                                <th>Open Seats</th>
+                                <td>{{ $classroom->seatsOpen }}</td>
+                            </tr>
 
-                <tr>
-                    <th>Teacher</th>
-                    <td>{{ $classroom->teacher ?? 'Not Assigned' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                            <tr>
+                                <th>Teacher</th>
+                                <td>{{ $classroom->teacher ?? 'Not Assigned' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-        <h3>Class Schedule</h3>
+                    <h3>Class Schedule</h3>
 
-        <table>
-            <tbody>
-                <tr>
-                    <th>Start Time</th>
-                    <td>{{ $classroom->timeStart ?? 'Not Scheduled' }}</td>
-                </tr>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Class Time</th>
+                                <td>
+                                    @if ($classroom->timeStart && $classroom->timeEnd)
+                                        {{ \App\Support\ClassTime::range($classroom->timeStart, $classroom->timeEnd) }}
+                                    @else
+                                        Not Scheduled
+                                    @endif
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <tr>
-                    <th>End Time</th>
-                    <td>{{ $classroom->timeEnd ?? 'Not Scheduled' }}</td>
-                </tr>
-            </tbody>
-        </table>
+                    @auth
+                        @if (auth()->user()->role === 'student')
+                            <div class="enroll-container">
 
-        @auth
-            @if (auth()->user()->role === 'student')
-                <div class="enroll-container">
+                                <form action="{{ route('student.enroll', ['classroom' => $classroom->id]) }}" method="POST">
+                                    @csrf
 
-                    <form action="{{ route('student.enroll', ['classroom' => $classroom->id]) }}" method="POST">
-                        @csrf
+                                    <label for="term">Choose Term:</label>
 
-                        <button type="submit" class="button-links-primary">
-                            Enroll
-                        </button>
-                    </form>
+                                    <select name="term" id="term" required>
+                                        <option value="">Select a term</option>
 
-                    @if (session()->has('success'))
-                        <div class="alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
+                                        @foreach ($availableTerms as $term)
+                                            <option value="{{ $term->id }}">
+                                                {{ $term->quarterYear }}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
-                    @if (session()->has('error'))
-                        <div class="alert-error">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+                                    <button type="submit" class="button-links-primary">
+                                        Enroll
+                                    </button>
+                                </form>
+
+                                @if (session('success'))
+                                    <div class="alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+
+                                @if (session('error'))
+                                    <div class="alert-error">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+
+                            </div>
+                        @endif
+                    @endauth
+
+                    <a href="{{ route('classes') }}" class="button-links">
+                        Back to Classes
+                    </a>
 
                 </div>
-            @endif
-        @endauth
-
-        <a href="{{ route('classes') }}" class="button-links">
-            Back to Classes
-        </a>
-
-    </div>
 @endsection

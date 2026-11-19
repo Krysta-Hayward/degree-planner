@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class AdminTermController extends Controller
 {
@@ -18,7 +19,12 @@ class AdminTermController extends Controller
     {
         $this->authorize('viewAny', Term::class);
 
-        $terms = Term::orderBy('termNumber')->paginate(25);
+        // Include each term's course number, and sort by it
+        $terms = Term::join('courses', 'terms.course', '=', 'courses.id')
+            ->select('terms.*', 'courses.courseNumber')
+            ->orderBy('courses.courseNumber')
+            ->orderBy('terms.quarterYear')
+            ->paginate(25);
 
         return view('admin.terms.terms', compact('terms'));
     }
@@ -86,6 +92,17 @@ class AdminTermController extends Controller
     public function destroy(Term $term): RedirectResponse
     {
         $this->authorize('delete', $term);
+
+        // A term students have planned can't be deleted
+        $isPlanned = DB::table('plans')
+            ->where('class', $term->id)
+            ->exists();
+        
+        if ($isPlanned) {
+            return redirect()
+            ->route('admin.terms.index')
+            ->with('error', 'This term cannot be deleted because it is being used in student plans.');
+        }
 
         $term->delete();
 

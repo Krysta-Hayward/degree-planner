@@ -16,6 +16,13 @@
                 </div>
             @endif
 
+            <!-- Error message, when a term can't be deleted -->
+            @if (session('error'))
+                <div class="alert-error">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div style="display: flex; align-items: center; gap: 20px;">
                 <p>
                     <strong>Total terms:</strong> {{ $terms->total() }}
@@ -48,7 +55,7 @@
                             <tr>
                                 <td>{{ $term->id }}</td>
                                 <td>{{ $term->quarterYear }}</td>
-                                <td>{{ $term->course }}</td>
+                                <td>{{ $term->courseNumber }}</td>
                                 <td>
                                     <a href="{{ route('admin.terms.edit', $term) }}" class="button-links">
                                         Edit

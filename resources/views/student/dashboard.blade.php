@@ -58,6 +58,168 @@
                     </form>
                 @endif
             </section> 
+                @endunless
+            @else
+                <!-- Missing prerequisites: say what to add first -->
+                <p>You have not picked a program yet.</p>
+
+                <form method="POST" action="{{ route('student.program.select') }}">
+
+                <!-- No program: let the student choose one -->
+                <form method="POST" action="{{ route('student.program.select') }}">
+                    @csrf
+                    <label for="program">Choose your program</label>
+                    <select id="program" name="program" required>
+                        <option value="">Select a program</option>
+                        @foreach ($programs as $name)
+                            <option value="{{ $name }}">{{ $name }}</option>
+                        @endforeach
+                    </select>
+                    <button type="submit" class="button-links">Save Program</button>
+                </form>
+            @endif
+        </section> 
+        
+        <!-- Required Courses -->
+        @if ($user->program)
+            <section>
+                <h2>Required Courses</h2>
+
+                 <!-- Required courses that arnt planned  -->
+                @php
+                    $remaining = $requirements->reject(fn ($course) => in_array($course->id, $plannedCourseIds));
+                @endphp
+
+                <p>{{ $requirements->count() - $remaining->count() }} of {{ $requirements->count() }} required courses planned</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Title</th>
+                            <th>Credits</th>
+                           <!-- <th>Time</th> -->
+                            <th>Prerequisites</th>
+                            <th>Offered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($remaining as $course)
+                            <tr>
+                                <td data-label="Course">{{ $course->courseNumber }}</td>
+                                <td data-label="Title">{{ $course->name }}</td>
+                                <td data-label="Credits">{{ $course->credits }}</td>
+                             <!--   <td data-label="Time">
+                                    @forelse ($sections[$course->id] ?? [] as $section)
+                                         {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
+                                    @empty
+                                        TBA
+                                    @endforelse
+                                </td> -->
+                                <td data-label="Prerequisites">
+                                    @forelse ($prerequisites->get($course->id, collect()) as $prereq)
+                                        @if (in_array($prereq->prereq_id, $plannedCourseIds))
+                                            <span class="plan-status plan-status--ok">{{ $prereq->courseNumber }}</span>
+                                        @else
+                                            <span class="plan-status plan-status--missing">{{ $prereq->courseNumber }}</span>
+                                        @endif
+                                    @empty
+                                        None
+                                    @endforelse
+                                </td>
+                                <!-- When courses are offered -->
+                                <td data-label="Offered">
+                                    @php
+                                        $courseTerms = $terms->get($course->id, collect());
+
+                                        $missing = $prerequisites->get($course->id, collect())
+                                            ->reject(fn ($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
+                                            ->pluck('courseNumber');
+                                    @endphp
+
+                                    <!-- Not offered in any quarter -->
+                                    @if ($courseTerms->isEmpty())
+                                        Not scheduled yet
+
+                                    <!-- Plan locked: just list the quarters -->
+                                    @elseif ($locked)
+                                        {{ $courseTerms->pluck('quarterYear')->join(', ') }}
+
+                                    <!-- Can be added: pick a quarter -->
+                                    @else
+                                        <form method="POST" action="{{ route('student.plan.add') }}" class="plan-actions__move">
+                                            @csrf
+                                            <select name="term" aria-label="Quarter for {{ $course->courseNumber }}">
+                                                @foreach ($courseTerms as $term)
+                                                    <option value="{{ $term->id }}">{{ $term->quarterYear }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="button-links">Add</button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                               <td colspan="5">
+                                    @if ($requirements->isEmpty())
+                                        No courses are listed for this program yet.
+                                    @else
+                                        All required courses are on your program map.
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </section>
+        @endif
+        
+        <!-- Program Courses -->
+        @unless ($user->program)
+            <section>
+                <h2>All Courses</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Title</th>
+                            <th>Credits</th>
+                            <th>Prerequisites</th>
+                            <th>Terms Offered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($catalog as $course)
+                            <tr>
+                                <td data-label="Course">{{ $course->courseNumber }}</td>
+                                <td data-label="Title">{{ $course->name }}</td>
+                                <td data-label="Credits">{{ $course->credits }}</td>
+                                <td data-label="Prerequisites">
+                                    @forelse ($prerequisites->get($course->id, collect()) as $prereq)
+                                        {{ $prereq->courseNumber }}@if (!$loop->last), @endif
+                                    @empty
+                                        None
+                                    @endforelse
+                                </td>
+                                <td data-label="Terms Offered">
+                                    @forelse ($terms->get($course->id, collect()) as $term)
+                                        {{ $term->quarterYear }}@if (!$loop->last), @endif
+                                    @empty
+                                        Not scheduled yet
+                                    @endforelse
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No courses have been added yet.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </section>
+        @endunless
 
             <!-- Required Courses -->
             @if ($user->program)
@@ -147,6 +309,14 @@
                 <section>
                     <h2>All Courses</h2>
 
+                    <!-- Schedule conflicts in this quarter -->
+                    @foreach ($conflicts[$quarter] ?? [] as $conflict)
+                        <p class="plan-status plan-status--missing">
+                            ⚠ {{ $conflict['first'] }} and {{ $conflict['second'] }} may meet at the same time
+                            ({{ \App\Support\ClassTime::range($conflict['start'], $conflict['end']) }}). Check the days when you register.
+                        </p>
+                    @endforeach
+
                     <table>
                         <thead>
                             <tr>
@@ -155,6 +325,10 @@
                                 <th>Credits</th>
                                 <th>Prerequisites</th>
                                 <th>Terms Offered</th>
+                              <!--  <th>Time</th> -->
+                                @unless ($locked)
+                                    <th></th>
+                                @endunless
                             </tr>
                         </thead>
                         <tbody>
@@ -177,6 +351,74 @@
                                             Not scheduled yet
                                         @endforelse
                                     </td>
+                                    <td data-label="Course">{{ $item->courseNumber }}</td>
+                                    <td data-label="Title">{{ $item->name }}</td>
+                                    <td data-label="Credits">{{ $item->credits }}</td>
+                                <!--    <td data-label="Time">
+                                        @php
+                                            preg_match('/^([a-z]+)/i', $quarter, $seasonMatch);
+                                            $season = strtolower($seasonMatch[1] ?? '');
+
+                                            $quarterSections = ($sections[$item->course_id] ?? collect())
+                                                ->filter(fn ($s) => $s->$season ?? false);
+                                        @endphp
+
+                                        @forelse ($quarterSections as $section)
+                                           {{ \App\Support\ClassTime::range($section->timeStart, $section->timeEnd) }} @if (!$loop->last)<br>@endif
+                                        @empty
+                                            TBA
+                                        @endforelse
+                                    </td> -->
+                                    @unless ($locked)
+                                        <td data-label="Action">
+                                            @php
+                                                // Latest quarter of this course's prerequisites
+                                                $afterOrder = $prerequisites->get($item->course_id, collect())
+                                                    ->map(fn ($prereq) => $plannedQuarterOf[$prereq->prereq_id] ?? null)
+                                                    ->filter()
+                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
+                                                    ->max() ?? 0;
+
+                                                // Earliest quarter of planned courses that need this one
+                                                $beforeOrder = $prerequisites
+                                                    ->flatten(1)
+                                                    ->where('prereq_id', $item->course_id)
+                                                    ->map(fn ($row) => $plannedQuarterOf[$row->course_id] ?? null)
+                                                    ->filter()
+                                                    ->map(fn ($quarter) => \App\Support\Quarter::order($quarter))
+                                                    ->min() ?? PHP_INT_MAX;
+
+                                                // Other quarters this course is offered, between those two
+                                                $otherTerms = $terms->get($item->course_id, collect())
+                                                    ->where('id', '!=', $item->term_id)
+                                                    ->filter(function ($term) use ($afterOrder, $beforeOrder) {
+                                                        $order = \App\Support\Quarter::order($term->quarterYear);
+                                                        return $order > $afterOrder && $order < $beforeOrder;
+                                                    });
+                                            @endphp
+
+                                            <div class="plan-actions">
+                                                @if ($otherTerms->isNotEmpty())
+                                                    <form method="POST" action="{{ route('student.plan.move', $item->plan_id) }}" class="plan-actions__move">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <select name="term" aria-label="Move {{ $item->courseNumber }} to quarter">
+                                                            @foreach ($otherTerms as $term)
+                                                                <option value="{{ $term->id }}">{{ $term->quarterYear }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button type="submit" class="button-links">Move</button>
+                                                    </form>
+                                                @endif
+
+                                                <form method="POST" action="{{ route('student.plan.remove', $item->plan_id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="button-links">Remove</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endunless
                                 </tr>
                             @empty
                                 <tr>

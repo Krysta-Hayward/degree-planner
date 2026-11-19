@@ -15,6 +15,7 @@ class AdminDataController extends Controller
             'course_prerequisites',
             'course_program',
             'courses',
+            'histories',
             'plan_courses',
             'plans',
             'programs',

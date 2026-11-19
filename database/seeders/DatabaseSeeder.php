@@ -68,6 +68,9 @@ class DatabaseSeeder extends Seeder
         // three random students enroll in three random courses each
         $this->call(EnrollSeeder::class);
 
+        // six random students gain several random completed classes for their history
+        $this->call(HistorySeeder::class);
+
         // six random courses each get two dummy classrooms
         $this->call(ClassroomSeeder::class);
 

@@ -39,16 +39,16 @@ class HistorySeeder extends Seeder
                 $qnum = rand(1, 4);
                 switch ($qnum) {
                     case 1:
-                        $quarter = 'FALL2020';
+                        $quarter = 'Fall 2020';
                         break;
                     case 2:
-                        $quarter = 'WINTER2020';
+                        $quarter = 'Winter 2020';
                         break;
                     case 3:
-                        $quarter = 'SPRING2020';
+                        $quarter = 'Spring 2020';
                         break;
                     case 4:
-                        $quarter = 'SUMMER2020';
+                        $quarter = 'Summer 2020';
                         break;
                 }
                 DB::table('histories')->insert([

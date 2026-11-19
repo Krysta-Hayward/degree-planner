@@ -83,12 +83,32 @@ td[data-label="Action"] {
 }
 
 /* The quarter dropdown */
-.plan-actions__move select {
+.student-page .plan-actions__move select {
     padding: 4px 8px;
     border-radius: 6px;
-    border: 1px solid rgba(127, 127, 127, 0.4);
-    background: transparent;
-    color: inherit;
+    border: 1px solid var(--border, rgba(127, 127, 127, 0.4));
+    background-color: var(--surface, #ffffff);
+    color: var(--text, #222222);
+    color-scheme: light;
+}
+
+/* Dark mode dropdown */
+:root[data-theme="dark"] .student-page .plan-actions__move select {
+    background-color: #242424;
+    color: #ffffff;
+    border-color: #555555;
+    color-scheme: dark;
+}
+
+/* Dropdown options */
+.student-page .plan-actions__move select option {
+    background-color: #ffffff;
+    color: #222222;
+}
+
+:root[data-theme="dark"] .student-page .plan-actions__move select option {
+    background-color: #242424;
+    color: #ffffff;
 }
 
 .plan-status {

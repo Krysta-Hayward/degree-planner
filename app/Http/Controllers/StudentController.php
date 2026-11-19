@@ -438,10 +438,23 @@ class StudentController extends Controller
         }
 
         // Check for overlapping classroom schedules.
-        $enrolledCourses = Enroll::where('student', $request->user()->id)
-            ->pluck('course');
+        // Check for overlapping classroom schedules in the same quarter.
+        $studentId = $request->user()->id;
+
+        // Get the quarter/year of the term the student selected.
+        $selectedQuarter = $term->quarterYear;
+
+        // Find courses the student is already enrolled in for that same quarter/year.
+        $enrolledCourses = Enroll::join('terms', 'enrolls.term_id', '=', 'terms.id')
+            ->where('enrolls.student', $studentId)
+            ->where('terms.quarterYear', $selectedQuarter)
+            ->pluck('enrolls.course');
+
+        // Get their existing classroom schedules for that quarter.
+        $season = strtolower(explode(' ', $selectedQuarter)[0]);
 
         $existingClassrooms = Classroom::whereIn('course', $enrolledCourses)
+            ->where($season, true)
             ->get();
 
         foreach ($existingClassrooms as $existingClass) {
@@ -455,7 +468,7 @@ class StudentController extends Controller
             ) {
                 return redirect()->back()->with(
                     'error',
-                    'You cannot enroll in this class because it overlaps with another class in your schedule.'
+                    'You cannot enroll in this class because it overlaps with another class in your schedule for ' . $selectedQuarter . '.'
                 );
             }
         }

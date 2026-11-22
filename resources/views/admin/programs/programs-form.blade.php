@@ -44,9 +44,12 @@ $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (
     </p>
 
     <table class="programs-form-top-table">
-        <td><label for="course-filter">Filter courses</label>
-    <input id="course-filter" type="search" class="course-filter " placeholder="Course number or name"></td>
-        <td>{{ $courses->links() }}</td>
+        <tr>
+            <td>
+                <label for="course-filter">Filter courses</label>
+                <input id="course-filter" type="search" class="course-filter " placeholder="Course number or name">
+            </td>
+        </tr>
     </table>
 
     <div>
@@ -98,7 +101,7 @@ $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (
     document.getElementById('course-filter').addEventListener('input', function () {
         const term = this.value.trim().toLowerCase();
 
-        document.querySelectorAll('.program-courses tbody tr').forEach(function (row) {
+        document.querySelectorAll('.programs-form-bottom-table tbody tr').forEach(function (row) {
             row.hidden = term !== '' && !row.dataset.search.includes(term);
         });
     });

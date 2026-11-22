@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\Program;
 use App\Models\ProgramMap;
 use App\Models\Term;
+use App\Support\Quarter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -302,13 +303,49 @@ class StudentController extends Controller
                 ->withErrors(['term' => 'That class is not part of your degree program.']);
         }
 
-        // every prerequisite has to be on the student's program map first
         $courseId = Term::query()->whereKey($data['term'])->value('course');
+
+        // A course already passed doesn't need planning
+        if ($this->passedCourseIds($user->id)->contains($courseId)) {
+            return $this->toTop()
+                ->withErrors(['term' => 'You already completed that course.']);
+        }
+
+        // A course can only be on the plan once; use Move to change its quarter
+        $alreadyPlanned = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->where('plans.student', $user->id)
+            ->where('terms.course', $courseId)
+            ->exists();
+
+        if ($alreadyPlanned) {
+            return $this->toTop()
+                ->withErrors(['term' => 'That course is already on your program map. Use Move to change its quarter.']);
+        }
+
+        // every prerequisite has to be on the student's program map first (or already passed)
         $missing = $this->missingPrerequisites($user->id, $courseId);
 
         if ($missing->isNotEmpty()) {
             return $this->toTop()
                 ->withErrors(['term' => 'Add '.$missing->join(', ').' to your program map first.']);
+        }
+
+        // Planned prerequisites must be in an earlier quarter
+        $newQuarter = Term::whereKey($data['term'])->value('quarterYear');
+
+        $prereqQuarters = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->join('course_prerequisites', 'course_prerequisites.prereq', '=', 'terms.course')
+            ->where('plans.student', $user->id)
+            ->where('course_prerequisites.course', $courseId)
+            ->pluck('terms.quarterYear');
+
+        foreach ($prereqQuarters as $prereqQuarter) {
+            if (Quarter::order($prereqQuarter) >= Quarter::order($newQuarter)) {
+                return $this->toTop()
+                    ->withErrors(['term' => 'Pick a quarter after '.$prereqQuarter.', when its prerequisite is planned.']);
+            }
         }
 
         Plan::firstOrCreate([
@@ -324,22 +361,36 @@ class StudentController extends Controller
      */
     public function removeFromPlan(Request $request, Plan $plan): RedirectResponse
     {
+        // A submitted or approved program map can't be changed
+        $map = ProgramMap::where('student', $request->user()->id)->first();
+
+        if ($map && ! $map->isEditable()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+        }
+
         // a student can never change another student's program map
         abort_if((int) $plan->student !== $request->user()->id, 403);
 
-        // a class that is still on the map may need this one as a prerequisite
         $courseId = Term::query()->whereKey($plan->class)->value('course');
-        $dependents = DB::table('plans')
-            ->join('terms', 'plans.class', '=', 'terms.id')
-            ->join('course_prerequisites', 'course_prerequisites.course', '=', 'terms.course')
-            ->join('courses', 'terms.course', '=', 'courses.id')
-            ->where('plans.student', $plan->student)
-            ->where('course_prerequisites.prereq', $courseId)
-            ->pluck('courses.courseNumber');
 
-        if ($dependents->isNotEmpty()) {
-            return $this->toTop()
-                ->withErrors(['plan' => 'Remove '.$dependents->unique()->join(', ').' first, it needs this class.']);
+        // If the student already passed it, planned courses that need it are still covered
+        $alreadyPassed = $this->passedCourseIds($plan->student)->contains($courseId);
+
+        if (! $alreadyPassed) {
+            // a class that is still on the map may need this one as a prerequisite
+            $dependents = DB::table('plans')
+                ->join('terms', 'plans.class', '=', 'terms.id')
+                ->join('course_prerequisites', 'course_prerequisites.course', '=', 'terms.course')
+                ->join('courses', 'terms.course', '=', 'courses.id')
+                ->where('plans.student', $plan->student)
+                ->where('course_prerequisites.prereq', $courseId)
+                ->pluck('courses.courseNumber');
+
+            if ($dependents->isNotEmpty()) {
+                return $this->toTop()
+                    ->withErrors(['plan' => 'Remove '.$dependents->unique()->join(', ').' first, it needs this class.']);
+            }
         }
 
         $plan->delete();
@@ -374,6 +425,41 @@ class StudentController extends Controller
         if ($currentCourse !== $newCourse) {
             return $this->toTop()
                 ->withErrors(['term' => 'You can only move a course to another quarter it is offered.']);
+        }
+
+        $newQuarter = Term::whereKey($data['term'])->value('quarterYear');
+        $studentId = $request->user()->id;
+
+        // This course's planned prerequisites must still come before its new quarter
+        $prereqQuarters = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->join('course_prerequisites', 'course_prerequisites.prereq', '=', 'terms.course')
+            ->where('plans.student', $studentId)
+            ->where('course_prerequisites.course', $currentCourse)
+            ->pluck('terms.quarterYear');
+
+        foreach ($prereqQuarters as $prereqQuarter) {
+            if (Quarter::order($prereqQuarter) >= Quarter::order($newQuarter)) {
+                return $this->toTop()
+                    ->withErrors(['term' => 'Pick a quarter after '.$prereqQuarter.', when its prerequisite is planned.']);
+            }
+        }
+
+        // Courses that need this one must still come after its new quarter, unless it's already passed
+        if (! $this->passedCourseIds($studentId)->contains($currentCourse)) {
+            $dependentQuarters = DB::table('plans')
+                ->join('terms', 'plans.class', '=', 'terms.id')
+                ->join('course_prerequisites', 'course_prerequisites.course', '=', 'terms.course')
+                ->where('plans.student', $studentId)
+                ->where('course_prerequisites.prereq', $currentCourse)
+                ->pluck('terms.quarterYear');
+
+            foreach ($dependentQuarters as $dependentQuarter) {
+                if (Quarter::order($newQuarter) >= Quarter::order($dependentQuarter)) {
+                    return $this->toTop()
+                        ->withErrors(['term' => 'Pick a quarter before '.$dependentQuarter.', when a course that needs this one is planned.']);
+                }
+            }
         }
 
         $plan->update(['class' => $data['term']]);
@@ -474,12 +560,26 @@ class StudentController extends Controller
             ->where('plans.student', $studentId)
             ->pluck('terms.course');
 
+        // Planned or passed both count as covered
+        $coveredCourseIds = $plannedCourseIds->merge($this->passedCourseIds($studentId));
+
         return DB::table('course_prerequisites')
             ->join('courses', 'course_prerequisites.prereq', '=', 'courses.id')
             ->where('course_prerequisites.course', $courseId)
-            ->whereNotIn('course_prerequisites.prereq', $plannedCourseIds)
+            ->whereNotIn('course_prerequisites.prereq', $coveredCourseIds)
             ->orderBy('courses.courseNumber')
             ->pluck('courses.courseNumber');
+    }
+
+    /**
+     * Courses the student completed with a passing grade (2.0 or better).
+     */
+    private function passedCourseIds(int $studentId)
+    {
+        return DB::table('histories')
+            ->where('student', $studentId)
+            ->where('gpa', '>=', 2.0)
+            ->pluck('course');
     }
 
     /**

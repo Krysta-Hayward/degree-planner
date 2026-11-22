@@ -8,7 +8,8 @@
 
         <main class="admin-content">
             <h1>Add Program</h1>
-
+            <form action="{{ $action }}" method="POST">
+                @csrf
                 @include('admin.programs.programs-form')
             </form>
 

@@ -87,3 +87,4 @@ class SoftDevTermSeeder extends Seeder
         };
     }
 }
+

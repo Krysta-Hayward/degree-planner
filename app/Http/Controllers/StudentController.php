@@ -9,12 +9,30 @@ use App\Models\Plan;
 use App\Models\Program;
 use App\Models\ProgramMap;
 use App\Models\Term;
+use App\Support\Quarter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
+    // Letter grade => grade points (4.0 scale)
+    private const GRADE_POINTS = [
+        'A' => 4.0, 'A-' => 3.7,
+        'B+' => 3.3, 'B' => 3.0, 'B-' => 2.7,
+        'C+' => 2.3, 'C' => 2.0, 'C-' => 1.7,
+        'D+' => 1.3, 'D' => 1.0,
+        'F' => 0.0,
+    ];
+
+    // Lowest percentage for each letter grade
+    private const PERCENT_TO_LETTER = [
+        93 => 'A', 90 => 'A-',
+        87 => 'B+', 83 => 'B', 80 => 'B-',
+        77 => 'C+', 73 => 'C', 70 => 'C-',
+        67 => 'D+', 60 => 'D',
+        0 => 'F',
+    ];
     /**
      * The student's degree plan page: their program, the required courses
      * with prerequisites and offered terms, and their own program map.
@@ -25,13 +43,20 @@ class StudentController extends Controller
 
         $programs = Program::query()->distinct()->orderBy('name')->pluck('name');
 
+        // every course, used for requirements, prerequisites, terms and progress
+        $allCourses = DB::table('courses')
+            ->orderBy('courseNumber')
+            ->select('id', 'courseNumber', 'name', 'credits')
+            ->get();
+        
+
+        $courseIds = $allCourses->pluck('id');
+
         // every course in the catalog (the story says students see all available courses)
         $catalog = DB::table('courses')
             ->orderBy('courseNumber')
             ->select('id', 'courseNumber', 'name', 'credits')
             ->paginate(10);
-
-        $courseIds = $catalog->pluck('id');
 
         // prerequisites of every course, grouped by course (one query, not one per row)
         $prerequisites = DB::table('course_prerequisites')
@@ -53,7 +78,7 @@ class StudentController extends Controller
 
         if ($user->program) {
             $requiredIds = Program::query()->where('name', $user->program)->pluck('course');
-            $requirements = $catalog->whereIn('id', $requiredIds)->values();
+            $requirements = $allCourses->whereIn('id', $requiredIds)->values();
         }
 
         // this student's program map (only their own plan rows)
@@ -133,6 +158,45 @@ class StudentController extends Controller
             }
         }
 
+        // Courses this student completed, newest first
+        $history = DB::table('histories')
+            ->join('courses', 'histories.course', '=', 'courses.id')
+            ->where('histories.student', $user->id)
+            ->orderByDesc('histories.id')
+            ->select(
+                'histories.id as history_id',
+                'histories.course as course_id',
+                'histories.letterGrade',
+                'histories.gpa',
+                'histories.completed',
+                'courses.courseNumber',
+                'courses.name',
+                'courses.credits'
+            )
+            ->get();
+
+        // Required courses completed with a passing grade (2.0 or better)
+        $passedCourseIds = $history->where('gpa', '>=', 2.0)->pluck('course_id')->unique()->all();
+
+        // Each required course: met, in progress, or not started
+        $plannedIds = $planned->pluck('course_id')->all();
+
+        $progress = $requirements->map(function ($course) use ($passedCourseIds, $plannedIds) {
+            if (in_array($course->id, $passedCourseIds)) {
+                $course->status = 'met';
+            } elseif (in_array($course->id, $plannedIds)) {
+                $course->status = 'in_progress';
+            } else {
+                $course->status = 'not_started';
+            }
+
+            return $course;
+        });
+
+        // Credits completed toward the program, out of its total
+        $requiredCredits = $requirements->sum('credits');
+        $completedCredits = $progress->where('status', 'met')->sum('credits');
+        $creditPercent = $requiredCredits > 0 ? round($completedCredits / $requiredCredits * 100) : 0;
         // Get this student's enrolled courses.
         $enrolled = Enroll::with('term')
             ->where('student', $user->id)
@@ -165,6 +229,13 @@ class StudentController extends Controller
             'programMap' => $programMap,
             'sections' => $sections,
             'conflicts' => $conflicts,
+            'history' => $history,
+            'gradeOptions' => array_keys(self::GRADE_POINTS),
+            'progress' => $progress,
+            'requiredCredits' => $requiredCredits,
+            'completedCredits' => $completedCredits,
+            'creditPercent' => $creditPercent,
+            'passedCourseIds' => $passedCourseIds,
             'enrolled' => $enrolled,
         ]);
     }
@@ -268,13 +339,49 @@ class StudentController extends Controller
                 ->withErrors(['term' => 'That class is not part of your degree program.']);
         }
 
-        // every prerequisite has to be on the student's program map first
         $courseId = Term::query()->whereKey($data['term'])->value('course');
+
+        // A course already passed doesn't need planning
+        if ($this->passedCourseIds($user->id)->contains($courseId)) {
+            return $this->toTop()
+                ->withErrors(['term' => 'You already completed that course.']);
+        }
+
+        // A course can only be on the plan once; use Move to change its quarter
+        $alreadyPlanned = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->where('plans.student', $user->id)
+            ->where('terms.course', $courseId)
+            ->exists();
+
+        if ($alreadyPlanned) {
+            return $this->toTop()
+                ->withErrors(['term' => 'That course is already on your program map. Use Move to change its quarter.']);
+        }
+
+        // every prerequisite has to be on the student's program map first (or already passed)
         $missing = $this->missingPrerequisites($user->id, $courseId);
 
         if ($missing->isNotEmpty()) {
             return $this->toTop()
                 ->withErrors(['term' => 'Add '.$missing->join(', ').' to your program map first.']);
+        }
+
+        // Planned prerequisites must be in an earlier quarter
+        $newQuarter = Term::whereKey($data['term'])->value('quarterYear');
+
+        $prereqQuarters = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->join('course_prerequisites', 'course_prerequisites.prereq', '=', 'terms.course')
+            ->where('plans.student', $user->id)
+            ->where('course_prerequisites.course', $courseId)
+            ->pluck('terms.quarterYear');
+
+        foreach ($prereqQuarters as $prereqQuarter) {
+            if (Quarter::order($prereqQuarter) >= Quarter::order($newQuarter)) {
+                return $this->toTop()
+                    ->withErrors(['term' => 'Pick a quarter after '.$prereqQuarter.', when its prerequisite is planned.']);
+            }
         }
 
         Plan::firstOrCreate([
@@ -290,22 +397,36 @@ class StudentController extends Controller
      */
     public function removeFromPlan(Request $request, Plan $plan): RedirectResponse
     {
+        // A submitted or approved program map can't be changed
+        $map = ProgramMap::where('student', $request->user()->id)->first();
+
+        if ($map && ! $map->isEditable()) {
+            return $this->toTop()
+                ->withErrors(['plan' => 'Your program map is under review or approved and can\'t be changed.']);
+        }
+
         // a student can never change another student's program map
         abort_if((int) $plan->student !== $request->user()->id, 403);
 
-        // a class that is still on the map may need this one as a prerequisite
         $courseId = Term::query()->whereKey($plan->class)->value('course');
-        $dependents = DB::table('plans')
-            ->join('terms', 'plans.class', '=', 'terms.id')
-            ->join('course_prerequisites', 'course_prerequisites.course', '=', 'terms.course')
-            ->join('courses', 'terms.course', '=', 'courses.id')
-            ->where('plans.student', $plan->student)
-            ->where('course_prerequisites.prereq', $courseId)
-            ->pluck('courses.courseNumber');
 
-        if ($dependents->isNotEmpty()) {
-            return $this->toTop()
-                ->withErrors(['plan' => 'Remove '.$dependents->unique()->join(', ').' first, it needs this class.']);
+        // If the student already passed it, planned courses that need it are still covered
+        $alreadyPassed = $this->passedCourseIds($plan->student)->contains($courseId);
+
+        if (! $alreadyPassed) {
+            // a class that is still on the map may need this one as a prerequisite
+            $dependents = DB::table('plans')
+                ->join('terms', 'plans.class', '=', 'terms.id')
+                ->join('course_prerequisites', 'course_prerequisites.course', '=', 'terms.course')
+                ->join('courses', 'terms.course', '=', 'courses.id')
+                ->where('plans.student', $plan->student)
+                ->where('course_prerequisites.prereq', $courseId)
+                ->pluck('courses.courseNumber');
+
+            if ($dependents->isNotEmpty()) {
+                return $this->toTop()
+                    ->withErrors(['plan' => 'Remove '.$dependents->unique()->join(', ').' first, it needs this class.']);
+            }
         }
 
         $plan->delete();
@@ -342,9 +463,110 @@ class StudentController extends Controller
                 ->withErrors(['term' => 'You can only move a course to another quarter it is offered.']);
         }
 
+        $newQuarter = Term::whereKey($data['term'])->value('quarterYear');
+        $studentId = $request->user()->id;
+
+        // This course's planned prerequisites must still come before its new quarter
+        $prereqQuarters = DB::table('plans')
+            ->join('terms', 'plans.class', '=', 'terms.id')
+            ->join('course_prerequisites', 'course_prerequisites.prereq', '=', 'terms.course')
+            ->where('plans.student', $studentId)
+            ->where('course_prerequisites.course', $currentCourse)
+            ->pluck('terms.quarterYear');
+
+        foreach ($prereqQuarters as $prereqQuarter) {
+            if (Quarter::order($prereqQuarter) >= Quarter::order($newQuarter)) {
+                return $this->toTop()
+                    ->withErrors(['term' => 'Pick a quarter after '.$prereqQuarter.', when its prerequisite is planned.']);
+            }
+        }
+
+        // Courses that need this one must still come after its new quarter, unless it's already passed
+        if (! $this->passedCourseIds($studentId)->contains($currentCourse)) {
+            $dependentQuarters = DB::table('plans')
+                ->join('terms', 'plans.class', '=', 'terms.id')
+                ->join('course_prerequisites', 'course_prerequisites.course', '=', 'terms.course')
+                ->where('plans.student', $studentId)
+                ->where('course_prerequisites.prereq', $currentCourse)
+                ->pluck('terms.quarterYear');
+
+            foreach ($dependentQuarters as $dependentQuarter) {
+                if (Quarter::order($newQuarter) >= Quarter::order($dependentQuarter)) {
+                    return $this->toTop()
+                        ->withErrors(['term' => 'Pick a quarter before '.$dependentQuarter.', when a course that needs this one is planned.']);
+                }
+            }
+        }
+
         $plan->update(['class' => $data['term']]);
 
         return $this->toTop()->with('status', 'Course moved.');
+    }
+
+    /**
+     * Record a course the student completed, with a letter grade or a percentage.
+     */
+    public function storeHistory(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'course' => ['required', 'integer', 'exists:courses,id'],
+            'letterGrade' => ['nullable', 'required_without:percentage', 'in:'.implode(',', array_keys(self::GRADE_POINTS))],
+            'percentage' => ['nullable', 'required_without:letterGrade', 'numeric', 'min:0', 'max:100'],
+            'season' => ['required', 'in:Fall,Winter,Spring,Summer'],
+            'year' => ['required', 'integer', 'min:2000', 'max:'.now()->year],
+        ], [
+            'letterGrade.required_without' => 'Enter a letter grade or a percentage.',
+            'percentage.required_without' => 'Enter a letter grade or a percentage.',
+        ]);
+
+        // A percentage is turned into a letter; otherwise use the letter picked
+        $letter = isset($data['percentage'])
+            ? $this->letterFromPercentage((float) $data['percentage'])
+            : $data['letterGrade'];
+
+        // Same format as terms, e.g. "Fall 2025"
+        $completed = $data['season'].' '.$data['year'];
+
+        // The same course can't be recorded twice for the same quarter
+        $alreadyRecorded = DB::table('histories')
+            ->where('student', $user->id)
+            ->where('course', $data['course'])
+            ->where('completed', $completed)
+            ->exists();
+
+        if ($alreadyRecorded) {
+            return $this->toTop()
+                ->withErrors(['course' => 'That course is already recorded for '.$completed.'.']);
+        }
+
+        DB::table('histories')->insert([
+            'student' => $user->id,
+            'course' => $data['course'],
+            'letterGrade' => $letter,
+            'gpa' => self::GRADE_POINTS[$letter],
+            'completed' => $completed,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return $this->toTop()->with('status', 'Completed course recorded.');
+    }
+
+    /**
+     * Remove a completed course the student recorded.
+     */
+    public function destroyHistory(Request $request, int $history): RedirectResponse
+    {
+        $deleted = DB::table('histories')
+            ->where('id', $history)
+            ->where('student', $request->user()->id)
+            ->delete();
+
+        abort_if($deleted === 0, 404);
+
+        return $this->toTop()->with('status', 'Completed course removed.');
     }
 
     /* {{ Marquis }} */
@@ -383,12 +605,40 @@ class StudentController extends Controller
             ->where('plans.student', $studentId)
             ->pluck('terms.course');
 
+        // Planned or passed both count as covered
+        $coveredCourseIds = $plannedCourseIds->merge($this->passedCourseIds($studentId));
+
         return DB::table('course_prerequisites')
             ->join('courses', 'course_prerequisites.prereq', '=', 'courses.id')
             ->where('course_prerequisites.course', $courseId)
-            ->whereNotIn('course_prerequisites.prereq', $plannedCourseIds)
+            ->whereNotIn('course_prerequisites.prereq', $coveredCourseIds)
             ->orderBy('courses.courseNumber')
             ->pluck('courses.courseNumber');
+    }
+
+    /**
+     * Courses the student completed with a passing grade (2.0 or better).
+     */
+    private function passedCourseIds(int $studentId)
+    {
+        return DB::table('histories')
+            ->where('student', $studentId)
+            ->where('gpa', '>=', 2.0)
+            ->pluck('course');
+    }
+
+    /**
+     * Turn a percentage into a letter grade, e.g. 92 => "A-".
+     */
+    private function letterFromPercentage(float $percentage): string
+    {
+        foreach (self::PERCENT_TO_LETTER as $minimum => $letter) {
+            if ($percentage >= $minimum) {
+                return $letter;
+            }
+        }
+
+        return 'F';
     }
 
     /**

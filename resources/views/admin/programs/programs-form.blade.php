@@ -42,9 +42,12 @@ $oldCourses = collect(old('courses', $current->keys()->all()))->map(fn($id) => (
     </p>
 
     <table class="programs-form-top-table">
-        <td><label for="course-filter">Filter courses</label>
-    <input id="course-filter" type="search" class="course-filter " placeholder="Course number or name"></td>
-        <td>{{ $courses->links() }}</td>
+        <tr>
+            <td>
+                <label for="course-filter">Filter courses</label>
+                <input id="course-filter" type="search" class="course-filter " placeholder="Course number or name">
+            </td>
+        </tr>
     </table>
 
     <div>

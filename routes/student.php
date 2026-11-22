@@ -21,6 +21,10 @@ Route::middleware(['auth', StudentMiddleware::class])
         Route::delete('/plan/{plan}', [StudentController::class, 'removeFromPlan'])->name('plan.remove');
         // Move a course in the student's program map to a different quarter
         Route::patch('/plan/{plan}', [StudentController::class, 'movePlan'])->name('plan.move');
+        // Record a completed course with its grade
+        Route::post('/history', [StudentController::class, 'storeHistory'])->name('history.store');
+        // Remove a completed course the student recorded
+        Route::delete('/history/{history}', [StudentController::class, 'destroyHistory'])->name('history.destroy');
 
         // Student enrollment
         Route::post('/enroll/{classroom}', [StudentController::class, 'enroll'])

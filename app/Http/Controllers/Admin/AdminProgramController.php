@@ -263,7 +263,7 @@ class AdminProgramController extends Controller
      */
     private function availableCourses()
     {
-        return Course::orderBy('courseNumber')->paginate(15);
+        return Course::orderBy('courseNumber')->get();
     }
 
     /**

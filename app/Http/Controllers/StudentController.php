@@ -23,6 +23,15 @@ class StudentController extends Controller
         'D+' => 1.3, 'D' => 1.0,
         'F' => 0.0,
     ];
+
+    // Lowest percentage for each letter grade
+    private const PERCENT_TO_LETTER = [
+        93 => 'A', 90 => 'A-',
+        87 => 'B+', 83 => 'B', 80 => 'B-',
+        77 => 'C+', 73 => 'C', 70 => 'C-',
+        67 => 'D+', 60 => 'D',
+        0 => 'F',
+    ];
     /**
      * The student's degree plan page: their program, the required courses
      * with prerequisites and offered terms, and their own program map.
@@ -468,7 +477,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Record a course the student completed, with its grade.
+     * Record a course the student completed, with a letter grade or a percentage.
      */
     public function storeHistory(Request $request): RedirectResponse
     {
@@ -476,10 +485,19 @@ class StudentController extends Controller
 
         $data = $request->validate([
             'course' => ['required', 'integer', 'exists:courses,id'],
-            'letterGrade' => ['required', 'in:'.implode(',', array_keys(self::GRADE_POINTS))],
+            'letterGrade' => ['nullable', 'required_without:percentage', 'in:'.implode(',', array_keys(self::GRADE_POINTS))],
+            'percentage' => ['nullable', 'required_without:letterGrade', 'numeric', 'min:0', 'max:100'],
             'season' => ['required', 'in:Fall,Winter,Spring,Summer'],
             'year' => ['required', 'integer', 'min:2000', 'max:'.now()->year],
+        ], [
+            'letterGrade.required_without' => 'Enter a letter grade or a percentage.',
+            'percentage.required_without' => 'Enter a letter grade or a percentage.',
         ]);
+
+        // A percentage is turned into a letter; otherwise use the letter picked
+        $letter = isset($data['percentage'])
+            ? $this->letterFromPercentage((float) $data['percentage'])
+            : $data['letterGrade'];
 
         // Same format as terms, e.g. "Fall 2025"
         $completed = $data['season'].' '.$data['year'];
@@ -499,8 +517,8 @@ class StudentController extends Controller
         DB::table('histories')->insert([
             'student' => $user->id,
             'course' => $data['course'],
-            'letterGrade' => $data['letterGrade'],
-            'gpa' => self::GRADE_POINTS[$data['letterGrade']],
+            'letterGrade' => $letter,
+            'gpa' => self::GRADE_POINTS[$letter],
             'completed' => $completed,
             'created_at' => now(),
             'updated_at' => now(),
@@ -580,6 +598,20 @@ class StudentController extends Controller
             ->where('student', $studentId)
             ->where('gpa', '>=', 2.0)
             ->pluck('course');
+    }
+
+    /**
+     * Turn a percentage into a letter grade, e.g. 92 => "A-".
+     */
+    private function letterFromPercentage(float $percentage): string
+    {
+        foreach (self::PERCENT_TO_LETTER as $minimum => $letter) {
+            if ($percentage >= $minimum) {
+                return $letter;
+            }
+        }
+
+        return 'F';
     }
 
     /**

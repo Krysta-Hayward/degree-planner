@@ -130,12 +130,17 @@
                         @endforeach
                     </select>
 
-                    <label for="history-grade">Grade</label>
-                    <select id="history-grade" name="letterGrade" required>
+                    <!-- Grade: a letter, or a percentage -->
+                    <label for="history-grade">Letter grade</label>
+                    <select id="history-grade" name="letterGrade">
+                        <option value="">—</option>
                         @foreach ($gradeOptions as $grade)
-                            <option value="{{ $grade }}">{{ $grade }}</option>
+                            <option value="{{ $grade }}" @selected(old('letterGrade') === $grade)>{{ $grade }}</option>
                         @endforeach
                     </select>
+
+                    <label for="history-percentage">or Percentage</label>
+                    <input type="number" id="history-percentage" name="percentage" min="0" max="100" step="0.1" placeholder="e.g. 92" value="{{ old('percentage') }}">
 
                     <label for="history-season">Quarter</label>
                     <select id="history-season" name="season" required>

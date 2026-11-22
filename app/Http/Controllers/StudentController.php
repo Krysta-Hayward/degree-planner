@@ -43,13 +43,20 @@ class StudentController extends Controller
 
         $programs = Program::query()->distinct()->orderBy('name')->pluck('name');
 
+        // every course, used for requirements, prerequisites, terms and progress
+        $allCourses = DB::table('courses')
+            ->orderBy('courseNumber')
+            ->select('id', 'courseNumber', 'name', 'credits')
+            ->get();
+        
+
+        $courseIds = $allCourses->pluck('id');
+
         // every course in the catalog (the story says students see all available courses)
         $catalog = DB::table('courses')
             ->orderBy('courseNumber')
             ->select('id', 'courseNumber', 'name', 'credits')
             ->paginate(10);
-
-        $courseIds = $catalog->pluck('id');
 
         // prerequisites of every course, grouped by course (one query, not one per row)
         $prerequisites = DB::table('course_prerequisites')
@@ -71,7 +78,7 @@ class StudentController extends Controller
 
         if ($user->program) {
             $requiredIds = Program::query()->where('name', $user->program)->pluck('course');
-            $requirements = $catalog->whereIn('id', $requiredIds)->values();
+            $requirements = $allCourses->whereIn('id', $requiredIds)->values();
         }
 
         // this student's program map (only their own plan rows)

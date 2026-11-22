@@ -62,7 +62,9 @@
                                     </a>
 
                                     <form method="POST" action="{{ route('admin.terms.destroy', $term) }}"
-                                        onsubmit="return confirm('Are you sure you want to delete this term?');"
+                                        data-confirm="Are you sure you want to delete this term?"
+                                        data-confirm-title="Delete Classroom"
+                                        data-confirm-button="Delete"
                                         style="display: inline;">
 
                                         @csrf

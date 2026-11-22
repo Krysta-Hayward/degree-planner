@@ -4,7 +4,7 @@
     <input type="text" name="name" id="name" value="{{ old('name', $user->name ?? '') }}" required>
 
     @error('name')
-        <p class="error-message">{{ $message }}</p>
+        <p class="alert-error">{{ $message }}</p>
     @enderror
 </div>
 
@@ -14,7 +14,7 @@
     <input type="email" name="email" id="email" value="{{ old('email', $user->email ?? '') }}" required>
 
     @error('email')
-        <p class="error-message">{{ $message }}</p>
+        <p class="alert-error">{{ $message }}</p>
     @enderror
 </div>
 
@@ -32,7 +32,7 @@
     </select>
 
     @error('role')
-        <p class="error-message">{{ $message }}</p>
+        <p class="alert-error">{{ $message }}</p>
     @enderror
 </div>
 
@@ -48,7 +48,7 @@
         autocomplete="new-password">
 
     @error('password')
-        <p class="error-message">{{ $message }}</p>
+        <p class="alert-error">{{ $message }}</p>
     @enderror
 </div>
 

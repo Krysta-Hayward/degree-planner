@@ -1,8 +1,8 @@
 @php
-    $courseNumber = old('courseNumber', $course->courseNumber ?? '');
-    $courseName = old('name', $course->name ?? '');
-    $credits = old('credits', $course->credits ?? '');
-    $description = old('description', $course->description ?? '');
+$courseNumber = old('courseNumber', $course->courseNumber ?? '');
+$courseName = old('name', $course->name ?? '');
+$credits = old('credits', $course->credits ?? '');
+$description = old('description', $course->description ?? '');
 @endphp
 
 @if ($errors->any())
@@ -35,6 +35,35 @@
     <label for="description">Description</label>
     
     <textarea id="description" name="description" rows="4" maxlength="2000">{{ $description }}</textarea>
+</div>
+
+<div class="form-group">
+    <label>Terms Offered</label>
+
+    @php
+        $selectedTerms = old('quarterYears', $selectedQuarterYears ?? []);
+        $termsByYear = collect($availableQuarterYears)->groupBy(function ($term) {
+            return substr($term, -4);
+        });
+    @endphp
+
+    <div class="terms-compact">
+        @foreach ($termsByYear as $year => $terms)
+            <div class="terms-year">
+                <strong>{{ $year }}</strong>
+
+                <div class="terms-options">
+                    @foreach ($terms as $quarterYear)
+                        <label>
+                            <input type="checkbox" name="quarterYears[]" value="{{ $quarterYear }}"
+                                @checked(in_array($quarterYear, $selectedTerms))>
+                            {{ str_replace(' ' . $year, '', $quarterYear) }}
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>
 
 <div class="form-actions">

@@ -95,7 +95,7 @@ class AdminClassroomController extends Controller
 
     private function validateClassroom(Request $request): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'course' => ['required', 'integer', 'exists:courses,id'],
             'teacher' => ['nullable', 'string', 'max:255'],
             'seats' => ['required', 'integer', 'min:0'],
@@ -107,5 +107,9 @@ class AdminClassroomController extends Controller
             'timeStart' => ['required', 'date_format:H:i'],
             'timeEnd' => ['required', 'date_format:H:i', 'after:timeStart'],
         ]);
+        $data['timeStart'] = (int) substr($data['timeStart'], 0, 2);
+        $data['timeEnd'] = (int) substr($data['timeEnd'], 0, 2);
+
+        return $data;
     }
 }

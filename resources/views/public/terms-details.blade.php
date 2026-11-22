@@ -18,11 +18,17 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td>{{ $term->courseDetails->courseNumber }}</td>
-                    <td>{{ $term->courseDetails->name }}</td>
-                    <td>{{ $term->courseDetails->credits }}</td>
-                </tr>
+                @forelse ($courses as $course)
+                    <tr>
+                        <td>{{ $course->courseNumber }}</td>
+                        <td>{{ $course->name }}</td>
+                        <td>{{ $course->credits }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspane="3">No courses are available for this term.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
 

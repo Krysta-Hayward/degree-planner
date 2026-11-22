@@ -44,6 +44,7 @@
                             <th>Total Seats</th>
                             <th>Open Seats</th>
                             <th>Terms Available</th>
+                            <th>Time Start - Time End</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -85,13 +86,21 @@
                                 </td>
 
                                 <td>
+                                    @if ($classroom->timeStart && $classroom->timeEnd)
+                                        {{ \App\Support\ClassTime::range((int)$classroom->timeStart, (int)$classroom->timeEnd) }}
+                                    @else
+                                        Not Scheduled
+                                    @endif
+                                </td>
+
+                                <td>
                                     <a href="{{ route('admin.classrooms.edit', $classroom) }}" class="button-links">
                                         Edit
                                     </a>
 
                                     <form method="POST" action="{{ route('admin.classrooms.destroy', $classroom) }}"
-                                        onsubmit="return confirm('Are you sure you want to delete this classroom?');"
-                                        >
+                                        data-confirm="Are you sure you want to delete this classroom?"
+                                        data-confirm-title="Delete Classroom" data-confirm-button="Delete">
                                         @csrf
                                         @method('DELETE')
 

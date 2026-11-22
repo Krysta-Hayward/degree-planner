@@ -1,3 +1,17 @@
+@php
+    $startTime = isset($classroom) && $classroom->timeStart !== null
+        ? (str_contains((string) $classroom->timeStart, ':')
+            ? substr((string) $classroom->timeStart, 0, 5)
+            : sprintf('%02d:00', $classroom->timeStart))
+        : '';
+
+    $endTime = isset($classroom) && $classroom->timeEnd !== null
+        ? (str_contains((string) $classroom->timeEnd, ':')
+            ? substr((string) $classroom->timeEnd, 0, 5)
+            : sprintf('%02d:00', $classroom->timeEnd))
+        : '';
+@endphp
+
 <div class="form-container">
 
     <div class="form-group">
@@ -83,7 +97,7 @@
                 <label for="timeStart">Start Time</label>
 
                 <input type="time" name="timeStart" id="timeStart"
-                    value="{{ old('timeStart', isset($classroom) && $classroom->timeStart ? \Carbon\Carbon::parse($classroom->timeStart)->format('H:i') : '') }}">
+                    value="{{ old('timeStart', $startTime) }}" required>
 
                 @error('timeStart')
                     <div class="alert-error">{{ $message }}</div>
@@ -94,7 +108,7 @@
                 <label for="timeEnd">End Time</label>
 
                 <input type="time" name="timeEnd" id="timeEnd"
-                    value="{{ old('timeEnd', isset($classroom) && $classroom->timeEnd ? \Carbon\Carbon::parse($classroom->timeEnd)->format('H:i') : '') }}">
+                    value="{{ old('timeEnd', $endTime) }}" required>
 
                 @error('timeEnd')
                     <div class="alert-error">{{ $message }}</div>

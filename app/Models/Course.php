@@ -25,4 +25,9 @@ class Course extends Model
             'prereq'
         );
     }
+
+    public function terms()
+    {
+        return $this->hasMany(Term::class, 'course', 'id');
+    }
 }

@@ -60,8 +60,8 @@
 
                                         <form method="POST" action="{{ route('admin.prereqs.destroy', $prereq) }}"
                                             style="display: inline;"
-                                            onsubmit="return confirm('Are you sure you want to delete this prerequisite?');">
-
+                                            data-confirm="Are you sure you want to delete this prerequisite?"
+                                            data-confirm-title="Delete Prerequisite" data-confirm-button="Delete">
                                             @csrf
                                             @method('DELETE')
 

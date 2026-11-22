@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
+    // Letter grade => grade points (4.0 scale)
+    private const GRADE_POINTS = [
+        'A' => 4.0, 'A-' => 3.7,
+        'B+' => 3.3, 'B' => 3.0, 'B-' => 2.7,
+        'C+' => 2.3, 'C' => 2.0, 'C-' => 1.7,
+        'D+' => 1.3, 'D' => 1.0,
+        'F' => 0.0,
+    ];
     /**
      * The student's degree plan page: their program, the required courses
      * with prerequisites and offered terms, and their own program map.
@@ -132,6 +140,46 @@ class StudentController extends Controller
             }
         }
 
+        // Courses this student completed, newest first
+        $history = DB::table('histories')
+            ->join('courses', 'histories.course', '=', 'courses.id')
+            ->where('histories.student', $user->id)
+            ->orderByDesc('histories.id')
+            ->select(
+                'histories.id as history_id',
+                'histories.course as course_id',
+                'histories.letterGrade',
+                'histories.gpa',
+                'histories.completed',
+                'courses.courseNumber',
+                'courses.name',
+                'courses.credits'
+            )
+            ->get();
+
+        // Required courses completed with a passing grade (2.0 or better)
+        $passedCourseIds = $history->where('gpa', '>=', 2.0)->pluck('course_id')->unique()->all();
+
+        // Each required course: met, in progress, or not started
+        $plannedIds = $planned->pluck('course_id')->all();
+
+        $progress = $requirements->map(function ($course) use ($passedCourseIds, $plannedIds) {
+            if (in_array($course->id, $passedCourseIds)) {
+                $course->status = 'met';
+            } elseif (in_array($course->id, $plannedIds)) {
+                $course->status = 'in_progress';
+            } else {
+                $course->status = 'not_started';
+            }
+
+            return $course;
+        });
+
+        // Credits completed toward the program, out of its total
+        $requiredCredits = $requirements->sum('credits');
+        $completedCredits = $progress->where('status', 'met')->sum('credits');
+        $creditPercent = $requiredCredits > 0 ? round($completedCredits / $requiredCredits * 100) : 0;
+
         return view('student.dashboard', [
             'user' => $user,
             'programs' => $programs,
@@ -145,6 +193,13 @@ class StudentController extends Controller
             'programMap' => $programMap,
             'sections' => $sections,
             'conflicts' => $conflicts,
+            'history' => $history,
+            'gradeOptions' => array_keys(self::GRADE_POINTS),
+            'progress' => $progress,
+            'requiredCredits' => $requiredCredits,
+            'completedCredits' => $completedCredits,
+            'creditPercent' => $creditPercent,
+            'passedCourseIds' => $passedCourseIds,
         ]);
     }
 
@@ -324,6 +379,63 @@ class StudentController extends Controller
         $plan->update(['class' => $data['term']]);
 
         return $this->toTop()->with('status', 'Course moved.');
+    }
+
+    /**
+     * Record a course the student completed, with its grade.
+     */
+    public function storeHistory(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'course' => ['required', 'integer', 'exists:courses,id'],
+            'letterGrade' => ['required', 'in:'.implode(',', array_keys(self::GRADE_POINTS))],
+            'season' => ['required', 'in:Fall,Winter,Spring,Summer'],
+            'year' => ['required', 'integer', 'min:2000', 'max:'.now()->year],
+        ]);
+
+        // Same format as terms, e.g. "Fall 2025"
+        $completed = $data['season'].' '.$data['year'];
+
+        // The same course can't be recorded twice for the same quarter
+        $alreadyRecorded = DB::table('histories')
+            ->where('student', $user->id)
+            ->where('course', $data['course'])
+            ->where('completed', $completed)
+            ->exists();
+
+        if ($alreadyRecorded) {
+            return $this->toTop()
+                ->withErrors(['course' => 'That course is already recorded for '.$completed.'.']);
+        }
+
+        DB::table('histories')->insert([
+            'student' => $user->id,
+            'course' => $data['course'],
+            'letterGrade' => $data['letterGrade'],
+            'gpa' => self::GRADE_POINTS[$data['letterGrade']],
+            'completed' => $completed,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return $this->toTop()->with('status', 'Completed course recorded.');
+    }
+
+    /**
+     * Remove a completed course the student recorded.
+     */
+    public function destroyHistory(Request $request, int $history): RedirectResponse
+    {
+        $deleted = DB::table('histories')
+            ->where('id', $history)
+            ->where('student', $request->user()->id)
+            ->delete();
+
+        abort_if($deleted === 0, 404);
+
+        return $this->toTop()->with('status', 'Completed course removed.');
     }
 
     /* {{ Marquis }} */

@@ -102,7 +102,43 @@ td[data-label="Action"] {
     color: #e05a5a;
 }
 
+/* Completed course form: fields in a row, wrapping on small screens */
+.history-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
 
+.history-form select,
+.history-form input {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(127, 127, 127, 0.4);
+    background: transparent;
+    color: inherit;
+}
+
+/* Credits progress bar */
+.progress-bar {
+    height: 14px;
+    border-radius: 7px;
+    background: rgba(127, 127, 127, 0.2);
+    overflow: hidden;
+    margin: 6px 0 14px;
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background: #2e9e5b;
+}
+
+/* In progress status (yellow) */
+.plan-status--progress {
+    background: rgba(201, 145, 26, 0.15);
+    color: #c9911a;
+}
 
 
 

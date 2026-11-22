@@ -9,6 +9,9 @@
         @php
             $status = $programMap?->status ?? 'draft';
             $locked = in_array($status, ['submitted', 'approved']);
+
+            $plannedQuarterOf = $planned->pluck('quarterYear', 'course_id');
+            $coveredCourseIds = array_merge($plannedCourseIds, $passedCourseIds);
         @endphp
 
         <h1>My Degree Plan</h1>
@@ -55,8 +58,143 @@
                     <button type="submit" class="button-links">Save Program</button>
                 </form>
             @endif
-        </section> 
-        
+        </section>
+                
+                <!-- Degree Progress: credits and each requirement's status -->
+        @if ($user->program)
+            <section>
+                <h2>Degree Progress</h2>
+
+                <!-- Credits completed vs required -->
+                <p>
+                    <strong>{{ $completedCredits }}</strong> of {{ $requiredCredits }} credits completed
+                    ({{ $creditPercent }}%)
+                </p>
+
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{ $creditPercent }}" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar__fill" style="width: {{ $creditPercent }}%"></div>
+                </div>
+
+                <!-- Each requirement -->
+                <p>
+                    {{ $progress->where('status', 'met')->count() }} met ·
+                    {{ $progress->where('status', 'in_progress')->count() }} in progress ·
+                    {{ $progress->where('status', 'not_started')->count() }} not started
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Title</th>
+                            <th>Credits</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($progress as $course)
+                            <tr>
+                                <td data-label="Course">{{ $course->courseNumber }}</td>
+                                <td data-label="Title">{{ $course->name }}</td>
+                                <td data-label="Credits">{{ $course->credits }}</td>
+                                <td data-label="Status">
+                                    @if ($course->status === 'met')
+                                        <span class="plan-status plan-status--ok">Met</span>
+                                    @elseif ($course->status === 'in_progress')
+                                        <span class="plan-status plan-status--progress">In progress</span>
+                                    @else
+                                        <span class="plan-status">Not started</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </section>
+        @endif
+
+        <!-- Completed Courses: record courses already taken, with grades -->
+        @if ($user->program)
+            <section>
+                <h2>Completed Courses</h2>
+
+                <!-- Record a completed course -->
+                <form method="POST" action="{{ route('student.history.store') }}" class="history-form">
+                    @csrf
+
+                    <label for="history-course">Course</label>
+                    <select id="history-course" name="course" required>
+                        <option value="">Select a course</option>
+                        @foreach ($requirements as $course)
+                            <option value="{{ $course->id }}">{{ $course->courseNumber }} {{ $course->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <label for="history-grade">Grade</label>
+                    <select id="history-grade" name="letterGrade" required>
+                        @foreach ($gradeOptions as $grade)
+                            <option value="{{ $grade }}">{{ $grade }}</option>
+                        @endforeach
+                    </select>
+
+                    <label for="history-season">Quarter</label>
+                    <select id="history-season" name="season" required>
+                        <option value="Fall">Fall</option>
+                        <option value="Winter">Winter</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer">Summer</option>
+                    </select>
+
+                    <label for="history-year">Year</label>
+                    <input type="number" id="history-year" name="year" min="2000" max="{{ now()->year }}" value="{{ now()->year }}" required>
+
+                    <button type="submit" class="button-links">Record</button>
+                </form>
+
+                <!-- What the student has recorded -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Title</th>
+                            <th>Credits</th>
+                            <th>Grade</th>
+                            <th>Completed</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($history as $row)
+                            <tr>
+                                <td data-label="Course">{{ $row->courseNumber }}</td>
+                                <td data-label="Title">{{ $row->name }}</td>
+                                <td data-label="Credits">{{ $row->credits }}</td>
+                                <td data-label="Grade">
+                                    @if ($row->gpa >= 2.0)
+                                        <span class="plan-status plan-status--ok">{{ $row->letterGrade }}</span>
+                                    @else
+                                        <span class="plan-status plan-status--missing">{{ $row->letterGrade }}</span>
+                                    @endif
+                                </td>
+                                <td data-label="Completed">{{ $row->completed }}</td>
+                                <td data-label="Action">
+                                    <form method="POST" action="{{ route('student.history.destroy', $row->history_id) }}" class="inline-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button-links">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6">No completed courses recorded yet.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </section>
+        @endif
+                
         <!-- Required Courses -->
         @if ($user->program)
             <section>
@@ -64,7 +202,7 @@
 
                  <!-- Required courses that arnt planned  -->
                 @php
-                    $remaining = $requirements->reject(fn ($course) => in_array($course->id, $plannedCourseIds));
+                    $remaining = $requirements->reject(fn ($course) => in_array($course->id, $coveredCourseIds));
                 @endphp
 
                 <p>{{ $requirements->count() - $remaining->count() }} of {{ $requirements->count() }} required courses planned</p>
@@ -95,7 +233,7 @@
                                 </td> -->
                                 <td data-label="Prerequisites">
                                     @forelse ($prerequisites->get($course->id, collect()) as $prereq)
-                                        @if (in_array($prereq->prereq_id, $plannedCourseIds))
+                                        @if (in_array($prereq->prereq_id, $coveredCourseIds))
                                             <span class="plan-status plan-status--ok">{{ $prereq->courseNumber }}</span>
                                         @else
                                             <span class="plan-status plan-status--missing">{{ $prereq->courseNumber }}</span>
@@ -110,8 +248,8 @@
                                         $courseTerms = $terms->get($course->id, collect());
 
                                         $missing = $prerequisites->get($course->id, collect())
-                                            ->reject(fn ($prereq) => in_array($prereq->prereq_id, $plannedCourseIds))
-                                            ->pluck('courseNumber');
+                                        ->reject(fn ($prereq) => in_array($prereq->prereq_id, $coveredCourseIds))
+                                        ->pluck('courseNumber');
                                     @endphp
 
                                     <!-- Not offered in any quarter -->

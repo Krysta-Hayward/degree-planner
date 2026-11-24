@@ -19,11 +19,6 @@ button {
     max-width: 100%;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-}
-
 /* Tablets and small laptops */
 @media (max-width: 900px) {
     /* The menu wraps onto more lines instead of running off the screen */

@@ -227,7 +227,7 @@ test('a class cannot be added until its prerequisite is on the program map', fun
     $intro = makeCourse('PREQ 101', 'Intro Course');
     $next = makeCourse('PREQ 201', 'Next Course');
     $introTerm = makeTerm($intro);
-    $nextTerm = makeTerm($next);
+    $nextTerm = makeTerm($next, 'Winter 2027');
     makeProgram('Test Program', $intro);
     makeProgram('Test Program', $next);
     DB::table('course_prerequisites')->insert([

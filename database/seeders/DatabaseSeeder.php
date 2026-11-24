@@ -56,23 +56,38 @@ class DatabaseSeeder extends Seeder
         // A bunch of fake courses as test data
         Course::factory(75)->create();
 
+        // three random terms are created with three random courses each
+        $this->call(TermSeeder::class);
+
         // Three random students with default advisor each make a plan with three random courses
         $this->call(PlanSeeder::class);
 
         // five random classes gain a random prerequisite.
         $this->call(PrereqSeeder::class);
 
-        // three random terms are created with three random courses each
-        $this->call(TermSeeder::class);
-
         // three random students enroll in three random courses each
         $this->call(EnrollSeeder::class);
+
+        // six random students gain several random completed classes for their history
+        $this->call(HistorySeeder::class);
+
+        // six random courses each get two dummy classrooms
+        $this->call(ClassroomSeeder::class);
 
         // random program with the terms from TermSeeder
         $this->call(ProgramSeeder::class);
 
         // AAS-SoftDev data hand-pulled from SCC website
         $this->call(SoftDevSeeder::class);
+
+        // AAS-SoftDev Term
+        $this->call(SoftDevTermSeeder::class);
+
+        // AAS-SoftDev Prereq
+        $this->call(SoftDevPrereqSeeder::class);
+
+        // SoftDev Classroom
+        $this->call(SoftDevClassroomSeeder::class);
 
         // Program maps for students with plans, until the Submit button exists
         $this->call(ProgramMapSeeder::class);

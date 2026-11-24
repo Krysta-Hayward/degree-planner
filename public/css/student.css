@@ -25,16 +25,151 @@
 }
 
 .student-page .notice {
+    text-align: center;
     padding: 10px;
-    background: var(--notice-bg, #e6f4ea);
-    border: 1px solid var(--notice-border, #b7dfc2);
+    margin: 15px 0;
+    max-width: 80%;
+    background: var(--alert-succes-bg, #e6f4ea);
+    border: 1px solid var(--alert-succes-border, #b7dfc2);
+    border-radius: 5px;
 }
 
 .student-page .error {
+    text-align: center;
     padding: 10px;
-    background: var(--error-bg, #fdecea);
-    border: 1px solid var(--error-border, #f5c2bd);
+    margin: 15px 0;
+    max-width: 80%;
+    background: var(--alert-error-bg, #fdecea);
+    border: 1px solid var(--alert-error-border, #f5c2bd);
 }
+
+/*Term Column*/
+.quarter-block {
+    margin-bottom: 20px;
+}
+
+.quarter-block h3 {
+    margin: 0 0 8px;
+}
+
+/* {{ Add && Move Dropdowns }}*/
+
+/* Move and Remove side by side, on one line (My Program Map) */
+.plan-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.plan-actions form {
+    margin: 0;
+}
+
+/* Action column only as wide as its buttons */
+td[data-label="Action"] {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* Dropdown and button side by side (used by Add and Move) */
+.plan-actions__move {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+/* The quarter dropdown */
+.student-page .plan-actions__move select {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border, rgba(127, 127, 127, 0.4));
+    background-color: var(--surface, #ffffff);
+    color: var(--text, #222222);
+    color-scheme: light;
+}
+
+/* Dark mode dropdown */
+:root[data-theme="dark"] .student-page .plan-actions__move select {
+    background-color: #242424;
+    color: #ffffff;
+    border-color: #555555;
+    color-scheme: dark;
+}
+
+/* Dropdown options */
+.student-page .plan-actions__move select option {
+    background-color: #ffffff;
+    color: #222222;
+}
+
+:root[data-theme="dark"] .student-page .plan-actions__move select option {
+    background-color: #242424;
+    color: #ffffff;
+}
+
+.plan-status {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 1px 2px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.plan-status--ok {
+    background: rgba(30, 107, 58, 0.15);
+    color: #2e9e5b;
+}
+
+.plan-status--missing {
+    background: rgba(155, 34, 34, 0.15);
+    color: #e05a5a;
+}
+
+/* Completed course form: fields in a row, wrapping on small screens */
+.history-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.history-form select,
+.history-form input {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(127, 127, 127, 0.4);
+    background: transparent;
+    color: inherit;
+}
+
+/* Credits progress bar */
+.progress-bar {
+    height: 14px;
+    border-radius: 7px;
+    background: rgba(127, 127, 127, 0.2);
+    overflow: hidden;
+    margin: 6px 0 14px;
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background: #2e9e5b;
+}
+
+/* In progress status (yellow) */
+.plan-status--progress {
+    background: rgba(201, 145, 26, 0.15);
+    color: #c9911a;
+}
+
+
+
+
 
 /* Dark mode versions of the notice/error boxes */
 :root[data-theme="dark"] .student-page {

@@ -26,6 +26,7 @@
                         <th>Email</th>
                         <th>Current Advisor</th>
                         <th>Assign Advisor</th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -38,7 +39,8 @@
                                 {{ $student->advisor->first()?->name ?? 'Not assigned' }}
                             </td>
                             <td>
-                                <form action="{{ route('admin.students.advisor.update', $student) }}" method="POST">
+                                <form action="{{ route('admin.students.advisor.update', $student) }}" method="POST"
+                                    >
                                     @csrf
                                     @method('PUT')
 
@@ -47,17 +49,18 @@
 
                                         @foreach ($advisors as $advisor)
                                             <option value="{{ $advisor->id }}" @selected(
-            old('advisor_id', $student->advisor->first()?->id)
-            == $advisor->id
-        )>
+                                                old('advisor_id', $student->advisor->first()?->id)
+                                                == $advisor->id
+                                            )>
                                                 {{ $advisor->name }}
                                             </option>
                                         @endforeach
                                     </select>
-
-                                    <button type="submit" class="button-links">
-                                        Save Assignment
-                                    </button>
+                            </td>
+                            <td>
+                                <button type="submit" class="button-links-primary">
+                                    Save Assignment
+                                </button>
                                 </form>
                             </td>
                         </tr>

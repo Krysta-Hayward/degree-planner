@@ -5,12 +5,79 @@
 @section('dashboard')
     <h2>{{ $programMap->owner->name }}</h2>
     <p>Status: {{ ucfirst(str_replace('_', ' ', $programMap->status)) }}</p>
+    <p>Program: {{ $programName ?? 'Not Selected'}}</p>
 
+<!-- Planned Courses --> 
+    <h3>Planned Courses</h3>
     @if ($coursesByQuarter->isEmpty())
-        <p>This student hasn't planned any courses yet.</p>
+    <p>This student hasn't planned any courses yet.</p>
     @else
         @foreach ($coursesByQuarter as $quarter => $courses)
-            <h3>{{ $quarter }}</h3>
+            @php
+                $quarterComments = $programMap->comments->where('quarter', $quarter);
+            @endphp
+
+            <details class="comments-panel">
+                <summary>
+                    {{ $quarter }} · {{ $courses->count() }} {{ Str::plural('course', $courses->count()) }} · {{ $courses->sum('credits') }} credits
+                    @if ($quarterComments->isNotEmpty())
+                        · {{ $quarterComments->count() }} {{ Str::plural('comment', $quarterComments->count()) }}
+                    @endif
+                </summary>
+
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Name</th>
+                            <th>Credits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($courses as $course)
+                            <tr>
+                                <td>{{ $course->courseNumber }}</td>
+                                <td>{{ $course->name }}</td>
+                                <td>{{ $course->credits }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Comments about this quarter -->
+                @foreach ($quarterComments as $comment)
+                    <div class="plan-comment">
+                        <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                        <p>{{ $comment->body }}</p>
+                    </div>
+                @endforeach
+
+                <!-- Comment box for this quarter -->
+                @can('comment', $programMap)
+                    <form method="POST" action="{{ route('advisor.plans.comments.store', $programMap) }}">
+                        @csrf
+                        <input type="hidden" name="quarter" value="{{ $quarter }}">
+                        <label for="body-{{ $quarter }}">Comment on {{ $quarter }}</label>
+                        <br>
+                        <textarea name="body" id="body-{{ $quarter }}" rows="2"></textarea>
+                        <button type="submit" class="button-links">Post</button>
+                    </form>
+                @endcan
+            </details>
+        @endforeach
+    @endif
+
+
+    <!-- Program Requirements-->   
+    <details class="comments-panel">
+        <summary>Program requirements</summary>
+
+        @if (! $programName)
+            <p>This student hasn't selected a program yet.</p>
+        @elseif ($requirements->isEmpty())
+            <p>No requirements found for {{ $programName }}.</p>
+        @else
+            <p>{{ $requirements->whereNotNull('plannedIn')->count() }} of {{ $requirements->count() }} required courses planned</p>
 
             <table class="student-table">
                 <thead>
@@ -18,33 +85,110 @@
                         <th>Course</th>
                         <th>Name</th>
                         <th>Credits</th>
+                        <th>Planned</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($courses as $course)
+                    @foreach ($requirements as $course)
                         <tr>
                             <td>{{ $course->courseNumber }}</td>
                             <td>{{ $course->name }}</td>
                             <td>{{ $course->credits }}</td>
+                            <td>
+                                @if ($course->plannedIn)
+                                    <span class="plan-status plan-status--ok">{{ $course->plannedIn }}</span>
+                                @else
+                                    <span class="plan-status plan-status--missing">Not planned</span>
+                                @endif
+                            </td>
+                        </tr>
+                     @endforeach
+                </tbody>
+            </table>
+        @endif
+    </details>
+
+<!-- Program Prerequisites-->
+    <details class="comments-panel">
+        <summary>Prerequisites</summary>
+
+        @if ($prerequisites->isEmpty())
+            <p>None of the planned courses have prerequisites.</p>
+        @else
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Requires</th>
+                        <th>Prerequisite</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($prerequisites as $row)
+                        <tr>
+                            <td>{{ $row->course_number }}</td>
+                            <td>{{ $row->prereq_number }}</td>
+                            <td>
+                                @if ($row->prereqPlannedIn)
+                                    <span class="plan-status plan-status--ok">Planned in {{ $row->prereqPlannedIn }}</span>
+                                @else
+                                    <span class="plan-status plan-status--missing">Missing from plan</span>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        @endif
+    </details>
 
-            <p>Total credits: {{ $courses->sum('credits') }}</p>
-        @endforeach
-    @endif
+<!--Comments-->
+    <details class="comments-panel" @if (session('success') || $errors->has('body')) open @endif>
+        <summary>General comments ({{ $programMap->comments->whereNull('quarter')->count() }})</summary>
+
+        @forelse ($programMap->comments->whereNull('quarter') as $comment)
+            <div class="plan-comment">
+                <p><strong>{{ $comment->author->name }}</strong> · {{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                <p>{{ $comment->body }}</p>
+            </div>
+        @empty
+            <p>No general comments.</p>
+        @endforelse
+
+        @if (session('success'))
+            <p>{{ session('success') }}</p>
+        @endif
+
+        @can('comment', $programMap)
+            <form method="POST" action="{{ route('advisor.plans.comments.store', $programMap) }}">
+                @csrf
+                <label for="body">Add a comment about the whole plan</label>
+                <br>
+                <textarea name="body" id="body" rows="3">{{ old('body') }}</textarea>
+
+                @error('body')
+                    <p class="plan-status plan-status--missing">{{ $message }}</p>
+                @enderror
+
+                <button type="submit" class="button-links">Post Comment</button>
+            </form>
+        @endcan
+    </details>
 
     @can('review', $programMap)
-        <form method="POST" action="{{ route('advisor.plans.approve', $programMap) }}">
-            @csrf
-            <button type="submit" class="button-links">Approve</button>
-        </form>
+        <div class="review-actions">
+            <!-- Approve button -->
+            <form method="POST" action="{{ route('advisor.plans.approve', $programMap) }}">
+                @csrf
+                <button type="submit" class="button-links">Approve</button>
+            </form>
 
-        <form method="POST" action="{{ route('advisor.plans.changes', $programMap) }}">
-            @csrf
-            <button type="submit" class="button-links">Request changes</button>
-        </form>
+            <!-- Request Change button -->
+            <form method="POST" action="{{ route('advisor.plans.changes', $programMap) }}">
+                @csrf
+                <button type="submit" class="button-links">Request changes</button>
+            </form>
+        </div>
     @endcan
 
     <a href="{{ route('advisor.plans.index') }}" class="button-links">Back to plan reviews</a>

@@ -20,7 +20,10 @@
 
         <div class="dashboard-card">
             <h3>Needs Attention</h3>
-            <p class="record-count">{{ $flaggedStudents }}</p>
+            <p class="record-count">{{ $flaggedCount }}</p>
+            <a href="{{ route('advisor.attention.index') }}" class="button-links" >View Students</a>
         </div>
     </div>
+
+
 @endsection

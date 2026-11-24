@@ -41,12 +41,12 @@ test('only admins can open the course forms', function (string $role) {
         ->assertForbidden();
 
     $this->post('/admin/courses', [
-        'courseNumber' => 'TEST 101',
+        'courseNumber' => 'TST 101',
         'name' => 'Test Course',
         'credits' => 5,
     ])->assertForbidden();
 
-    expect(DB::table('courses')->where('courseNumber', 'TEST 101')->exists())
+    expect(DB::table('courses')->where('courseNumber', 'TST 101')->exists())
         ->toBeFalse();
 })->with(['student', 'advisor']);
 
@@ -59,7 +59,7 @@ test('guests are sent to login from the course forms', function () {
 });
 
 test('an admin can view the course list', function () {
-    courseTestCreateCourse('TEST 101', 'Introduction to Testing');
+    courseTestCreateCourse('TST 101', 'Introduction to Testing');
 
     $this->actingAs(courseTestUser('admin'))
         ->get('/admin/courses')
@@ -78,7 +78,7 @@ test('an admin can open the course create form', function () {
 test('an admin can create a course', function () {
     $this->actingAs(courseTestUser('admin'))
         ->post('/admin/courses', [
-            'courseNumber' => 'TEST 101',
+            'courseNumber' => 'TST 101',
             'name' => 'Introduction to Testing',
             'credits' => 5,
         ])
@@ -86,7 +86,7 @@ test('an admin can create a course', function () {
         ->assertSessionHas('success');
 
     $course = DB::table('courses')
-        ->where('courseNumber', 'TEST 101')
+        ->where('courseNumber', 'TST 101')
         ->first();
 
     expect($course)->not->toBeNull();
@@ -109,11 +109,11 @@ test('a course requires a course number, name, and credits', function () {
 });
 
 test('a course number cannot be reused', function () {
-    courseTestCreateCourse('TEST 101');
+    courseTestCreateCourse('TST 101');
 
     $this->actingAs(courseTestUser('admin'))
         ->post('/admin/courses', [
-            'courseNumber' => 'TEST 101',
+            'courseNumber' => 'TST 101',
             'name' => 'Duplicate Course',
             'credits' => 5,
         ])
@@ -123,7 +123,7 @@ test('a course number cannot be reused', function () {
 test('course credits cannot be negative', function () {
     $this->actingAs(courseTestUser('admin'))
         ->post('/admin/courses', [
-            'courseNumber' => 'TEST 101',
+            'courseNumber' => 'TST 101',
             'name' => 'Invalid Credits Course',
             'credits' => -5,
         ])
@@ -132,7 +132,7 @@ test('course credits cannot be negative', function () {
 
 test('an admin can edit a course', function () {
     $course = courseTestCreateCourse(
-        'TEST 101',
+        'TST 101',
         'Old Course Name',
         5
     );
@@ -143,9 +143,9 @@ test('an admin can edit a course', function () {
         ->assertSee('Old Course Name');
 
     $this->put("/admin/courses/{$course}", [
-        'courseNumber' => 'TEST 102',
+        'courseNumber' => 'TST 102',
         'name' => 'Updated Course Name',
-        'credits' => 10,
+        'credits' => 5,
     ])
         ->assertRedirect('/admin/courses')
         ->assertSessionHas('success');
@@ -154,13 +154,13 @@ test('an admin can edit a course', function () {
         ->where('id', $course)
         ->first();
 
-    expect($updated->courseNumber)->toBe('TEST 102');
+    expect($updated->courseNumber)->toBe('TST 102');
     expect($updated->name)->toBe('Updated Course Name');
-    expect((int) $updated->credits)->toBe(10);
+    expect((int) $updated->credits)->toBe(5);
 });
 
 test('only admins can edit a course', function (string $role) {
-    $course = courseTestCreateCourse('TEST 101');
+    $course = courseTestCreateCourse('TST 101');
 
     $this->actingAs(courseTestUser($role))
         ->put("/admin/courses/{$course}", [
@@ -171,11 +171,11 @@ test('only admins can edit a course', function (string $role) {
         ->assertForbidden();
 
     expect(DB::table('courses')->where('id', $course)->value('courseNumber'))
-        ->toBe('TEST 101');
+        ->toBe('TST 101');
 })->with(['student', 'advisor']);
 
 test('an admin can delete a course', function () {
-    $course = courseTestCreateCourse('TEST 101');
+    $course = courseTestCreateCourse('TST 101');
 
     $this->actingAs(courseTestUser('admin'))
         ->delete("/admin/courses/{$course}")

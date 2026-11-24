@@ -12,6 +12,7 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $tables = [
+            'classrooms' => 'Classrooms',
             'course_prerequisites' => 'Course Prerequisites',
             'course_program' => 'Course Programs',
             'courses' => 'Courses',

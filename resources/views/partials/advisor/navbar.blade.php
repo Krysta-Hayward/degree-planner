@@ -17,6 +17,9 @@
         Plan Reviews
         </a>
     </li>
+    <li>
+        <a href="{{ route('advisor.attention.index') }}" class="{{ request()->routeIs('advisor.attention.*') ? 'active' : '' }}">Needs Attention</a>
+    </li>
 </ul>
 
 

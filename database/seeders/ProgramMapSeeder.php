@@ -9,30 +9,54 @@ use Illuminate\Support\Facades\DB;
 
 class ProgramMapSeeder extends Seeder
 {
+    // TODO: Test only. Replaced by the student Submit button.
     public function run(): void
     {
-        // A program map for every student who has planned courses
-        $studentsWithPlans = DB::table('plans')->distinct()->pluck('student');
+        $advisorId = User::where('email', 'advisor@example.com')->value('id');
 
-        $statuses = ['submitted', 'submitted', 'draft', 'approved'];
-
-        foreach ($studentsWithPlans as $i => $studentId) {
-            ProgramMap::create([
-                'student' => $studentId,
-                'status' => $statuses[$i % count($statuses)],
-            ]);
+        if (! $advisorId) {
+            return;
         }
 
-        // A map for a student NOT assigned to any advisor, for testing the 403
-        $assigned = DB::table('students')->pluck('student');
+        // A program that has terms, so its courses can be planned
+        $programName = DB::table('programs')
+            ->join('terms', 'programs.course', '=', 'terms.course')
+            ->value('programs.name');
 
-        $otherStudent = User::where('role', 'student')
-            ->whereNotIn('id', $assigned)
-            ->value('id');
+        if (! $programName) {
+            return;
+        }
 
-        if ($otherStudent) {
+        // Terms (course offerings) that belong to that program
+        $programTermIds = DB::table('terms')
+            ->whereIn('course', DB::table('programs')->where('name', $programName)->pluck('course'))
+            ->pluck('id');
+
+        // Students linked to this advisor who don't have a map yet
+        $students = DB::table('students')
+            ->where('advisor', $advisorId)
+            ->pluck('student')
+            ->diff(ProgramMap::pluck('student'))
+            ->diff(User::where('email', 'student@example.com')->pluck('id'))
+            ->take(20);
+
+        foreach ($students as $studentId) {
+            // Give them the program
+            DB::table('users')->where('id', $studentId)->update(['program' => $programName]);
+
+            // Plan 3 of that program's courses
+            foreach ($programTermIds->shuffle()->take(8) as $termId) {
+                DB::table('plans')->insert([
+                    'student' => $studentId,
+                    'class' => $termId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Submit it for review
             ProgramMap::create([
-                'student' => $otherStudent,
+                'student' => $studentId,
                 'status' => 'submitted',
             ]);
         }

@@ -12,32 +12,23 @@
 
 <body>
     <header class="site-header">
-        <div class="logo">Degree Planner</div>
-
+        @include('partials.app-logo')
         <nav>
-            <button class="button-links"><a href="/">Home</a></button>
-            <button class="button-links"><a href="/programs">Programs</a></button>
-            <button class="button-links"><a href="/courses">Courses</a></button>
-            <button class="button-links"><a href="/terms">Terms</a></button>
-            <button class="button-links"><a href="/prerequisites">Prerequisites</a></button>
+            <a href="/" class="button-links">Home</a>
+            <a href="/programs" class="button-links">Programs</a>
+            <a href="/courses" class="button-links">Courses</a>
+            <a href="/terms" class="button-links">Terms</a>
+            <a href="/prerequisites" class="button-links">Prerequisites</a>
 
             @auth
+                <a href="{{ route('classes') }}" class="button-links">Classes</a>
                 @if (auth()->user()->role === 'admin')
-                    <button class="button-links">
-                        <a href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
-                    </button>
-                    <button class="button-links">
-                        <a href="{{ route('admin.data') }}">Database Overview</a>
-                    </button>
-
+                    <a href="{{ route('admin.dashboard') }}" class="button-links">Admin Dashboard</a>
+                    <a href="{{ route('admin.data') }}" class="button-links">Database Overview</a>
                 @elseif (auth()->user()->role === 'advisor')
-                    <button class="button-links">
-                        <a href="{{ route('advisor.dashboard') }}">Advisor Dashboard</a>
-                    </button>
+                    <a href="{{ route('advisor.dashboard') }}" class="button-links">Advisor Dashboard</a>
                 @elseif (auth()->user()->role === 'student')
-                    <button class="button-links">
-                        <a href="{{ route('student.dashboard') }}">My Degree Plan</a>
-                    </button>
+                    <a href="{{ route('student.dashboard') }}" class="button-links">My Degree Plan</a>
                 @endif
 
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
@@ -45,15 +36,15 @@
                     <button class="button-links" type="submit">Log Out</button>
                 </form>
 
-                <span>
+                <span class="site-header-logged-in">
                     {{ Auth::user()->name }}
-                    ({{ ucfirst(Auth::user()->role) }})
+                    <span class="user-role">
+                        ({{ ucfirst(Auth::user()->role) }})
+                    </span>
                 </span>
 
             @else
-                <button class="button-links">
-                    <a href="{{ route('login') }}">Log In</a>
-                </button>
+                <a href="{{ route('login') }}" class="button-links">Log In</a>
             @endauth
         </nav>
         <div>
@@ -67,23 +58,154 @@
         @yield('content')
     </main>
     <script>
-        document.addEventListener('click', function (event) {
-            const link = event.target.closest('.pagination a');
+        // Save scroll position before submitting forms
+        document.addEventListener('submit', function (event) {
+            sessionStorage.setItem('pageScroll', window.scrollY);
+        });
 
-            if (link) {
-                sessionStorage.setItem('tableScroll', window.scrollY);
+        document.addEventListener('click', function (event) {
+            const link = event.target.closest(
+                '.pagination a, .button-links, .button-links-primary, .button-links-danger'
+            );
+
+            if (link && link.tagName === 'A') {
+                sessionStorage.setItem('pageScroll', window.scrollY);
             }
         });
 
         window.addEventListener('load', function () {
-            const savedPosition = sessionStorage.getItem('tableScroll');
+            const savedPosition = sessionStorage.getItem('pageScroll');
 
             if (savedPosition !== null) {
                 window.scrollTo(0, parseInt(savedPosition, 10));
-                sessionStorage.removeItem('tableScroll');
+                sessionStorage.removeItem('pageScroll');
             }
         });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('confirm-modal');
+            const title = document.getElementById('confirm-title');
+            const message = document.getElementById('confirm-message');
+            const cancel = document.getElementById('confirm-cancel');
+            const accept = document.getElementById('confirm-accept');
+
+            let pendingForm = null;
+            let pendingSubmitter = null;
+
+            // Display the confirmation modal.
+            function showConfirmation(form, button = null) {
+                pendingForm = form;
+                pendingSubmitter = button;
+
+                const settings = button || form;
+
+                title.textContent =
+                    settings.dataset.confirmTitle || 'Confirm Action';
+
+                message.textContent =
+                    settings.dataset.confirm || form.dataset.confirm;
+
+                accept.textContent =
+                    settings.dataset.confirmButton || 'Confirm';
+
+                accept.classList.toggle(
+                    'confirm-delete',
+                    settings.dataset.confirmDanger !== 'false'
+                );
+
+                modal.showModal();
+            }
+
+            // Handle form submissions.
+            // Handle form submissions.
+            document.addEventListener('submit', function (event) {
+                const form = event.target;
+                const button = event.submitter;
+
+                // Check whether the form or submit button has confirmation settings.
+                if (!form.matches('[data-confirm]') && !button?.matches('[data-confirm]')) {
+                    return;
+                }
+
+                if (form.dataset.confirmed === 'true') {
+                    delete form.dataset.confirmed;
+                    return;
+                }
+
+                event.preventDefault();
+
+                showConfirmation(
+                    form,
+                    button?.matches('[data-confirm]') ? button : null
+                );
+            });
+
+            // Handle buttons with their own confirmation messages.
+            document.addEventListener('click', function (event) {
+                const button = event.target.closest('button[data-confirm]');
+
+                if (!button || button.type === 'submit') {
+                    return;
+                }
+
+                event.preventDefault();
+
+                showConfirmation(button.form, button);
+            });
+
+            // Cancel.
+            cancel.addEventListener('click', function () {
+                modal.close();
+                pendingForm = null;
+                pendingSubmitter = null;
+            });
+
+            // Confirm.
+            accept.addEventListener('click', function () {
+                if (!pendingForm) return;
+
+                const form = pendingForm;
+                const submitter = pendingSubmitter;
+
+                pendingForm = null;
+                pendingSubmitter = null;
+
+                form.dataset.confirmed = 'true';
+                modal.close();
+
+                form.requestSubmit(submitter || undefined);
+            });
+
+            // Escape key.
+            modal.addEventListener('close', function () {
+                pendingForm = null;
+                pendingSubmitter = null;
+            });
+        });
     </script>
+
+    <dialog id="confirm-modal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <h2 id="confirm-title">Confirm Action</h2>
+
+            <p id="confirm-message">
+                Are you sure you want to continue?
+            </p>
+
+            <div class="confirm-modal-buttons">
+                <button type="button" id="confirm-cancel" class="confirm-cancel">
+                    Cancel
+                </button>
+
+                <button type="button" id="confirm-accept" class="confirm-delete">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+
 </body>
 
 </html>
